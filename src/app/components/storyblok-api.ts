@@ -14,7 +14,7 @@
  */
 
 import { useState, useEffect } from "react";
-import type { CourseInfo, CourseSessionRaw, CourseSession, CourseMaterial } from "./course-data";
+import type { CourseInfo, CourseSessionRaw, CourseSession, CourseMaterial, CourseTutorial, CourseHomework } from "./course-data";
 import {
   courseInfo as fallbackCourseInfo,
   courseSessions as fallbackSessions,
@@ -100,6 +100,30 @@ function transformMaterial(block: any): CourseMaterial {
   };
 }
 
+function transformTutorial(block: any): CourseTutorial {
+  return {
+    title: block.title || "",
+    url: block.url || "#",
+    type: block.type || "YouTube Video",
+    duration: block.duration || "",
+    language: block.language || "Deutsch",
+    whenToUse: block.when_to_use || "",
+  };
+}
+
+function transformHomework(c: any): CourseHomework | null {
+  if (!c.homework_title) return null;
+  return {
+    number: c.homework_number || "",
+    title: c.homework_title || "",
+    deadline: c.homework_deadline || "",
+    goal: c.homework_goal || "",
+    description: c.homework_description || "",
+    format: c.homework_format || "",
+    learningFocus: c.homework_learning_focus || "",
+  };
+}
+
 type SessionStatus = "upcoming" | "completed" | "current";
 
 function parseGermanDate(dateStr: string): Date {
@@ -139,13 +163,19 @@ function transformSession(story: any): CourseSessionRaw {
     id: story.slug || story.uuid,
     sessionNumber: Number(c.session_number) || 0,
     date: c.date || "",
+    time: c.time || "09:55-13:05",
+    room: c.room || "K115",
     title: c.title || "",
     description: c.description || "",
+    schwerpunkt: c.schwerpunkt || "",
     // Topics kommen als Textarea mit \n-Trennung
     topics: (c.topics || "")
       .split("\n")
       .map((t: string) => t.trim())
       .filter((t: string) => t.length > 0),
+    projectSubmission: c.project_submission || "–",
+    homework: transformHomework(c),
+    tutorials: (c.tutorials || []).map(transformTutorial),
     materials: (c.materials || []).map(transformMaterial),
   };
 }

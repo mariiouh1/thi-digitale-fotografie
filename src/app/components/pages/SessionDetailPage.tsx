@@ -2,6 +2,8 @@ import { useParams, Link } from "react-router";
 import {
   ArrowLeft,
   Calendar,
+  Clock,
+  MapPin,
   FileText,
   Download,
   ExternalLink,
@@ -12,6 +14,12 @@ import {
   Radio,
   ChevronLeft,
   ChevronRight,
+  BookOpen,
+  ClipboardList,
+  Target,
+  Tag,
+  Play,
+  Globe,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useCourse } from "../CourseContext";
@@ -68,6 +76,12 @@ function getStatusBadge(status: string) {
         </span>
       );
   }
+}
+
+function getTutorialIcon(type: string) {
+  if (type.toLowerCase().includes("youtube") || type.toLowerCase().includes("video")) return Play;
+  if (type.toLowerCase().includes("blog") || type.toLowerCase().includes("artikel")) return Globe;
+  return ExternalLink;
 }
 
 export function SessionDetailPage() {
@@ -139,12 +153,36 @@ export function SessionDetailPage() {
             <Calendar className="h-3.5 w-3.5" />
             {session.date}
           </div>
+          <div className="flex items-center gap-1.5 text-[0.75rem] text-white/30">
+            <Clock className="h-3.5 w-3.5" />
+            {session.time}
+          </div>
+          <div className="flex items-center gap-1.5 text-[0.75rem] text-white/30">
+            <MapPin className="h-3.5 w-3.5" />
+            {session.room}
+          </div>
           {getStatusBadge(session.status)}
         </div>
 
-        <h1 className="mb-4 text-[1.8rem] tracking-tight text-white sm:text-[2.2rem]" style={{ lineHeight: 1.15 }}>
+        <h1 className="mb-3 text-[1.8rem] tracking-tight text-white sm:text-[2.2rem]" style={{ lineHeight: 1.15 }}>
           {session.title}
         </h1>
+
+        {/* Schwerpunkt & Project badges */}
+        <div className="flex flex-wrap gap-2">
+          {session.schwerpunkt && (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/10 px-3 py-1 text-[0.7rem] text-indigo-300">
+              <Tag className="h-3 w-3" />
+              {session.schwerpunkt}
+            </span>
+          )}
+          {session.projectSubmission && session.projectSubmission !== "–" && (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-3 py-1 text-[0.7rem] text-amber-300">
+              <Target className="h-3 w-3" />
+              {session.projectSubmission}
+            </span>
+          )}
+        </div>
       </motion.div>
 
       <div className="grid gap-8 lg:grid-cols-3">
@@ -180,14 +218,100 @@ export function SessionDetailPage() {
               ))}
             </div>
           </div>
+
+          {/* Homework */}
+          {session.homework && (
+            <div className="mb-8">
+              <h2 className="mb-3 flex items-center gap-2 text-[0.8rem] text-white/40 uppercase tracking-wider">
+                <ClipboardList className="h-3.5 w-3.5" />
+                Hausaufgabe: {session.homework.number}
+              </h2>
+              <div className="rounded-2xl border border-amber-500/10 bg-amber-500/[0.03] p-5">
+                <h3 className="mb-2 text-[0.95rem] text-amber-200">{session.homework.title}</h3>
+                <p className="mb-4 text-[0.85rem] text-white/50" style={{ lineHeight: 1.7 }}>
+                  {session.homework.description}
+                </p>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="rounded-xl bg-white/[0.03] px-4 py-3">
+                    <p className="mb-1 text-[0.65rem] text-white/25 uppercase tracking-wider">Ziel</p>
+                    <p className="text-[0.8rem] text-white/50">{session.homework.goal}</p>
+                  </div>
+                  <div className="rounded-xl bg-white/[0.03] px-4 py-3">
+                    <p className="mb-1 text-[0.65rem] text-white/25 uppercase tracking-wider">Abgabeformat</p>
+                    <p className="text-[0.8rem] text-white/50">{session.homework.format}</p>
+                  </div>
+                  <div className="rounded-xl bg-white/[0.03] px-4 py-3">
+                    <p className="mb-1 text-[0.65rem] text-white/25 uppercase tracking-wider">Lernfokus</p>
+                    <p className="text-[0.8rem] text-white/50">{session.homework.learningFocus}</p>
+                  </div>
+                  <div className="rounded-xl bg-white/[0.03] px-4 py-3">
+                    <p className="mb-1 text-[0.65rem] text-amber-400/60 uppercase tracking-wider">Abgabe bis</p>
+                    <p className="text-[0.8rem] text-amber-300/80">{session.homework.deadline}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Tutorials */}
+          {session.tutorials.length > 0 && (
+            <div className="mb-8">
+              <h2 className="mb-3 flex items-center gap-2 text-[0.8rem] text-white/40 uppercase tracking-wider">
+                <BookOpen className="h-3.5 w-3.5" />
+                Video-Tutorials & Ressourcen
+              </h2>
+              <div className="flex flex-col gap-2">
+                {session.tutorials.map((tutorial, i) => {
+                  const Icon = getTutorialIcon(tutorial.type);
+                  const isVideo = tutorial.type.toLowerCase().includes("video") || tutorial.type.toLowerCase().includes("youtube");
+                  return (
+                    <a
+                      key={i}
+                      href={tutorial.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-start gap-3 rounded-xl border border-white/[0.04] bg-white/[0.02] p-4 transition-all hover:border-white/10 hover:bg-white/[0.04]"
+                    >
+                      <div className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg ${isVideo ? "bg-red-500/10" : "bg-blue-500/10"}`}>
+                        <Icon className={`h-4 w-4 ${isVideo ? "text-red-400/70" : "text-blue-400/70"}`} />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-[0.85rem] text-white/70 transition-colors group-hover:text-white/90">
+                          {tutorial.title}
+                        </p>
+                        <div className="mt-1 flex flex-wrap items-center gap-2">
+                          <span className="text-[0.65rem] text-white/25">{tutorial.type}</span>
+                          {tutorial.duration && (
+                            <>
+                              <span className="text-[0.65rem] text-white/15">·</span>
+                              <span className="text-[0.65rem] text-white/25">{tutorial.duration}</span>
+                            </>
+                          )}
+                          {tutorial.whenToUse && (
+                            <>
+                              <span className="text-[0.65rem] text-white/15">·</span>
+                              <span className="text-[0.65rem] text-violet-400/50">{tutorial.whenToUse}</span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                      <ExternalLink className="mt-1 h-3.5 w-3.5 flex-shrink-0 text-white/10 transition-colors group-hover:text-white/30" />
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </motion.div>
 
-        {/* Sidebar: Materials */}
+        {/* Sidebar */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
+          className="flex flex-col gap-5"
         >
+          {/* Materials */}
           <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5">
             <h2 className="mb-4 flex items-center gap-2 text-[0.8rem] text-white/40 uppercase tracking-wider">
               <Download className="h-3.5 w-3.5" />
@@ -236,6 +360,54 @@ export function SessionDetailPage() {
                 })}
               </div>
             )}
+          </div>
+
+          {/* Quick Info Card */}
+          <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5">
+            <h2 className="mb-4 text-[0.8rem] text-white/40 uppercase tracking-wider">
+              Auf einen Blick
+            </h2>
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-3">
+                <Calendar className="h-4 w-4 text-white/20" />
+                <div>
+                  <p className="text-[0.65rem] text-white/25">Datum</p>
+                  <p className="text-[0.8rem] text-white/60">{session.date}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <Clock className="h-4 w-4 text-white/20" />
+                <div>
+                  <p className="text-[0.65rem] text-white/25">Zeit</p>
+                  <p className="text-[0.8rem] text-white/60">{session.time} Uhr</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <MapPin className="h-4 w-4 text-white/20" />
+                <div>
+                  <p className="text-[0.65rem] text-white/25">Raum</p>
+                  <p className="text-[0.8rem] text-white/60">{session.room}</p>
+                </div>
+              </div>
+              {session.schwerpunkt && (
+                <div className="flex items-center gap-3">
+                  <Tag className="h-4 w-4 text-white/20" />
+                  <div>
+                    <p className="text-[0.65rem] text-white/25">Schwerpunkt</p>
+                    <p className="text-[0.8rem] text-white/60">{session.schwerpunkt}</p>
+                  </div>
+                </div>
+              )}
+              {session.homework && (
+                <div className="flex items-center gap-3">
+                  <ClipboardList className="h-4 w-4 text-amber-400/40" />
+                  <div>
+                    <p className="text-[0.65rem] text-amber-400/40">Hausaufgabe bis</p>
+                    <p className="text-[0.8rem] text-amber-300/70">{session.homework.deadline}</p>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </motion.div>
       </div>

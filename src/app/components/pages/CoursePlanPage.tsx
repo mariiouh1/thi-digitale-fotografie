@@ -1,12 +1,18 @@
 import { Link } from "react-router";
 import {
   Calendar,
+  Clock,
+  MapPin,
   CheckCircle2,
   Circle,
   ArrowRight,
   FileText,
   Download,
   Radio,
+  ClipboardList,
+  Target,
+  BookOpen,
+  Tag,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useCourse } from "../CourseContext";
@@ -93,7 +99,20 @@ export function CoursePlanPage() {
                   <div className="mb-1 flex flex-wrap items-center gap-2">
                     <span className="text-[0.7rem] text-white/25">#{session.sessionNumber}</span>
                     <span className="text-[0.7rem] text-white/25">·</span>
-                    <span className="text-[0.7rem] text-white/25">{session.date}</span>
+                    <span className="flex items-center gap-1 text-[0.7rem] text-white/25">
+                      <Calendar className="h-3 w-3" />
+                      {session.date}
+                    </span>
+                    <span className="text-[0.7rem] text-white/25">·</span>
+                    <span className="flex items-center gap-1 text-[0.7rem] text-white/25">
+                      <Clock className="h-3 w-3" />
+                      {session.time}
+                    </span>
+                    <span className="text-[0.7rem] text-white/25">·</span>
+                    <span className="flex items-center gap-1 text-[0.7rem] text-white/25">
+                      <MapPin className="h-3 w-3" />
+                      {session.room}
+                    </span>
                     {session.status === "current" && (
                       <span className="rounded-full bg-violet-500/10 px-2 py-0.5 text-[0.6rem] text-violet-400">
                         Aktuell
@@ -113,18 +132,48 @@ export function CoursePlanPage() {
                     {session.title}
                   </h3>
 
-                  <p className="mb-2 text-[0.78rem] text-white/25 line-clamp-1" style={{ lineHeight: 1.5 }}>
-                    {session.topics.join(" · ")}
-                  </p>
-
-                  {/* Materials indicator */}
-                  {session.materials.length > 0 && (
-                    <div className="flex items-center gap-1.5 text-[0.7rem] text-white/20">
-                      <FileText className="h-3 w-3" />
-                      <span>{session.materials.length} Material{session.materials.length !== 1 ? "ien" : ""}</span>
-                      <Download className="ml-1 h-3 w-3" />
-                    </div>
+                  {/* Schwerpunkt */}
+                  {session.schwerpunkt && (
+                    <p className="mb-1.5 flex items-center gap-1.5 text-[0.72rem] text-indigo-400/50">
+                      <Tag className="h-3 w-3" />
+                      {session.schwerpunkt}
+                    </p>
                   )}
+
+                  {/* Indicators row */}
+                  <div className="flex flex-wrap items-center gap-3">
+                    {/* Project submission */}
+                    {session.projectSubmission && session.projectSubmission !== "–" && (
+                      <span className="flex items-center gap-1 text-[0.68rem] text-amber-400/50">
+                        <Target className="h-3 w-3" />
+                        {session.projectSubmission}
+                      </span>
+                    )}
+
+                    {/* Homework indicator */}
+                    {session.homework && (
+                      <span className="flex items-center gap-1 text-[0.68rem] text-amber-300/40">
+                        <ClipboardList className="h-3 w-3" />
+                        {session.homework.number}: {session.homework.title}
+                      </span>
+                    )}
+
+                    {/* Tutorials indicator */}
+                    {session.tutorials.length > 0 && (
+                      <span className="flex items-center gap-1 text-[0.68rem] text-blue-400/40">
+                        <BookOpen className="h-3 w-3" />
+                        {session.tutorials.length} Tutorial{session.tutorials.length !== 1 ? "s" : ""}
+                      </span>
+                    )}
+
+                    {/* Materials indicator */}
+                    {session.materials.length > 0 && (
+                      <span className="flex items-center gap-1 text-[0.68rem] text-white/20">
+                        <FileText className="h-3 w-3" />
+                        {session.materials.length} Material{session.materials.length !== 1 ? "ien" : ""}
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 {/* Arrow */}

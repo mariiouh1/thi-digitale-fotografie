@@ -1,57 +1,15 @@
 /**
- * Course Data Layer
+ * Course Data Layer – Digitale Fotografie (THI)
  * 
  * STORYBLOK INTEGRATION:
- * This file contains hardcoded fallback data that mirrors the Storyblok content structure.
+ * Fallback data mirrors Storyblok content structure.
  * Mario manages all content in Storyblok – sessions, texts, materials, images.
- * He can create new semesters by adding/removing course_session entries.
  * 
  * STATUS IS TIME-BASED:
- * There is NO manual status field in Storyblok. The app calculates session status
- * automatically based on the session date vs. today:
+ * No manual status field. App calculates from session date vs. today:
  *   - Past sessions → "completed"
- *   - Today's session (or nearest upcoming if none today) → "current"
+ *   - First session with date >= today → "current"
  *   - Future sessions → "upcoming"
- * 
- * Storyblok Content Types:
- * 
- * 1. "course_info" (Singleton) – Fields:
- *    - title (text): "Digitale Fotografie"
- *    - subtitle (text): "Sommersemester 2026"
- *    - description (textarea): Course description
- *    - instructor_name (text): "Mario Schubert"
- *    - instructor_title (text): "Dozent für Digitale Fotografie"
- *    - instructor_image (text): ImageKit URL
- *    - instructor_bio (textarea): Short bio
- *    - semester (text): "SoSe 2026"
- *    - schedule (text): "Mittwochs, 14:00 – 17:15 Uhr"
- *    - room (text): "Raum G.013 – Fotolabor"
- *    - credits (text): "5 ECTS"
- *    - hero_image (text): ImageKit URL
- *    - highlights (textarea): One per line
- *    - hero_badge_text (text): "Neu"
- *    - cta_primary_text (text): "Anmelden"
- *    - cta_secondary_text (text): "Mehr Informationen"
- *    - announcement (textarea): "Kurs beginnt bald!"
- *    - announcement_type (option): "info" | "warning" | "success" | ""
- *    - section_title_progress (text): "Fortschritt"
- *    - section_title_instructor (text): "Dozent"
- *    - section_title_highlights (text): "Highlights"
- *    - section_title_next_sessions (text): "Nächste Sitzungen"
- * 
- * 2. "course_session" (Collection – Mario creates one per Kurstermin) – Fields:
- *    - session_number (number): 1, 2, 3...
- *    - date (text): "16.04.2026" (DD.MM.YYYY – used for time-based status!)
- *    - title (text): Session title
- *    - description (textarea): Detailed session description
- *    - topics (textarea): One topic per line
- *    - materials (bloks): Nested "material" blocks
- * 
- * 3. "material" (Nested block inside course_session) – Fields:
- *    - name (text): Display name
- *    - url (text): Download URL (Mario pastes link to file, e.g. Google Drive, Dropbox)
- *    - type (option): "pdf" | "zip" | "link" | "video"
- *    - size (text): "2.4 MB" (optional)
  */
 
 export interface CourseMaterial {
@@ -61,13 +19,38 @@ export interface CourseMaterial {
   size?: string;
 }
 
+export interface CourseTutorial {
+  title: string;
+  url: string;
+  type: string; // "YouTube Video" | "Blog-Artikel" | "Adobe Help"
+  duration: string;
+  language: string;
+  whenToUse: string; // z.B. "Vor/nach Termin 1"
+}
+
+export interface CourseHomework {
+  number: string; // "HA1", "HA2", ...
+  title: string;
+  deadline: string; // "29.03.2026, 23:59"
+  goal: string;
+  description: string;
+  format: string;
+  learningFocus: string;
+}
+
 export interface CourseSessionRaw {
   id: string;
   sessionNumber: number;
   date: string; // DD.MM.YYYY
+  time: string; // "09:55-13:05"
+  room: string; // "K115"
   title: string;
   description: string;
+  schwerpunkt: string; // Focus area
   topics: string[];
+  projectSubmission: string; // e.g. "Start P1 (Sport & Bewegung)" or "Abgabe P1 / Start P2"
+  homework: CourseHomework | null;
+  tutorials: CourseTutorial[];
   materials: CourseMaterial[];
 }
 
@@ -105,7 +88,6 @@ export interface CourseInfo {
 
 // ============================================================
 // TIME-BASED STATUS CALCULATION
-// Mario only enters dates in Storyblok – no manual status needed.
 // ============================================================
 
 function parseGermanDate(dateStr: string): Date {
@@ -118,17 +100,10 @@ function getToday(): Date {
   return new Date(now.getFullYear(), now.getMonth(), now.getDate());
 }
 
-/**
- * Calculates status for all sessions based on their dates:
- * - Sessions with date < today → "completed"
- * - The first session with date >= today → "current"
- * - All remaining sessions → "upcoming"
- */
 function calculateSessionStatuses(sessions: CourseSessionRaw[]): CourseSession[] {
   const today = getToday();
   let currentFound = false;
 
-  // Sort by date to ensure correct order
   const sorted = [...sessions].sort((a, b) => {
     return parseGermanDate(a.date).getTime() - parseGermanDate(b.date).getTime();
   });
@@ -151,7 +126,7 @@ function calculateSessionStatuses(sessions: CourseSessionRaw[]): CourseSession[]
 }
 
 // ============================================================
-// FALLBACK DATA – Replace with Storyblok API calls
+// FALLBACK DATA – Mario's real course plan
 // ============================================================
 
 export const courseInfo: CourseInfo = {
@@ -166,236 +141,419 @@ export const courseInfo: CourseInfo = {
   instructorBio:
     "Professioneller Fotograf mit Schwerpunkt Hochzeits-, Tier- und Porträtfotografie in Tirol und Bayern. Mario verbindet jahrelange Praxiserfahrung mit seiner Leidenschaft für die Lehre.",
   semester: "SoSe 2026",
-  schedule: "Mittwochs, 14:00 – 17:15 Uhr",
-  room: "Raum G.013 – Fotolabor",
+  schedule: "Montags, 09:55 – 13:05 Uhr",
+  room: "K115",
   credits: "5 ECTS",
   heroImage:
-    "https://images.unsplash.com/photo-1736066330610-c102cab4e942?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwcGhvdG9ncmFwaHklMjBjYW1lcmElMjB1bml2ZXJzaXR5JTIwbGVjdHVyZXxlbnwxfHx8fDE3NzM0MTM5MTl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+    "https://images.unsplash.com/photo-1736066330610-c102cab4e942?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080",
   highlights: [
-    "Praxisorientiert mit wöchentlichen Foto-Challenges",
-    "Professionelle Ausrüstung im Fotolabor verfügbar",
-    "Portfolio-Review am Semesterende",
-    "Gastvorträge von Branchenprofis",
+    "13 Präsenztermine mit Theorie & Praxis",
+    "5 Fotoprojekte + Abschlussarbeit mit Prüfung",
+    "Wöchentliche Hausaufgaben mit Feedback",
+    "Video-Tutorials & Lightroom/Photoshop-Labs",
+    "Portfolio-Review & Generalprobe vor der Prüfung",
   ],
-  // Landing Page Controls
-  heroBadgeText: "Neu",
-  ctaPrimaryText: "Anmelden",
-  ctaSecondaryText: "Mehr Informationen",
-  announcement: "Kurs beginnt bald!",
+  heroBadgeText: "SoSe 2026",
+  ctaPrimaryText: "Zum Kursplan",
+  ctaSecondaryText: "Aktuelle Session",
+  announcement: "Willkommen zum Kurs Digitale Fotografie! Der erste Termin ist am 23. März 2026.",
   announcementType: "info",
-  sectionTitleProgress: "Fortschritt",
+  sectionTitleProgress: "Kursfortschritt",
   sectionTitleInstructor: "Dozent",
-  sectionTitleHighlights: "Highlights",
-  sectionTitleNextSessions: "Nächste Sitzungen",
+  sectionTitleHighlights: "Kurs-Highlights",
+  sectionTitleNextSessions: "Nächste Sessions",
 };
 
-// Raw session data (as it comes from Storyblok – NO status field)
 const rawSessions: CourseSessionRaw[] = [
   {
-    id: "01-einfuehrung",
+    id: "01-kickoff",
     sessionNumber: 1,
-    date: "16.04.2026",
-    title: "Einführung & Kameratechnik Basics",
-    description:
-      "Willkommen im Kurs! Wir starten mit einer Übersicht über den Semesterplan, lernen uns kennen und steigen direkt in die Grundlagen ein: Wie funktioniert eine Digitalkamera? Was bedeuten Sensor, Verschluss und Objektiv? Ihr bekommt eure erste Hands-on Session mit den Kamera-Leihgeräten.",
+    date: "23.03.2026",
+    time: "09:55-13:05",
+    room: "K115",
+    title: "Kick-off, Sehen lernen & Kameragrundlagen",
+    schwerpunkt: "Kamera/Grundlagen",
+    description: "Willkommen im Kurs! Wir lernen uns kennen, besprechen den Semesterplan und steigen direkt ein: Wie funktioniert eure Kamera? Was bedeuten die Modi, der Sensor, das Objektiv? Danach geht's raus – Sehen lernen durch bewusstes Fotografieren.",
     topics: [
       "Kursübersicht & Organisatorisches",
-      "Aufbau einer Digitalkamera",
-      "Sensor-Typen: APS-C vs. Vollformat",
-      "Erste Hands-on Übung",
+      "Kameraaufbau & Modi (P/A/S/M)",
+      "Sehen lernen: Formen, Linien, Texturen",
+      "Erste Hands-on Übung auf dem Campus",
     ],
-    materials: [
-      { name: "Kursübersicht SoSe 2026", url: "#", type: "pdf", size: "1.2 MB" },
-      { name: "Slides: Kameratechnik Basics", url: "#", type: "pdf", size: "4.8 MB" },
+    projectSubmission: "–",
+    homework: {
+      number: "HA1",
+      title: "Formen-Jagd & Kamerakenntnis",
+      deadline: "29.03.2026, 23:59",
+      goal: "Kamera ausprobieren, bewusst sehen lernen",
+      description: "12 Bilder (4x Linien, 4x Formen, 4x Texturen), 5 beste auswählen + kurze Reflexion",
+      format: "ZIP mit 5 JPG + 1 TXT/PDF",
+      learningFocus: "Sehen lernen, Kamera-Modi testen",
+    },
+    tutorials: [
+      { title: "Fotografie Basics – Folge 4: Das Belichtungsdreieck", url: "https://www.youtube.com/watch?v=IC8bPtjQFSw", type: "YouTube Video", duration: "ca. 15 Min", language: "Deutsch", whenToUse: "Vor/nach Termin 1" },
+      { title: "10 ERSTE SCHRITTE in LIGHTROOM CLASSIC", url: "https://www.youtube.com/watch?v=9Tu8lqtqhiA", type: "YouTube Video + Blog", duration: "ca. 35 Min", language: "Deutsch", whenToUse: "Selbststudium bis Termin 2" },
     ],
+    materials: [],
   },
   {
     id: "02-belichtungsdreieck",
     sessionNumber: 2,
-    date: "23.04.2026",
-    title: "Das Belichtungsdreieck",
-    description:
-      "Das Herzstück der Fotografie: Blende, Verschlusszeit und ISO. Wir verstehen nicht nur die Theorie, sondern experimentieren im Fotolabor mit verschiedenen Einstellungen. Am Ende der Session könnt ihr manuell belichten und wisst, wann welche Einstellung Sinn macht.",
+    date: "30.03.2026",
+    time: "09:55-13:05",
+    room: "K115",
+    title: "Technik-Intensiv: Belichtungsdreieck, Fokus, RAW & Import",
+    schwerpunkt: "Kamera/Belichtung/Technik",
+    description: "Das Herzstück der Fotografie: Blende, Verschlusszeit und ISO im Detail. Dazu Fokus-Systeme, RAW vs. JPEG und der erste Lightroom-Import. Am Ende könnt ihr manuell belichten und wisst, warum RAW besser ist.",
     topics: [
-      "Blende (Aperture) & Schärfentiefe",
-      "Verschlusszeit & Bewegungsunschärfe",
-      "ISO & Bildrauschen",
-      "Praxis: Manueller Modus",
+      "Blende, Verschlusszeit, ISO – das Belichtungsdreieck",
+      "Fokus-Systeme: AF-S, AF-C, Spot-AF",
+      "RAW vs. JPEG – warum RAW?",
+      "Lightroom: Erster Import & Katalog",
     ],
-    materials: [
-      { name: "Slides: Belichtungsdreieck", url: "#", type: "pdf", size: "3.6 MB" },
-      { name: "Cheat Sheet: Belichtung", url: "#", type: "pdf", size: "0.8 MB" },
-      { name: "Übungsblatt Woche 2", url: "#", type: "pdf", size: "0.5 MB" },
+    projectSubmission: "Start P1 (Sport & Bewegung)",
+    homework: {
+      number: "HA2",
+      title: "Belichtungsdreieck-Experiment",
+      deadline: "12.04.2026, 23:59",
+      goal: "Zeit, Blende, ISO wirklich verstehen",
+      description: "3 Serien je 3 Bilder (Zeit/Blende/ISO variieren) + 3 Action-Bilder",
+      format: "ZIP mit 12 JPG + 1 TXT/PDF (Reflexion)",
+      learningFocus: "Belichtungsdreieck praktisch anwenden",
+    },
+    tutorials: [
+      { title: "Crashkurs für Anfänger | ISO Blende Verschlusszeit", url: "https://www.youtube.com/watch?v=yMyObFiSSIg", type: "YouTube Video", duration: "ca. 12 Min", language: "Deutsch", whenToUse: "Nach Termin 2" },
+      { title: "Belichtungsdreieck in der Praxis – Tipps am Holstentor", url: "https://www.youtube.com/watch?v=EWlHH4PPh4Y", type: "YouTube Video", duration: "ca. 10 Min", language: "Deutsch", whenToUse: "Nach Termin 2" },
+      { title: "Der Import - Adobe Lightroom Classic - 2025", url: "https://www.youtube.com/watch?v=vxLpi-DwDZA", type: "YouTube Video", duration: "ca. 8 Min", language: "Deutsch", whenToUse: "Selbststudium bis Termin 3" },
     ],
+    materials: [],
   },
   {
-    id: "03-komposition",
+    id: "03-portrait-grundlagen",
     sessionNumber: 3,
-    date: "30.04.2026",
-    title: "Bildkomposition & Gestaltungsregeln",
-    description:
-      "Ein gutes Foto ist mehr als korrekte Belichtung. Wir lernen die wichtigsten Gestaltungsregeln: Drittelregel, Goldener Schnitt, Führungslinien, Rahmen im Bild und Symmetrie. Danach geht's raus – Foto-Walk auf dem Campus mit konkreten Aufgaben.",
+    date: "13.04.2026",
+    time: "09:55-13:05",
+    room: "K115",
+    title: "Feedback P1 + Portrait-Grundlagen & Licht",
+    schwerpunkt: "Gestaltung/Licht/Portrait",
+    description: "Wir besprechen eure Sport-Fotos (P1), dann tauchen wir ein in die Portrait-Fotografie: Brennweiten, Posing-Basics, Kommunikation und wie ihr natürliches Licht für Portraits nutzt.",
     topics: [
-      "Drittelregel & Goldener Schnitt",
-      "Führungslinien & Fluchtpunkte",
-      "Symmetrie & Patterns",
-      "Foto-Walk: Campus Kompositions-Challenge",
+      "Feedback-Runde: Projekt 1 (Sport & Bewegung)",
+      "Portrait-Brennweiten & Perspektive",
+      "Posing-Basics & Kommunikation",
+      "Natürliches Licht für Portraits nutzen",
     ],
-    materials: [
-      { name: "Slides: Bildkomposition", url: "#", type: "pdf", size: "5.2 MB" },
-      { name: "Inspiration Board (Pinterest)", url: "#", type: "link" },
+    projectSubmission: "Abgabe P1 / Start P2 (Kreative Portraits)",
+    homework: {
+      number: "HA3",
+      title: "Mini-Portrait-Serie",
+      deadline: "19.04.2026, 23:59",
+      goal: "Portrait-Basics anwenden",
+      description: "3 Portraits einer Person (neutral/Umgebung/kreatives Licht) + Reflexion",
+      format: "ZIP mit 3 JPG + 1 TXT/PDF",
+      learningFocus: "Portrait-Grundlagen, Licht nutzen",
+    },
+    tutorials: [
+      { title: "10 Tipps für gute Portraitfotos – Basics", url: "https://www.youtube.com/watch?v=_U0j6IQ7W6A", type: "YouTube Video", duration: "ca. 15 Min", language: "Deutsch", whenToUse: "Vor/nach Termin 3" },
+      { title: "Simple PORTRÄT-TRICKS zum direkt anwenden", url: "https://www.youtube.com/watch?v=SNTqYx3Ioak", type: "YouTube Video", duration: "ca. 10 Min", language: "Deutsch", whenToUse: "Nach Termin 3" },
     ],
+    materials: [],
   },
   {
-    id: "04-licht",
+    id: "04-licht-farbe",
     sessionNumber: 4,
-    date: "07.05.2026",
-    title: "Licht verstehen & nutzen",
-    description:
-      "Licht ist das wichtigste Werkzeug eines Fotografen. Natural Light, Golden Hour, Blue Hour, hartes vs. weiches Licht – wir analysieren Lichtsituationen und lernen, wie man mit einfachen Mitteln (Reflektor, Diffusor) Licht kontrolliert.",
+    date: "20.04.2026",
+    time: "09:55-13:05",
+    room: "K113",
+    title: "Licht & Farbe – Tageszeiten, Weißabgleich, Farblooks",
+    schwerpunkt: "Licht/Farbe/Bildbearbeitung",
+    description: "Licht ist das wichtigste Werkzeug. Wir analysieren verschiedene Lichtsituationen über den Tag, verstehen Farbtemperatur und Weißabgleich und erstellen erste konsistente Farblooks in Lightroom.",
     topics: [
-      "Lichtqualitäten: hart vs. weich",
-      "Farbtemperatur & Weißabgleich",
-      "Golden Hour & Blue Hour",
-      "Praxis: Available Light Portraits",
+      "Lichtqualitäten über den Tag",
+      "Farbtemperatur & Weißabgleich (Kamera + LR)",
+      "Golden Hour, Blue Hour, hartes Mittagslicht",
+      "Erste Farblooks in Lightroom",
     ],
-    materials: [
-      { name: "Slides: Licht in der Fotografie", url: "#", type: "pdf", size: "4.1 MB" },
-      { name: "Golden Hour Rechner (Link)", url: "#", type: "link" },
+    projectSubmission: "–",
+    homework: {
+      number: "HA4",
+      title: "Licht-Tagebuch",
+      deadline: "26.04.2026, 23:59",
+      goal: "Verschiedene Lichtsituationen erkennen & nutzen",
+      description: "6 Fotos in unterschiedlichen Lichtsituationen + Weißabgleich-Reflexion",
+      format: "6 JPG + 1 Tabelle/TXT",
+      learningFocus: "Lichtqualität, Weißabgleich",
+    },
+    tutorials: [
+      { title: "Der Weißabgleich - Lightroom Grundlagen Tutorial", url: "https://www.youtube.com/watch?v=f3wk630TThQ", type: "YouTube Video", duration: "ca. 8 Min", language: "Deutsch", whenToUse: "Vor Termin 4" },
+      { title: "Weißabgleich mit Lightroom - Lightroom Basics Teil 1", url: "https://www.pixolum.com/blog/fotografie/weissabgleich-lightroom", type: "Blog-Artikel", duration: "ca. 5 Min Lesezeit", language: "Deutsch", whenToUse: "Selbststudium" },
     ],
+    materials: [],
   },
   {
-    id: "05-portrait",
+    id: "05-streetfotografie",
     sessionNumber: 5,
-    date: "14.05.2026",
-    title: "Porträtfotografie",
-    description:
-      "People Photography! Von der richtigen Brennweite über Posing-Basics bis zur Kommunikation mit dem Model. Wir üben uns gegenseitig zu fotografieren und lernen, wie man Menschen vor der Kamera zum Strahlen bringt.",
+    date: "27.04.2026",
+    time: "09:55-13:05",
+    room: "K115",
+    title: "Feedback P2 + Einstieg Streetfotografie",
+    schwerpunkt: "Gestaltung/Story/Street",
+    description: "Wir besprechen eure Portrait-Arbeiten (P2), dann steigen wir ein in die Streetfotografie: Bildaussage, Komposition im urbanen Raum, Ethik und rechtliche Aspekte. Keine Angst vor der Straße!",
     topics: [
-      "Brennweiten für Portraits",
-      "Posing-Grundlagen",
-      "Kommunikation mit dem Model",
-      "Studio-Setup: 1-Licht-Portrait",
+      "Feedback-Runde: Projekt 2 (Kreative Portraits)",
+      "Streetfotografie: Was macht ein gutes Street-Foto?",
+      "Komposition im urbanen Raum",
+      "Ethik & Recht: Fotografieren im öffentlichen Raum",
     ],
-    materials: [
-      { name: "Slides: Porträtfotografie", url: "#", type: "pdf", size: "6.3 MB" },
-      { name: "Posing Guide", url: "#", type: "pdf", size: "2.1 MB" },
+    projectSubmission: "Abgabe P2 / Start P3 (Urban Street)",
+    homework: {
+      number: "HA5",
+      title: "Street ohne Gesichter",
+      deadline: "03.05.2026, 23:59",
+      goal: "Street üben ohne Stress durch Portraitrechte",
+      description: "6 Street-Fotos ohne erkennbare Gesichter (Silhouetten, Hände, Schatten)",
+      format: "ZIP mit 6 JPG + 1 TXT/PDF",
+      learningFocus: "Streetfotografie, Bildaussage",
+    },
+    tutorials: [
+      { title: "8 Streetfotografie Tipps für Anfänger & Fortgeschrittene", url: "https://www.youtube.com/watch?v=9kwSo2NqK58", type: "YouTube Video", duration: "ca. 12 Min", language: "Deutsch", whenToUse: "Vor/nach Termin 5" },
+      { title: "Streetfotografie in Deutschland ohne Angst", url: "https://www.youtube.com/watch?v=X6Q2m4WJdTE", type: "YouTube Video", duration: "ca. 10 Min", language: "Deutsch", whenToUse: "Vor Termin 5" },
     ],
+    materials: [],
   },
   {
-    id: "06-landschaft",
+    id: "06-lightroom-lab",
     sessionNumber: 6,
-    date: "21.05.2026",
-    title: "Landschafts- & Architekturfotografie",
-    description:
-      "Raus in die Natur! Wir besprechen Techniken für Landschaftsaufnahmen: Stativ-Einsatz, Langzeitbelichtung, Filter und HDR. Dazu gibt's einen Exkurs in Architekturfotografie mit Fokus auf Linien und Perspektive.",
+    date: "04.05.2026",
+    time: "09:55-13:05",
+    room: "K115",
+    title: "Lightroom-Lab I – Organisieren, Masken, erste Looks",
+    schwerpunkt: "Bildbearbeitung/Workflow",
+    description: "Hands-on Lightroom Session: Katalog organisieren, mit Masken arbeiten (Himmel, Gesichter, Objekte selektiv bearbeiten) und einen einheitlichen Look für eine Bilderserie erstellen.",
     topics: [
-      "Stativ & Langzeitbelichtung",
-      "ND-Filter & Polfilter",
-      "HDR-Technik",
-      "Architektur: Perspektivkorrektur",
+      "Lightroom: Katalog & Sammlungen organisieren",
+      "Masken: Himmel, Motive, Pinsel",
+      "Serien-Look: Konsistente Bearbeitung",
+      "Presets erstellen & anwenden",
     ],
-    materials: [
-      { name: "Slides: Landschaft & Architektur", url: "#", type: "pdf", size: "5.7 MB" },
+    projectSubmission: "–",
+    homework: {
+      number: "HA6",
+      title: "Masken & Look",
+      deadline: "10.05.2026, 23:59",
+      goal: "Masken in Lightroom gezielt einsetzen",
+      description: "5 Fotos mit Masken bearbeiten + einheitlichen Look erstellen (Before/After)",
+      format: "ZIP mit 10 JPG (Vorher/Nachher)",
+      learningFocus: "Lightroom Masken, Serien-Look",
+    },
+    tutorials: [
+      { title: "Lightroom Masken – Der ultimative Guide", url: "https://weblog.datenwerk.at/lightroom-masken-der-ultimative-guide", type: "Blog-Artikel", duration: "ca. 10 Min Lesezeit", language: "Deutsch", whenToUse: "Vor/nach Termin 6" },
     ],
+    materials: [],
   },
   {
-    id: "07-lightroom",
+    id: "07-storytelling",
     sessionNumber: 7,
-    date: "28.05.2026",
-    title: "Adobe Lightroom: RAW-Entwicklung",
-    description:
-      "Der digitale Dunkelraum. Warum RAW statt JPEG? Wir lernen Lightroom von Grund auf: Import, Katalogisierung, Grundentwicklung, Farbanpassungen und Export. Jeder bringt eigene Fotos mit und bearbeitet live.",
+    date: "11.05.2026",
+    time: "09:55-13:05",
+    room: "K115",
+    title: "Feedback P3 + Serien & Storytelling",
+    schwerpunkt: "Gestaltung/Story/Serien",
+    description: "Wir besprechen eure Street-Fotos (P3), dann geht's um das große Thema Storytelling: Wie erzählt man Geschichten mit Bildern? Serien planen, Dramaturgie aufbauen und ein Ereignis dokumentarisch festhalten.",
     topics: [
-      "RAW vs. JPEG",
-      "Lightroom: Import & Katalog",
-      "Grundentwicklung & Tonwerte",
-      "Farb-Grading & Presets",
+      "Feedback-Runde: Projekt 3 (Urban Street)",
+      "Visuelles Storytelling: Grundlagen",
+      "Bildserien: Planung & Dramaturgie",
+      "Dokumentarische Fotografie",
     ],
-    materials: [
-      { name: "Slides: Lightroom Workflow", url: "#", type: "pdf", size: "3.9 MB" },
-      { name: "Starter Presets Pack", url: "#", type: "zip", size: "12.4 MB" },
-      { name: "RAW-Übungsdateien", url: "#", type: "zip", size: "89.2 MB" },
-    ],
+    projectSubmission: "Abgabe P3 / Start P4 (Ereignis-Doku)",
+    homework: {
+      number: "HA7",
+      title: "Ereignis-Skizze",
+      deadline: "17.05.2026, 23:59",
+      goal: "Dokumentarische Serie vorher planen",
+      description: "Storyboard-Sequenz (10-15 Bilder) + 3 Testfotos",
+      format: "1 PDF (Storyboard + Testbilder)",
+      learningFocus: "Planung, Storytelling",
+    },
+    tutorials: [],
+    materials: [],
   },
   {
-    id: "08-photoshop",
+    id: "08-langzeitbelichtung",
     sessionNumber: 8,
-    date: "04.06.2026",
-    title: "Adobe Photoshop: Retusche & Composing",
-    description:
-      "Fortgeschrittene Bildbearbeitung in Photoshop. Wir lernen Ebenen, Masken, Frequenztrennung für Hautretusche und einfache Composings. Wann braucht man Photoshop und wann reicht Lightroom?",
+    date: "18.05.2026",
+    time: "09:55-13:05",
+    room: "K115",
+    title: "Langzeitbelichtung & kreative Nachtfotografie",
+    schwerpunkt: "Kamera/Technik/Kreativ",
+    description: "Stativ raus! Wir experimentieren mit langen Belichtungszeiten: Lichtspuren, weiches Wasser, Sternenhimmel und kreative Light-Painting-Effekte. Theorie und sofortige Praxis.",
     topics: [
-      "Ebenen & Masken",
-      "Frequenztrennung (Hautretusche)",
-      "Dodge & Burn",
-      "Einfaches Composing",
+      "Langzeitbelichtung: Technik & Einstellungen",
+      "Stativ, Fernauslöser, ND-Filter",
+      "Lichtspuren, Wasser, Wolken",
+      "Light Painting & kreative Nacht-Experimente",
     ],
-    materials: [
-      { name: "Slides: Photoshop Retusche", url: "#", type: "pdf", size: "4.5 MB" },
-      { name: "Übungsdateien Retusche", url: "#", type: "zip", size: "34.7 MB" },
+    projectSubmission: "Start P5 (Langzeitbelichtung)",
+    homework: {
+      number: "HA8",
+      title: "LZB-Experimente indoor/outdoor",
+      deadline: "24.05.2026, 23:59",
+      goal: "Erste Erfahrungen mit Langzeitbelichtung",
+      description: "3 LZB-Fotos (Lichtspuren/Wasser/Experiment, ≥3s)",
+      format: "ZIP mit 3 JPG + TXT (Einstellungen)",
+      learningFocus: "Langzeitbelichtung, Stativ-Arbeit",
+    },
+    tutorials: [
+      { title: "Langzeitbelichtung - Der ultimative Guide [2026]", url: "https://www.matthiashaltenhof.de/tutorials/langzeitbelichtung/", type: "Blog-Artikel", duration: "ca. 12 Min Lesezeit", language: "Deutsch", whenToUse: "Vor Termin 8" },
+      { title: "Langzeitbelichtung am Tag: Schritt-für-Schritt Anleitung", url: "https://www.suitcaseandwanderlust.com/langzeitbelichtung-am-tag/", type: "Blog-Artikel", duration: "ca. 8 Min Lesezeit", language: "Deutsch", whenToUse: "Vor Termin 8" },
     ],
+    materials: [],
   },
   {
-    id: "09-storytelling",
+    id: "09-workflow-recht",
     sessionNumber: 9,
-    date: "11.06.2026",
-    title: "Visuelles Storytelling & Reportage",
-    description:
-      "Ein Foto erzählt eine Geschichte. Wir beschäftigen uns mit Bildserien, Reportage-Fotografie und wie man mit Bildern Emotionen transportiert. Gastvortrag: Einblicke in die Hochzeitsfotografie als visuelles Storytelling.",
+    date: "01.06.2026",
+    time: "09:55-13:05",
+    room: "K115",
+    title: "Workflow, Recht, UX & Start Abschlussarbeit",
+    schwerpunkt: "Workflow/Recht/UX",
+    description: "Wir definieren euren persönlichen Foto-Workflow (Import → Auswahl → Bearbeitung → Export → Backup), besprechen Urheberrecht und Bildrechte und starten offiziell in die Abschlussarbeit.",
     topics: [
-      "Storytelling mit Bildern",
-      "Reportage-Fotografie",
-      "Bildserien & Editing",
-      "Gastvortrag: Hochzeitsfotografie",
+      "Persönlicher Foto-Workflow definieren",
+      "Urheberrecht & Bildrechte in Deutschland",
+      "Backup-Strategien & Katalogpflege",
+      "Briefing: Abschlussarbeit",
     ],
-    materials: [
-      { name: "Slides: Visuelles Storytelling", url: "#", type: "pdf", size: "5.0 MB" },
-      { name: "Gastvortrag Recording", url: "#", type: "video" },
+    projectSubmission: "Abgabe P4 / Start Abschlussarbeit",
+    homework: {
+      number: "HA9",
+      title: "Mein Foto-Workflow",
+      deadline: "07.06.2026, 23:59",
+      goal: "Eigenen Workflow definieren",
+      description: "Workflow-Diagramm + Screenshot Katalog + 3 Verbesserungspunkte",
+      format: "1 PDF (Diagramm + Screenshot)",
+      learningFocus: "Workflow, Organisation, Backup",
+    },
+    tutorials: [
+      { title: "Organisation in Lightroom - Fotografie Projekte organisieren", url: "https://www.annamardo.de/lightroom-organisation/", type: "Blog-Artikel", duration: "ca. 6 Min Lesezeit", language: "Deutsch", whenToUse: "Vor/nach Termin 9" },
+      { title: "Mastering Photography Workflow: Ein umfassender Leitfaden", url: "https://www.format.com/de/magazine/resources/photography/mastering-photography-workflow-guide/", type: "Blog-Artikel", duration: "ca. 10 Min Lesezeit", language: "Deutsch", whenToUse: "Selbststudium" },
     ],
+    materials: [],
   },
   {
-    id: "10-projekt",
+    id: "10-konzeptwerkstatt",
     sessionNumber: 10,
-    date: "18.06.2026",
-    title: "Projektarbeit & Beratung",
-    description:
-      "Freie Session für eure Semesterprojekte. Individuelle Beratung zu euren Portfolio-Arbeiten, offene Fragen klären, gemeinsames Feedback in der Gruppe. Vorbereitung auf die finale Präsentation.",
+    date: "08.06.2026",
+    time: "09:55-13:05",
+    room: "K115",
+    title: "Konzeptwerkstatt Abschlussarbeit + freies Shooting",
+    schwerpunkt: "Konzept/Story",
+    description: "Heute wird's konkret: Ihr stellt eure Themenskizzen vor, bekommt Feedback und verfeinert euer Konzept. Danach freies Shooting für die Abschlussarbeit mit individueller Beratung.",
     topics: [
-      "Individuelle Projektberatung",
-      "Peer-Review in Kleingruppen",
-      "Portfolio-Aufbau Tipps",
-      "Technische Fragen klären",
+      "Themenskizzen vorstellen & Feedback",
+      "Konzept verfeinern & Machbarkeit prüfen",
+      "Freies Shooting: Testbilder",
+      "Individuelle Beratung",
     ],
-    materials: [
-      { name: "Portfolio-Template", url: "#", type: "zip", size: "8.3 MB" },
-      { name: "Bewertungskriterien", url: "#", type: "pdf", size: "0.4 MB" },
-    ],
+    projectSubmission: "M1: Themenskizze Abschlussarbeit",
+    homework: {
+      number: "HA10",
+      title: "Konzept-Finishing & Testshots",
+      deadline: "14.06.2026, 23:59",
+      goal: "Konzept konkret machen",
+      description: "1-seitiges Konzept + 4-6 Testfotos Abschlussarbeit",
+      format: "1 PDF (Konzept + Bilder)",
+      learningFocus: "Konzeptarbeit, Machbarkeit",
+    },
+    tutorials: [],
+    materials: [],
   },
   {
-    id: "11-praesentationen",
+    id: "11-retusche-look",
     sessionNumber: 11,
-    date: "25.06.2026",
-    title: "Abschlusspräsentationen & Portfolio-Review",
-    description:
-      "Der große Abschluss! Ihr präsentiert eure Semester-Portfolios vor der Gruppe. Konstruktives Feedback, Diskussion und Ausblick – was kommt nach dem Kurs? Möglichkeiten in der Fotografie, Community und Weiterbildung.",
+    date: "15.06.2026",
+    time: "09:55-13:05",
+    room: "K115",
+    title: "LR/PS-Vertiefung, Retusche & konsistenter Look",
+    schwerpunkt: "Bildbearbeitung/Technik",
+    description: "Fortgeschrittene Bearbeitung: Retusche-Techniken, Schärfen, Rauschreduzierung und wie ihr einen konsistenten Look über eure gesamte Abschluss-Serie hinbekommt. Lightroom + Photoshop im Zusammenspiel.",
     topics: [
-      "Portfolio-Präsentationen",
-      "Grupppen-Feedback & Diskussion",
+      "Retusche in Lightroom & Photoshop",
+      "Schärfen & Rauschreduzierung",
+      "Konsistenter Look für die Serie",
+      "Before/After Workflow",
+    ],
+    projectSubmission: "Abgabe P5 / M2: Rohserie (4-6 Bilder)",
+    homework: {
+      number: "HA11",
+      title: "Before/After Abschlussarbeit",
+      deadline: "21.06.2026, 23:59",
+      goal: "Bearbeitung als kreatives Werkzeug nutzen",
+      description: "2 Bilder Before/After + Reflexion Bearbeitungsschritte",
+      format: "1 PDF (Vorher/Nachher)",
+      learningFocus: "Retusche, Schärfen, Look",
+    },
+    tutorials: [
+      { title: "So schärfst du richtig in Adobe Lightroom", url: "https://www.youtube.com/watch?v=GU0WhDyQ4vg", type: "YouTube Video", duration: "ca. 8 Min", language: "Deutsch", whenToUse: "Vor Termin 11" },
+      { title: "Retuschieren von Fotos in Lightroom Classic", url: "https://helpx.adobe.com/de/lightroom-classic/help/retouch-photos.html", type: "Adobe Help", duration: "ca. 5 Min Lesezeit", language: "Deutsch", whenToUse: "Selbststudium" },
+    ],
+    materials: [],
+  },
+  {
+    id: "12-praesentation-portfolio",
+    sessionNumber: 12,
+    date: "22.06.2026",
+    time: "09:55-13:05",
+    room: "K115",
+    title: "Präsentation, Portfolio & Generalprobe",
+    schwerpunkt: "Präsentation/Portfolio",
+    description: "Generalprobe für die Prüfung! Ihr stellt eure nahezu fertige Serie vor, übt die Präsentation und bekommt letztes Feedback. Dazu Tipps für Portfolio-Aufbau und Bildreihenfolge.",
+    topics: [
+      "Generalprobe: Serie präsentieren",
+      "Feedback & letzte Korrekturen",
+      "Portfolio-Aufbau & Bildreihenfolge",
+      "Prüfungsvorbereitung: Ablauf & Tipps",
+    ],
+    projectSubmission: "M3: Nahezu fertige Serie (8-12 Bilder)",
+    homework: {
+      number: "HA12",
+      title: "Prüfungs-Skript & Bildreihenfolge",
+      deadline: "27.06.2026, 23:59",
+      goal: "Sicher in Präsentation gehen",
+      description: "Endgültige Bildreihenfolge + Stichwort-Skript + PDF-Portfolio",
+      format: "1 PDF (Serie + Skript)",
+      learningFocus: "Präsentationsvorbereitung",
+    },
+    tutorials: [],
+    materials: [],
+  },
+  {
+    id: "13-pruefung",
+    sessionNumber: 13,
+    date: "29.06.2026",
+    time: "09:55-13:05",
+    room: "K115",
+    title: "Prüfungs-Session & Retrospektive",
+    schwerpunkt: "Prüfung",
+    description: "Der große Tag! Ihr präsentiert eure Abschlussarbeiten (8-12 Bilder als zusammenhängende Serie). Danach Retrospektive: Was habt ihr gelernt? Wie geht's weiter mit der Fotografie?",
+    topics: [
+      "Prüfungspräsentationen",
+      "Bewertung & Feedback",
+      "Kurs-Retrospektive",
       "Ausblick: Wege in der Fotografie",
-      "Kursabschluss & Feedback",
     ],
-    materials: [
-      { name: "Abschluss-Infos & Noten", url: "#", type: "pdf", size: "0.3 MB" },
-    ],
+    projectSubmission: "Prüfung: Abschlussarbeit",
+    homework: null,
+    tutorials: [],
+    materials: [],
   },
 ];
 
 // ============================================================
-// COMPUTED EXPORTS – Status is calculated from dates, not stored
+// COMPUTED EXPORTS
 // ============================================================
 
-/** All sessions with time-based status (recalculated on every import/render) */
 export const courseSessions: CourseSession[] = calculateSessionStatuses(rawSessions);
 
 export function getSessionById(id: string): CourseSession | undefined {
