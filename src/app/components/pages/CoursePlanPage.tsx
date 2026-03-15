@@ -9,11 +9,23 @@ import {
   Radio,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { courseSessions, getProgressPercent, getCompletedCount } from "../course-data";
+import { useCourse } from "../CourseContext";
 
 export function CoursePlanPage() {
-  const progress = getProgressPercent();
+  const { sessions, getProgress, getCompletedCount, loading } = useCourse();
+  const progress = getProgress();
   const completed = getCompletedCount();
+
+  if (loading) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-violet-500/20 border-t-violet-500" />
+          <p className="text-[0.85rem] text-white/30">Kursplan wird geladen...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16">
@@ -28,7 +40,7 @@ export function CoursePlanPage() {
           Kursplan
         </h1>
         <p className="mb-6 text-[0.9rem] text-white/40">
-          {courseSessions.length} Sessions · {completed} abgeschlossen
+          {sessions.length} Sessions · {completed} abgeschlossen
         </p>
 
         {/* Progress bar */}
@@ -51,7 +63,7 @@ export function CoursePlanPage() {
         <div className="absolute left-[1.05rem] top-2 bottom-2 w-px bg-white/[0.06] sm:left-[1.55rem]" />
 
         <div className="flex flex-col gap-2">
-          {courseSessions.map((session, i) => (
+          {sessions.map((session, i) => (
             <motion.div
               key={session.id}
               initial={{ opacity: 0, x: -10 }}

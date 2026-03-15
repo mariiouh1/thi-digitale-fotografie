@@ -29,6 +29,15 @@
  *    - credits (text): "5 ECTS"
  *    - hero_image (text): ImageKit URL
  *    - highlights (textarea): One per line
+ *    - hero_badge_text (text): "Neu"
+ *    - cta_primary_text (text): "Anmelden"
+ *    - cta_secondary_text (text): "Mehr Informationen"
+ *    - announcement (textarea): "Kurs beginnt bald!"
+ *    - announcement_type (option): "info" | "warning" | "success" | ""
+ *    - section_title_progress (text): "Fortschritt"
+ *    - section_title_instructor (text): "Dozent"
+ *    - section_title_highlights (text): "Highlights"
+ *    - section_title_next_sessions (text): "Nächste Sitzungen"
  * 
  * 2. "course_session" (Collection – Mario creates one per Kurstermin) – Fields:
  *    - session_number (number): 1, 2, 3...
@@ -82,6 +91,16 @@ export interface CourseInfo {
   credits: string;
   heroImage: string;
   highlights: string[];
+  // Landing Page Controls
+  heroBadgeText: string;
+  ctaPrimaryText: string;
+  ctaSecondaryText: string;
+  announcement: string;
+  announcementType: "info" | "warning" | "success" | "";
+  sectionTitleProgress: string;
+  sectionTitleInstructor: string;
+  sectionTitleHighlights: string;
+  sectionTitleNextSessions: string;
 }
 
 // ============================================================
@@ -158,6 +177,16 @@ export const courseInfo: CourseInfo = {
     "Portfolio-Review am Semesterende",
     "Gastvorträge von Branchenprofis",
   ],
+  // Landing Page Controls
+  heroBadgeText: "Neu",
+  ctaPrimaryText: "Anmelden",
+  ctaSecondaryText: "Mehr Informationen",
+  announcement: "Kurs beginnt bald!",
+  announcementType: "info",
+  sectionTitleProgress: "Fortschritt",
+  sectionTitleInstructor: "Dozent",
+  sectionTitleHighlights: "Highlights",
+  sectionTitleNextSessions: "Nächste Sitzungen",
 };
 
 // Raw session data (as it comes from Storyblok – NO status field)

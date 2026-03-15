@@ -14,7 +14,8 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { getSessionById, courseSessions, type CourseMaterial } from "../course-data";
+import { useCourse } from "../CourseContext";
+import type { CourseMaterial } from "../course-data";
 
 function getMaterialIcon(type: CourseMaterial["type"]) {
   switch (type) {
@@ -71,7 +72,19 @@ function getStatusBadge(status: string) {
 
 export function SessionDetailPage() {
   const { sessionId } = useParams();
+  const { sessions, getSessionById, loading } = useCourse();
   const session = getSessionById(sessionId || "");
+
+  if (loading) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-violet-500/20 border-t-violet-500" />
+          <p className="text-[0.85rem] text-white/30">Session wird geladen...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!session) {
     return (
@@ -91,9 +104,9 @@ export function SessionDetailPage() {
   }
 
   // Find prev/next sessions
-  const currentIndex = courseSessions.findIndex((s) => s.id === session.id);
-  const prevSession = currentIndex > 0 ? courseSessions[currentIndex - 1] : null;
-  const nextSession = currentIndex < courseSessions.length - 1 ? courseSessions[currentIndex + 1] : null;
+  const currentIndex = sessions.findIndex((s) => s.id === session.id);
+  const prevSession = currentIndex > 0 ? sessions[currentIndex - 1] : null;
+  const nextSession = currentIndex < sessions.length - 1 ? sessions[currentIndex + 1] : null;
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12">

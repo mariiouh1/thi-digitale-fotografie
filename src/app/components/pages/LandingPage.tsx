@@ -9,16 +9,92 @@ import {
   Sparkles,
   BookOpen,
   CheckCircle2,
+  Info,
+  AlertTriangle,
+  X,
 } from "lucide-react";
-import { motion } from "motion/react";
-import { courseInfo, courseSessions, getProgressPercent, getCurrentSession } from "../course-data";
+import { motion, AnimatePresence } from "motion/react";
+import { useCourse } from "../CourseContext";
+import { useState } from "react";
+
+const announcementStyles = {
+  info: {
+    bg: "bg-blue-500/10 border-blue-500/20",
+    text: "text-blue-300",
+    icon: Info,
+  },
+  warning: {
+    bg: "bg-amber-500/10 border-amber-500/20",
+    text: "text-amber-300",
+    icon: AlertTriangle,
+  },
+  success: {
+    bg: "bg-emerald-500/10 border-emerald-500/20",
+    text: "text-emerald-300",
+    icon: CheckCircle2,
+  },
+};
 
 export function LandingPage() {
+  const { courseInfo, sessions, getProgress, getCurrentSession, loading } = useCourse();
   const currentSession = getCurrentSession();
-  const progress = getProgressPercent();
+  const progress = getProgress();
+  const [announcementDismissed, setAnnouncementDismissed] = useState(false);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-violet-500/20 border-t-violet-500" />
+          <p className="text-[0.85rem] text-white/30">Kursdaten werden geladen...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const showAnnouncement =
+    !announcementDismissed &&
+    courseInfo.announcement &&
+    courseInfo.announcement.trim().length > 0 &&
+    courseInfo.announcementType &&
+    courseInfo.announcementType in announcementStyles;
+
+  const announcementStyle = courseInfo.announcementType
+    ? announcementStyles[courseInfo.announcementType as keyof typeof announcementStyles]
+    : null;
 
   return (
     <div>
+      {/* Announcement Banner (editable in Storyblok) */}
+      <AnimatePresence>
+        {showAnnouncement && announcementStyle && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+          >
+            <div className={`border-b ${announcementStyle.bg}`}>
+              <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
+                <div className="flex items-center gap-3">
+                  <announcementStyle.icon className={`h-4 w-4 flex-shrink-0 ${announcementStyle.text}`} />
+                  <p className={`text-[0.82rem] ${announcementStyle.text}`}>
+                    {courseInfo.announcement}
+                  </p>
+                </div>
+                <button
+                  onClick={() => setAnnouncementDismissed(true)}
+                  className="flex-shrink-0 rounded-lg p-1 text-white/30 transition-colors hover:bg-white/5 hover:text-white/60"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         {/* Background image with overlay */}
@@ -39,14 +115,21 @@ export function LandingPage() {
             transition={{ duration: 0.6 }}
             className="max-w-2xl"
           >
+            {/* Badge (editable: heroBadgeText or falls back to semester) */}
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1">
               <Sparkles className="h-3.5 w-3.5 text-violet-400" />
-              <span className="text-[0.75rem] text-violet-300">{courseInfo.semester}</span>
+              <span className="text-[0.75rem] text-violet-300">
+                {courseInfo.heroBadgeText || courseInfo.semester}
+              </span>
             </div>
 
             <h1 className="mb-4 text-[2.5rem] tracking-tight text-white sm:text-[3.2rem]" style={{ lineHeight: 1.1 }}>
               {courseInfo.title}
             </h1>
+
+            {courseInfo.subtitle && (
+              <p className="mb-2 text-[1.1rem] text-violet-300/70">{courseInfo.subtitle}</p>
+            )}
 
             <p className="mb-8 max-w-lg text-[1rem] text-white/50" style={{ lineHeight: 1.7 }}>
               {courseInfo.description}
@@ -58,7 +141,7 @@ export function LandingPage() {
                 className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-2.5 text-[0.85rem] text-white transition-all hover:from-violet-500 hover:to-indigo-500 hover:shadow-lg hover:shadow-violet-500/20"
               >
                 <BookOpen className="h-4 w-4" />
-                Zum Kursplan
+                {courseInfo.ctaPrimaryText || "Zum Kursplan"}
                 <ArrowRight className="h-4 w-4" />
               </Link>
 
@@ -67,7 +150,7 @@ export function LandingPage() {
                   to={`/kursplan/${currentSession.id}`}
                   className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-5 py-2.5 text-[0.85rem] text-white/70 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
                 >
-                  Aktuelle Session →
+                  {courseInfo.ctaSecondaryText || "Aktuelle Session"} →
                 </Link>
               )}
             </div>
@@ -82,7 +165,7 @@ export function LandingPage() {
             { icon: Calendar, label: "Zeitraum", value: courseInfo.schedule },
             { icon: MapPin, label: "Raum", value: courseInfo.room },
             { icon: GraduationCap, label: "Credits", value: courseInfo.credits },
-            { icon: Clock, label: "Sessions", value: `${courseSessions.length} Kurstermine` },
+            { icon: Clock, label: "Sessions", value: `${sessions.length} Kurstermine` },
           ].map((item, i) => (
             <motion.div
               key={item.label}
@@ -111,7 +194,9 @@ export function LandingPage() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 lg:col-span-2"
           >
-            <h3 className="mb-4 text-[0.8rem] text-white/40 uppercase tracking-wider">Kursfortschritt</h3>
+            <h3 className="mb-4 text-[0.8rem] text-white/40 uppercase tracking-wider">
+              {courseInfo.sectionTitleProgress || "Kursfortschritt"}
+            </h3>
             
             {/* Progress bar */}
             <div className="mb-3 h-2 overflow-hidden rounded-full bg-white/[0.06]">
@@ -123,7 +208,7 @@ export function LandingPage() {
               />
             </div>
             <p className="mb-6 text-[0.8rem] text-white/40">
-              {progress}% abgeschlossen · Session {courseSessions.findIndex(s => s.status === "current") + 1} von {courseSessions.length}
+              {progress}% abgeschlossen · Session {sessions.findIndex(s => s.status === "current") + 1} von {sessions.length}
             </p>
 
             {/* Current session teaser */}
@@ -146,7 +231,9 @@ export function LandingPage() {
             transition={{ duration: 0.5, delay: 0.4 }}
             className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 lg:col-span-3"
           >
-            <h3 className="mb-5 text-[0.8rem] text-white/40 uppercase tracking-wider">Dozent</h3>
+            <h3 className="mb-5 text-[0.8rem] text-white/40 uppercase tracking-wider">
+              {courseInfo.sectionTitleInstructor || "Dozent"}
+            </h3>
             
             <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
               <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-2xl bg-white/[0.06]">
@@ -169,26 +256,30 @@ export function LandingPage() {
       </section>
 
       {/* Course Highlights */}
-      <section className="mx-auto mt-16 max-w-6xl px-4 sm:px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-        >
-          <h2 className="mb-6 text-[0.8rem] text-white/40 uppercase tracking-wider">Kurs-Highlights</h2>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {courseInfo.highlights.map((highlight, i) => (
-              <div
-                key={i}
-                className="flex items-start gap-3 rounded-xl border border-white/[0.06] bg-white/[0.02] p-4"
-              >
-                <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-400/60" />
-                <span className="text-[0.85rem] text-white/60">{highlight}</span>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-      </section>
+      {courseInfo.highlights.length > 0 && (
+        <section className="mx-auto mt-16 max-w-6xl px-4 sm:px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+          >
+            <h2 className="mb-6 text-[0.8rem] text-white/40 uppercase tracking-wider">
+              {courseInfo.sectionTitleHighlights || "Kurs-Highlights"}
+            </h2>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {courseInfo.highlights.map((highlight, i) => (
+                <div
+                  key={i}
+                  className="flex items-start gap-3 rounded-xl border border-white/[0.06] bg-white/[0.02] p-4"
+                >
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-400/60" />
+                  <span className="text-[0.85rem] text-white/60">{highlight}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </section>
+      )}
 
       {/* Quick Access: Nächste Sessions */}
       <section className="mx-auto mt-16 max-w-6xl px-4 sm:px-6">
@@ -198,7 +289,9 @@ export function LandingPage() {
           transition={{ duration: 0.5, delay: 0.6 }}
         >
           <div className="mb-6 flex items-center justify-between">
-            <h2 className="text-[0.8rem] text-white/40 uppercase tracking-wider">Nächste Sessions</h2>
+            <h2 className="text-[0.8rem] text-white/40 uppercase tracking-wider">
+              {courseInfo.sectionTitleNextSessions || "Nächste Sessions"}
+            </h2>
             <Link
               to="/kursplan"
               className="flex items-center gap-1 text-[0.8rem] text-violet-400 transition-colors hover:text-violet-300"
@@ -207,7 +300,7 @@ export function LandingPage() {
             </Link>
           </div>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {courseSessions
+            {sessions
               .filter((s) => s.status === "current" || s.status === "upcoming")
               .slice(0, 3)
               .map((session) => (

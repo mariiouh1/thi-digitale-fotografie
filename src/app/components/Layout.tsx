@@ -2,6 +2,7 @@ import { Outlet, Link, useLocation } from "react-router";
 import { Camera, Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { CourseProvider } from "./CourseContext";
 
 export function Layout() {
   const location = useLocation();
@@ -102,7 +103,9 @@ export function Layout() {
 
       {/* Main Content */}
       <main>
-        <Outlet />
+        <CourseProvider>
+          <Outlet />
+        </CourseProvider>
       </main>
 
       {/* Footer */}
