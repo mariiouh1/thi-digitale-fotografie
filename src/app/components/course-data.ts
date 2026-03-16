@@ -52,6 +52,7 @@ export interface CourseSessionRaw {
   homework: CourseHomework | null;
   tutorials: CourseTutorial[];
   materials: CourseMaterial[];
+  galleryFolderId: string; // Google Drive folder ID for session gallery
 }
 
 export type SessionStatus = "upcoming" | "completed" | "current";
@@ -84,6 +85,9 @@ export interface CourseInfo {
   sectionTitleInstructor: string;
   sectionTitleHighlights: string;
   sectionTitleNextSessions: string;
+  // Gallery
+  galleryFolderId: string; // Google Drive folder ID for homepage gallery
+  galleryPassword: string; // Password to unlock all galleries
 }
 
 // ============================================================
@@ -162,6 +166,9 @@ export const courseInfo: CourseInfo = {
   sectionTitleInstructor: "Dozent",
   sectionTitleHighlights: "Kurs-Highlights",
   sectionTitleNextSessions: "Nächste Sessions",
+  // Gallery
+  galleryFolderId: "", // Mario: Google Drive Folder ID hier eintragen
+  galleryPassword: "", // Mario: Galerie-Passwort hier eintragen
 };
 
 const rawSessions: CourseSessionRaw[] = [
@@ -195,6 +202,7 @@ const rawSessions: CourseSessionRaw[] = [
       { title: "10 ERSTE SCHRITTE in LIGHTROOM CLASSIC", url: "https://www.youtube.com/watch?v=9Tu8lqtqhiA", type: "YouTube Video + Blog", duration: "ca. 35 Min", language: "Deutsch", whenToUse: "Selbststudium bis Termin 2" },
     ],
     materials: [],
+    galleryFolderId: "", // Mario: Google Drive Folder ID für Session 1
   },
   {
     id: "02-belichtungsdreieck",
@@ -227,6 +235,7 @@ const rawSessions: CourseSessionRaw[] = [
       { title: "Der Import - Adobe Lightroom Classic - 2025", url: "https://www.youtube.com/watch?v=vxLpi-DwDZA", type: "YouTube Video", duration: "ca. 8 Min", language: "Deutsch", whenToUse: "Selbststudium bis Termin 3" },
     ],
     materials: [],
+    galleryFolderId: "", // Mario: Google Drive Folder ID für Session 2
   },
   {
     id: "03-portrait-grundlagen",
@@ -258,6 +267,7 @@ const rawSessions: CourseSessionRaw[] = [
       { title: "Simple PORTRÄT-TRICKS zum direkt anwenden", url: "https://www.youtube.com/watch?v=SNTqYx3Ioak", type: "YouTube Video", duration: "ca. 10 Min", language: "Deutsch", whenToUse: "Nach Termin 3" },
     ],
     materials: [],
+    galleryFolderId: "", // Mario: Google Drive Folder ID für Session 3
   },
   {
     id: "04-licht-farbe",
@@ -289,6 +299,7 @@ const rawSessions: CourseSessionRaw[] = [
       { title: "Weißabgleich mit Lightroom - Lightroom Basics Teil 1", url: "https://www.pixolum.com/blog/fotografie/weissabgleich-lightroom", type: "Blog-Artikel", duration: "ca. 5 Min Lesezeit", language: "Deutsch", whenToUse: "Selbststudium" },
     ],
     materials: [],
+    galleryFolderId: "", // Mario: Google Drive Folder ID für Session 4
   },
   {
     id: "05-streetfotografie",
@@ -320,6 +331,7 @@ const rawSessions: CourseSessionRaw[] = [
       { title: "Streetfotografie in Deutschland ohne Angst", url: "https://www.youtube.com/watch?v=X6Q2m4WJdTE", type: "YouTube Video", duration: "ca. 10 Min", language: "Deutsch", whenToUse: "Vor Termin 5" },
     ],
     materials: [],
+    galleryFolderId: "", // Mario: Google Drive Folder ID für Session 5
   },
   {
     id: "06-lightroom-lab",
@@ -350,6 +362,7 @@ const rawSessions: CourseSessionRaw[] = [
       { title: "Lightroom Masken – Der ultimative Guide", url: "https://weblog.datenwerk.at/lightroom-masken-der-ultimative-guide", type: "Blog-Artikel", duration: "ca. 10 Min Lesezeit", language: "Deutsch", whenToUse: "Vor/nach Termin 6" },
     ],
     materials: [],
+    galleryFolderId: "", // Mario: Google Drive Folder ID für Session 6
   },
   {
     id: "07-storytelling",
@@ -378,6 +391,7 @@ const rawSessions: CourseSessionRaw[] = [
     },
     tutorials: [],
     materials: [],
+    galleryFolderId: "", // Mario: Google Drive Folder ID für Session 7
   },
   {
     id: "08-langzeitbelichtung",
@@ -409,6 +423,7 @@ const rawSessions: CourseSessionRaw[] = [
       { title: "Langzeitbelichtung am Tag: Schritt-für-Schritt Anleitung", url: "https://www.suitcaseandwanderlust.com/langzeitbelichtung-am-tag/", type: "Blog-Artikel", duration: "ca. 8 Min Lesezeit", language: "Deutsch", whenToUse: "Vor Termin 8" },
     ],
     materials: [],
+    galleryFolderId: "", // Mario: Google Drive Folder ID für Session 8
   },
   {
     id: "09-workflow-recht",
@@ -440,6 +455,7 @@ const rawSessions: CourseSessionRaw[] = [
       { title: "Mastering Photography Workflow: Ein umfassender Leitfaden", url: "https://www.format.com/de/magazine/resources/photography/mastering-photography-workflow-guide/", type: "Blog-Artikel", duration: "ca. 10 Min Lesezeit", language: "Deutsch", whenToUse: "Selbststudium" },
     ],
     materials: [],
+    galleryFolderId: "", // Mario: Google Drive Folder ID für Session 9
   },
   {
     id: "10-konzeptwerkstatt",
@@ -468,6 +484,7 @@ const rawSessions: CourseSessionRaw[] = [
     },
     tutorials: [],
     materials: [],
+    galleryFolderId: "", // Mario: Google Drive Folder ID für Session 10
   },
   {
     id: "11-retusche-look",
@@ -499,6 +516,7 @@ const rawSessions: CourseSessionRaw[] = [
       { title: "Retuschieren von Fotos in Lightroom Classic", url: "https://helpx.adobe.com/de/lightroom-classic/help/retouch-photos.html", type: "Adobe Help", duration: "ca. 5 Min Lesezeit", language: "Deutsch", whenToUse: "Selbststudium" },
     ],
     materials: [],
+    galleryFolderId: "", // Mario: Google Drive Folder ID für Session 11
   },
   {
     id: "12-praesentation-portfolio",
@@ -527,6 +545,7 @@ const rawSessions: CourseSessionRaw[] = [
     },
     tutorials: [],
     materials: [],
+    galleryFolderId: "", // Mario: Google Drive Folder ID für Session 12
   },
   {
     id: "13-pruefung",
@@ -547,6 +566,7 @@ const rawSessions: CourseSessionRaw[] = [
     homework: null,
     tutorials: [],
     materials: [],
+    galleryFolderId: "", // Mario: Google Drive Folder ID für Session 13
   },
 ];
 

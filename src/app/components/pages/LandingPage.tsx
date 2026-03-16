@@ -16,6 +16,7 @@ import {
 import { motion, AnimatePresence } from "motion/react";
 import { useCourse } from "../CourseContext";
 import { useState } from "react";
+import { Gallery } from "../Gallery";
 
 const announcementStyles = {
   info: {
@@ -336,6 +337,24 @@ export function LandingPage() {
           </div>
         </motion.div>
       </section>
+
+      {/* Homepage Gallery – Vergangene Kurse */}
+      {courseInfo.galleryFolderId && (
+        <section className="mx-auto mt-16 max-w-6xl px-4 sm:px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.7 }}
+          >
+            <Gallery
+              folderId={courseInfo.galleryFolderId}
+              password={courseInfo.galleryPassword}
+              title="Galerie – Vergangene Kurse"
+              subtitle="Impressionen aus dem Kurs Digitale Fotografie"
+            />
+          </motion.div>
+        </section>
+      )}
     </div>
   );
 }

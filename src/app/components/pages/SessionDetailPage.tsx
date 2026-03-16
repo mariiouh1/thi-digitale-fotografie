@@ -24,6 +24,7 @@ import {
 import { motion } from "motion/react";
 import { useCourse } from "../CourseContext";
 import type { CourseMaterial } from "../course-data";
+import { Gallery } from "../Gallery";
 
 function getMaterialIcon(type: CourseMaterial["type"]) {
   switch (type) {
@@ -86,7 +87,7 @@ function getTutorialIcon(type: string) {
 
 export function SessionDetailPage() {
   const { sessionId } = useParams();
-  const { sessions, getSessionById, loading } = useCourse();
+  const { sessions, getSessionById, loading, courseInfo } = useCourse();
   const session = getSessionById(sessionId || "");
 
   if (loading) {
@@ -301,6 +302,23 @@ export function SessionDetailPage() {
                 })}
               </div>
             </div>
+          )}
+
+          {/* Gallery */}
+          {session.galleryFolderId && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.15 }}
+              className="mb-8"
+            >
+              <Gallery
+                folderId={session.galleryFolderId}
+                password={courseInfo.galleryPassword}
+                title={`Galerie – Session ${session.sessionNumber}`}
+                subtitle="Fotos aus dieser Kursstunde"
+              />
+            </motion.div>
           )}
         </motion.div>
 

@@ -88,6 +88,9 @@ function transformCourseInfo(story: any): CourseInfo {
     sectionTitleInstructor: c.section_title_instructor || "Dozent",
     sectionTitleHighlights: c.section_title_highlights || "Kurs-Highlights",
     sectionTitleNextSessions: c.section_title_next_sessions || "Nächste Sessions",
+    // Gallery
+    galleryFolderId: c.gallery_folder_id || "",
+    galleryPassword: c.gallery_password || "",
   };
 }
 
@@ -177,6 +180,7 @@ function transformSession(story: any): CourseSessionRaw {
     homework: transformHomework(c),
     tutorials: (c.tutorials || []).map(transformTutorial),
     materials: (c.materials || []).map(transformMaterial),
+    galleryFolderId: c.gallery_folder_id || "",
   };
 }
 
