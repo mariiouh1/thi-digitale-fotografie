@@ -2,7 +2,7 @@
  * Gallery Component
  * 
  * Features:
- *   - Bento Grid Layout (varying sizes for visual interest)
+ *   - Bento Grid Layout with aspect-ratio-aware sizing
  *   - Lightbox with keyboard navigation
  *   - Password-protected overlay (stored in sessionStorage)
  *   - Loads images from Google Drive folder
@@ -27,29 +27,57 @@ import { useGoogleDriveImages, type DriveImage } from "./useGoogleDriveImages";
 const STORAGE_KEY = "kursportal_gallery_unlocked";
 
 // ============================================================
-// BENTO GRID PATTERNS
+// ASPECT-RATIO BASED GRID SIZING
 // ============================================================
 
-// Repeating pattern of cell sizes for visual variety
-// [colSpan, rowSpan]
-const BENTO_PATTERNS: [number, number][] = [
-  [2, 2], // Large
-  [1, 1], // Small
-  [1, 1], // Small
-  [1, 2], // Tall
-  [1, 1], // Small
-  [2, 1], // Wide
-  [1, 1], // Small
-  [1, 1], // Small
-  [1, 1], // Small
-  [2, 1], // Wide
-  [1, 1], // Small
-  [1, 2], // Tall
-];
+/**
+ * Determines grid span based on actual image aspect ratio.
+ * 
+ * - Very wide (panorama, 2:1+)  → 2 cols, 1 row
+ * - Landscape (3:2 – 2:1)       → 2 cols, 1 row (or 1 col on smaller grids)
+ * - Standard landscape (4:3)     → 1 col, 1 row
+ * - Square-ish (0.8 – 1.2)      → 1 col, 1 row
+ * - Portrait (2:3 – 3:4)        → 1 col, 2 rows
+ * - Very tall (< 2:3)           → 1 col, 2 rows
+ * 
+ * Every ~6th image gets promoted to "hero" (2x2) for visual variety,
+ * but only if aspect ratio allows it (not extremely narrow).
+ */
+function getGridSpan(
+  image: DriveImage,
+  index: number,
+  totalImages: number
+): { colSpan: number; rowSpan: number } {
+  const r = image.aspectRatio;
 
-function getBentoSize(index: number): { colSpan: number; rowSpan: number } {
-  const pattern = BENTO_PATTERNS[index % BENTO_PATTERNS.length];
-  return { colSpan: pattern[0], rowSpan: pattern[1] };
+  // Hero promotion: every 6th image starting at 0, only if roughly square-ish or landscape
+  const isHeroCandidate = index % 7 === 0 && totalImages > 3;
+  if (isHeroCandidate && r > 0.7 && r < 2.0) {
+    return { colSpan: 2, rowSpan: 2 };
+  }
+
+  // Very wide / panorama (ratio > 1.8)
+  if (r > 1.8) {
+    return { colSpan: 2, rowSpan: 1 };
+  }
+
+  // Landscape (ratio 1.3 – 1.8)
+  if (r > 1.3) {
+    return { colSpan: 2, rowSpan: 1 };
+  }
+
+  // Standard / slightly landscape (ratio 1.0 – 1.3)
+  if (r >= 0.85) {
+    return { colSpan: 1, rowSpan: 1 };
+  }
+
+  // Portrait (ratio 0.5 – 0.85)
+  if (r >= 0.5) {
+    return { colSpan: 1, rowSpan: 2 };
+  }
+
+  // Very tall / narrow (ratio < 0.5)
+  return { colSpan: 1, rowSpan: 2 };
 }
 
 // ============================================================
@@ -268,7 +296,7 @@ function Lightbox({ images, currentIndex, onClose, onNext, onPrev }: LightboxPro
 }
 
 // ============================================================
-// BENTO GRID
+// BENTO GRID (aspect-ratio aware)
 // ============================================================
 
 interface BentoGridProps {
@@ -280,16 +308,17 @@ function BentoGrid({ images, onImageClick }: BentoGridProps) {
   return (
     <div className="grid auto-rows-[140px] grid-cols-2 gap-2 sm:auto-rows-[180px] sm:grid-cols-3 md:grid-cols-4 md:gap-3">
       {images.map((image, i) => {
-        const { colSpan, rowSpan } = getBentoSize(i);
-        // On mobile (< sm), force single column spans
+        const { colSpan, rowSpan } = getGridSpan(image, i, images.length);
+        // On mobile (< sm), force single column spans to avoid overflow
         const colClass = colSpan === 2 ? "col-span-1 sm:col-span-2" : "col-span-1";
         const rowClass = rowSpan === 2 ? "row-span-2" : "row-span-1";
+
         return (
           <motion.button
             key={image.id}
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3, delay: i * 0.03 }}
+            transition={{ duration: 0.3, delay: Math.min(i * 0.03, 0.6) }}
             className={`group relative overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02] focus:outline-none focus:ring-2 focus:ring-violet-500/40 ${colClass} ${rowClass}`}
             onClick={() => onImageClick(i)}
           >
@@ -304,6 +333,9 @@ function BentoGrid({ images, onImageClick }: BentoGridProps) {
             <div className="absolute inset-0 flex items-end opacity-0 transition-opacity duration-300 group-hover:opacity-100">
               <div className="w-full bg-gradient-to-t from-black/60 to-transparent px-3 py-2">
                 <p className="text-[0.7rem] text-white/80 truncate">{image.name}</p>
+                <p className="text-[0.6rem] text-white/40">
+                  {image.width} × {image.height}
+                </p>
               </div>
             </div>
           </motion.button>

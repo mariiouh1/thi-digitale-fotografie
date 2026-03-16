@@ -23,6 +23,9 @@ export interface DriveImage {
   mimeType: string;
   thumbnailUrl: string;
   fullUrl: string;
+  width: number;
+  height: number;
+  aspectRatio: number; // width / height
 }
 
 interface UseDriveImagesResult {
@@ -59,7 +62,7 @@ export function useGoogleDriveImages(folderId: string | undefined): UseDriveImag
     async function fetchImages() {
       try {
         const query = encodeURIComponent(`'${folderId}' in parents and mimeType contains 'image/' and trashed = false`);
-        const fields = encodeURIComponent("files(id,name,mimeType)");
+        const fields = encodeURIComponent("files(id,name,mimeType,imageMediaMetadata(width,height))");
         const url = `https://www.googleapis.com/drive/v3/files?q=${query}&key=${API_KEY}&fields=${fields}&pageSize=100&orderBy=name`;
 
         const response = await fetch(url);
@@ -73,13 +76,20 @@ export function useGoogleDriveImages(folderId: string | undefined): UseDriveImag
         const files = data.files || [];
 
         if (!cancelled) {
-          const driveImages: DriveImage[] = files.map((file: any) => ({
-            id: file.id,
-            name: file.name,
-            mimeType: file.mimeType,
-            thumbnailUrl: getDriveImageUrl(file.id, 800),
-            fullUrl: getDriveImageUrl(file.id, 1920),
-          }));
+          const driveImages: DriveImage[] = files.map((file: any) => {
+            const w = file.imageMediaMetadata?.width || 1;
+            const h = file.imageMediaMetadata?.height || 1;
+            return {
+              id: file.id,
+              name: file.name,
+              mimeType: file.mimeType,
+              thumbnailUrl: getDriveImageUrl(file.id, 800),
+              fullUrl: getDriveImageUrl(file.id, 1920),
+              width: w,
+              height: h,
+              aspectRatio: w / h,
+            };
+          });
 
           setImages(driveImages);
           setLoading(false);
