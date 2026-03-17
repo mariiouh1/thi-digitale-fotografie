@@ -156,7 +156,6 @@ function PasswordOverlay({ correctPassword, onUnlock, imageCount }: PasswordOver
                   className={`w-full rounded-xl border bg-white/[0.04] px-4 py-3 pr-10 text-[0.85rem] text-white/80 placeholder-white/20 outline-none transition-all focus:border-violet-500/40 focus:bg-white/[0.06] ${
                     error ? "border-red-500/40" : "border-white/[0.08]"
                   }`}
-                  autoFocus
                 />
                 <button
                   type="button"
