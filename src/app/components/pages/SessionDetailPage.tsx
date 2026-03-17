@@ -304,22 +304,6 @@ export function SessionDetailPage() {
             </div>
           )}
 
-          {/* Gallery */}
-          {session.galleryFolderId && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.15 }}
-              className="mb-8"
-            >
-              <Gallery
-                folderId={session.galleryFolderId}
-                password={courseInfo.galleryPassword}
-                title={`Galerie – Session ${session.sessionNumber}`}
-                subtitle="Fotos aus dieser Kursstunde"
-              />
-            </motion.div>
-          )}
         </motion.div>
 
         {/* Sidebar */}
@@ -429,6 +413,23 @@ export function SessionDetailPage() {
           </div>
         </motion.div>
       </div>
+
+      {/* Gallery – full width, after all content sections */}
+      {session.galleryFolderId && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="mt-8"
+        >
+          <Gallery
+            folderId={session.galleryFolderId}
+            password={courseInfo.galleryPassword}
+            title={`Galerie – Session ${session.sessionNumber}`}
+            subtitle="Fotos aus dieser Kursstunde"
+          />
+        </motion.div>
+      )}
 
       {/* Prev / Next Navigation */}
       <motion.div
