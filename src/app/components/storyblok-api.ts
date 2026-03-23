@@ -95,18 +95,20 @@ function transformCourseInfo(story: any): CourseInfo {
 }
 
 function transformMaterial(block: any): CourseMaterial {
+  const url = typeof block.url === "string" ? block.url : (block.url?.url || "#");
   return {
     name: block.name || "",
-    url: block.url || "#",
+    url: url,
     type: block.type || "pdf",
     size: block.size || undefined,
   };
 }
 
 function transformTutorial(block: any): CourseTutorial {
+  const url = typeof block.url === "string" ? block.url : (block.url?.url || "#");
   return {
     title: block.title || "",
-    url: block.url || "#",
+    url: url,
     type: block.type || "YouTube Video",
     duration: block.duration || "",
     language: block.language || "Deutsch",
