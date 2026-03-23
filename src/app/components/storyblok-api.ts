@@ -58,39 +58,57 @@ async function fetchFromStoryblok(endpoint: string, params: Record<string, strin
 // DATA TRANSFORMERS – Storyblok → App-Datenstruktur
 // ============================================================
 
+/**
+ * Extracts plain text from Storyblok rich text or link objects.
+ * Handles nested objects that might be returned instead of strings.
+ */
+function extractText(field: any): string {
+  if (typeof field === "string") return field;
+  if (!field) return "";
+  
+  // Storyblok link/rich text object
+  if (typeof field === "object") {
+    if (field.text) return String(field.text);
+    if (field.url && typeof field.url === "string") return field.url;
+    if (typeof field.url === "object" && field.url.url) return field.url.url;
+  }
+  
+  return "";
+}
+
 function transformCourseInfo(story: any): CourseInfo {
   const c = story.content;
   return {
-    title: c.title || "",
-    subtitle: c.subtitle || "",
-    description: c.description || "",
-    instructorName: c.instructor_name || "",
-    instructorTitle: c.instructor_title || "",
+    title: extractText(c.title),
+    subtitle: extractText(c.subtitle),
+    description: extractText(c.description),
+    instructorName: extractText(c.instructor_name),
+    instructorTitle: extractText(c.instructor_title),
     instructorImage: c.instructor_image || "",
-    instructorBio: c.instructor_bio || "",
-    semester: c.semester || "",
-    schedule: c.schedule || "",
-    room: c.room || "",
-    credits: c.credits || "",
+    instructorBio: extractText(c.instructor_bio),
+    semester: extractText(c.semester),
+    schedule: extractText(c.schedule),
+    room: extractText(c.room),
+    credits: extractText(c.credits),
     heroImage: c.hero_image || "",
     // Highlights kommen als Textarea mit \n-Trennung aus Storyblok
-    highlights: (c.highlights || "")
+    highlights: extractText(c.highlights)
       .split("\n")
       .map((h: string) => h.trim())
       .filter((h: string) => h.length > 0),
     // Landing Page Controls
-    heroBadgeText: c.hero_badge_text || "",
-    ctaPrimaryText: c.cta_primary_text || "Zum Kursplan",
-    ctaSecondaryText: c.cta_secondary_text || "Aktuelle Session",
-    announcement: c.announcement || "",
+    heroBadgeText: extractText(c.hero_badge_text),
+    ctaPrimaryText: extractText(c.cta_primary_text) || "Zum Kursplan",
+    ctaSecondaryText: extractText(c.cta_secondary_text) || "Aktuelle Session",
+    announcement: extractText(c.announcement),
     announcementType: c.announcement_type || "",
-    sectionTitleProgress: c.section_title_progress || "Kursfortschritt",
-    sectionTitleInstructor: c.section_title_instructor || "Dozent",
-    sectionTitleHighlights: c.section_title_highlights || "Kurs-Highlights",
-    sectionTitleNextSessions: c.section_title_next_sessions || "Nächste Sessions",
+    sectionTitleProgress: extractText(c.section_title_progress) || "Kursfortschritt",
+    sectionTitleInstructor: extractText(c.section_title_instructor) || "Dozent",
+    sectionTitleHighlights: extractText(c.section_title_highlights) || "Kurs-Highlights",
+    sectionTitleNextSessions: extractText(c.section_title_next_sessions) || "Nächste Sessions",
     // Gallery
-    galleryFolderId: c.gallery_folder_id || "",
-    galleryPassword: c.gallery_password || "",
+    galleryFolderId: extractText(c.gallery_folder_id),
+    galleryPassword: extractText(c.gallery_password),
   };
 }
 
@@ -107,25 +125,25 @@ function transformMaterial(block: any): CourseMaterial {
 function transformTutorial(block: any): CourseTutorial {
   const url = typeof block.url === "string" ? block.url : (block.url?.url || "#");
   return {
-    title: block.title || "",
+    title: extractText(block.title),
     url: url,
-    type: block.type || "YouTube Video",
-    duration: block.duration || "",
-    language: block.language || "Deutsch",
-    whenToUse: block.when_to_use || "",
+    type: extractText(block.type) || "YouTube Video",
+    duration: extractText(block.duration),
+    language: extractText(block.language) || "Deutsch",
+    whenToUse: extractText(block.when_to_use),
   };
 }
 
 function transformHomework(c: any): CourseHomework | null {
   if (!c.homework_title) return null;
   return {
-    number: c.homework_number || "",
-    title: c.homework_title || "",
-    deadline: c.homework_deadline || "",
-    goal: c.homework_goal || "",
-    description: c.homework_description || "",
-    format: c.homework_format || "",
-    learningFocus: c.homework_learning_focus || "",
+    number: extractText(c.homework_number),
+    title: extractText(c.homework_title),
+    deadline: extractText(c.homework_deadline),
+    goal: extractText(c.homework_goal),
+    description: extractText(c.homework_description),
+    format: extractText(c.homework_format),
+    learningFocus: extractText(c.homework_learning_focus),
   };
 }
 
@@ -167,22 +185,22 @@ function transformSession(story: any): CourseSessionRaw {
   return {
     id: story.slug || story.uuid,
     sessionNumber: Number(c.session_number) || 0,
-    date: c.date || "",
-    time: c.time || "09:55-13:05",
-    room: c.room || "K115",
-    title: c.title || "",
-    description: c.description || "",
-    schwerpunkt: c.schwerpunkt || "",
+    date: extractText(c.date),
+    time: extractText(c.time) || "09:55-13:05",
+    room: extractText(c.room) || "K115",
+    title: extractText(c.title),
+    description: extractText(c.description),
+    schwerpunkt: extractText(c.schwerpunkt),
     // Topics kommen als Textarea mit \n-Trennung
-    topics: (c.topics || "")
+    topics: extractText(c.topics)
       .split("\n")
       .map((t: string) => t.trim())
       .filter((t: string) => t.length > 0),
-    projectSubmission: c.project_submission || "–",
+    projectSubmission: extractText(c.project_submission) || "–",
     homework: transformHomework(c),
     tutorials: (c.tutorials || []).map(transformTutorial),
     materials: (c.materials || []).map(transformMaterial),
-    galleryFolderId: c.gallery_folder_id || "",
+    galleryFolderId: extractText(c.gallery_folder_id),
   };
 }
 
