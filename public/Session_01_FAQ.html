@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Session 01 – Digitalfotografie SS2026 | THI</title>
+<style>
+  /* ─── RESET & TOKENS ─────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --c-bg:          #0e1117;
+    --c-surface:     #161b27;
+    --c-surface2:    #1e2536;
+    --c-border:      #2a3347;
+    --c-primary:     #e8a838;
+    --c-primary-dim: rgba(232,168,56,.15);
+    --c-accent:      #4fd1c5;
+    --c-accent-dim:  rgba(79,209,197,.12);
+    --c-danger:      #f56565;
+    --c-success:     #68d391;
+    --c-text:        #e2e8f0;
+    --c-muted:       #718096;
+    --c-white:       #ffffff;
+    --radius:        10px;
+    --radius-lg:     16px;
+    --transition:    .25s ease;
+    --shadow:        0 4px 24px rgba(0,0,0,.4);
+    --shadow-lg:     0 8px 48px rgba(0,0,0,.55);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--c-bg);
+    color: var(--c-text);
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ─── SCROLLBAR ───────────────────────────────────────── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--c-bg); }
+  ::-webkit-scrollbar-thumb { background: var(--c-border); border-radius: 99px; }
+
+  /* ─── HEADER ──────────────────────────────────────────── */
+  .site-header {
+    background: linear-gradient(135deg, #1a2236 0%, #0e1117 60%, #1a1a0e 100%);
+    border-bottom: 1px solid var(--c-border);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    backdrop-filter: blur(12px);
+  }
+
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: space-between;
+  }
+
+  .header-left { display: flex; align-items: center; gap: 1rem; }
+
+  .header-badge {
+    background: var(--c-primary);
+    color: #000;
+    font-weight: 800;
+    font-size: .7rem;
+    letter-spacing: .08em;
+    padding: .3rem .7rem;
+    border-radius: 6px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .header-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--c-text);
+    line-height: 1.2;
+  }
+
+  .header-title span {
+    display: block;
+    font-size: .8rem;
+    color: var(--c-muted);
+    font-weight: 400;
+  }
+
+  .header-meta {
+    font-size: .8rem;
+    color: var(--c-muted);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  /* ─── NAV TABS ────────────────────────────────────────── */
+  .nav-tabs {
+    background: var(--c-surface);
+    border-bottom: 1px solid var(--c-border);
+    position: sticky;
+    top: 72px;
+    z-index: 190;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+
+  .nav-list {
+    list-style: none;
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    gap: .25rem;
+  }
+
+  .nav-list a {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .85rem 1.1rem;
+    text-decoration: none;
+    color: var(--c-muted);
+    font-size: .88rem;
+    font-weight: 500;
+    border-bottom: 2px solid transparent;
+    transition: color var(--transition), border-color var(--transition);
+    white-space: nowrap;
+  }
+
+  .nav-list a:hover { color: var(--c-text); }
+
+  .nav-list a.active {
+    color: var(--c-primary);
+    border-bottom-color: var(--c-primary);
+  }
+
+  /* ─── LAYOUT ──────────────────────────────────────────── */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  .section-panel {
+    display: none;
+    animation: fadeUp .3s ease;
+  }
+
+  .section-panel.active { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── HEADINGS ────────────────────────────────────────── */
+  .section-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--c-text);
+    margin-bottom: .4rem;
+  }
+
+  .section-subtitle {
+    font-size: .95rem;
+    color: var(--c-muted);
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--c-border);
+    padding-bottom: 1.25rem;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--c-primary);
+    margin: 2rem 0 .8rem;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+
+  /* ─── HERO CARD ───────────────────────────────────────── */
+  .hero-card {
+    background: linear-gradient(135deg, var(--c-surface2) 0%, #1a2236 100%);
+    border: 1px solid var(--c-border);
+    border-left: 4px solid var(--c-primary);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
+
+  .hero-icon {
+    font-size: 2.5rem;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .hero-text h2 { font-size: 1.2rem; color: var(--c-primary); margin-bottom: .4rem; }
+  .hero-text p  { font-size: .95rem; color: var(--c-muted); }
+
+  /* ─── STAT CARDS ──────────────────────────────────────── */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  .stat-card {
+    background: var(--c-surface2);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    transition: border-color var(--transition), transform var(--transition);
+    cursor: default;
+  }
+
+  .stat-card:hover {
+    border-color: var(--c-primary);
+    transform: translateY(-3px);
+  }
+
+  .stat-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--c-primary);
+    line-height: 1;
+    margin-bottom: .35rem;
+  }
+
+  .stat-label {
+    font-size: .8rem;
+    color: var(--c-muted);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+
+  /* ─── TABLES ──────────────────────────────────────────── */
+  .table-wrap { overflow-x: auto; margin: 1.25rem 0; border-radius: var(--radius); border: 1px solid var(--c-border); }
+
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+
+  thead th {
+    background: var(--c-surface2);
+    color: var(--c-primary);
+    font-weight: 600;
+    padding: .85rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--c-border);
+    white-space: nowrap;
+  }
+
+  tbody td {
+    padding: .8rem 1rem;
+    border-bottom: 1px solid var(--c-border);
+    color: var(--c-text);
+  }
+
+  tbody tr:last-child td { border-bottom: none; }
+
+  tbody tr { transition: background var(--transition); }
+  tbody tr:hover { background: var(--c-surface2); }
+
+  /* ─── CALLOUT BOXES ───────────────────────────────────── */
+  .callout {
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    margin: 1.25rem 0;
+    font-size: .93rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .callout-icon { font-size: 1.4rem; flex-shrink: 0; line-height: 1.4; }
+
+  .callout-body strong { display: block; margin-bottom: .25rem; }
+
+  .callout.info {
+    background: var(--c-accent-dim);
+    border: 1px solid rgba(79,209,197,.25);
+  }
+
+  .callout.warning {
+    background: rgba(232,168,56,.1);
+    border: 1px solid rgba(232,168,56,.3);
+  }
+
+  .callout.danger {
+    background: rgba(245,101,101,.1);
+    border: 1px solid rgba(245,101,101,.3);
+  }
+
+  .callout.success {
+    background: rgba(104,211,145,.1);
+    border: 1px solid rgba(104,211,145,.3);
+  }
+
+  /* ─── TASK CARD ───────────────────────────────────────── */
+  .task-card {
+    background: var(--c-surface2);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin: 1.5rem 0;
+  }
+
+  .task-header {
+    background: linear-gradient(90deg, var(--c-primary-dim), transparent);
+    border-bottom: 1px solid var(--c-border);
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .task-header h3 { margin: 0; font-size: 1rem; }
+
+  .task-body { padding: 1.5rem; }
+
+  .task-body p { margin-bottom: .75rem; font-size: .93rem; }
+
+  .task-body ul, .task-body ol {
+    margin-left: 1.5rem;
+    margin-bottom: .75rem;
+    font-size: .93rem;
+  }
+
+  .task-body li { margin-bottom: .35rem; }
+
+  /* ─── PILL CHIPS ──────────────────────────────────────── */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    padding: .25rem .75rem;
+    border-radius: 99px;
+    font-size: .75rem;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+
+  .chip-gold    { background: rgba(232,168,56,.2); color: var(--c-primary); border: 1px solid rgba(232,168,56,.4); }
+  .chip-teal    { background: var(--c-accent-dim); color: var(--c-accent);  border: 1px solid rgba(79,209,197,.3); }
+  .chip-red     { background: rgba(245,101,101,.15); color: var(--c-danger); border: 1px solid rgba(245,101,101,.3); }
+  .chip-green   { background: rgba(104,211,145,.15); color: var(--c-success); border: 1px solid rgba(104,211,145,.3); }
+  .chip-muted   { background: rgba(113,128,150,.15); color: var(--c-muted); border: 1px solid rgba(113,128,150,.25); }
+
+  /* ─── COUNTDOWN ───────────────────────────────────────── */
+  .countdown-box {
+    background: linear-gradient(135deg, rgba(245,101,101,.12), rgba(232,168,56,.08));
+    border: 1px solid rgba(245,101,101,.3);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem 2rem;
+    margin: 1.5rem 0;
+    text-align: center;
+  }
+
+  .countdown-label { font-size: .8rem; color: var(--c-muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: .5rem; }
+
+  .countdown-value {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--c-danger);
+    line-height: 1;
+    margin-bottom: .4rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .countdown-sub { font-size: .9rem; color: var(--c-muted); }
+
+  /* ─── VIDEO GRID ──────────────────────────────────────── */
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.25rem;
+    margin: 1.25rem 0;
+  }
+
+  .video-card {
+    background: var(--c-surface2);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .video-card:hover {
+    border-color: var(--c-primary);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow);
+  }
+
+  .video-thumb {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+    overflow: hidden;
+  }
+
+  .video-thumb iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+
+  .video-info { padding: 1rem 1.1rem 1.25rem; flex: 1; }
+
+  .video-title {
+    font-size: .93rem;
+    font-weight: 600;
+    color: var(--c-text);
+    margin-bottom: .5rem;
+    line-height: 1.4;
+  }
+
+  .video-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+    margin-bottom: .6rem;
+  }
+
+  .video-desc { font-size: .82rem; color: var(--c-muted); line-height: 1.5; }
+
+  /* ─── PROTOCOL VIEWER ─────────────────────────────────── */
+  .protocol-viewer {
+    background: var(--c-surface2);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin: 1.5rem 0;
+  }
+
+  .protocol-toolbar {
+    background: var(--c-surface);
+    border-bottom: 1px solid var(--c-border);
+    padding: .75rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .protocol-toolbar-label {
+    font-size: .82rem;
+    color: var(--c-muted);
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+  }
+
+  .protocol-toolbar-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+
+  .protocol-content {
+    padding: 2rem;
+    max-height: 70vh;
+    overflow-y: auto;
+    font-size: .88rem;
+    line-height: 1.75;
+    color: var(--c-text);
+  }
+
+  .protocol-content h1 {
+    font-size: 1.5rem;
+    color: var(--c-primary);
+    border-bottom: 2px solid var(--c-border);
+    padding-bottom: .75rem;
+    margin-bottom: 1rem;
+  }
+
+  .protocol-content h2 {
+    font-size: 1.1rem;
+    color: var(--c-accent);
+    margin-top: 1.75rem;
+    margin-bottom: .6rem;
+    font-weight: 600;
+  }
+
+  .protocol-content h3 {
+    font-size: .95rem;
+    color: var(--c-text);
+    margin-top: 1.25rem;
+    margin-bottom: .4rem;
+    font-weight: 600;
+  }
+
+  .protocol-content table { font-size: .82rem; }
+
+  .protocol-content p, .protocol-content ul, .protocol-content li {
+    color: var(--c-muted);
+    margin-bottom: .4rem;
+  }
+
+  .protocol-content ul { margin-left: 1.5rem; }
+
+  .protocol-content hr {
+    border: none;
+    border-top: 1px solid var(--c-border);
+    margin: 1.25rem 0;
+  }
+
+  .protocol-content strong { color: var(--c-text); }
+
+  .protocol-content code {
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: 4px;
+    padding: .1rem .4rem;
+    font-size: .82rem;
+    font-family: 'Consolas', monospace;
+  }
+
+  /* ─── BUTTONS ─────────────────────────────────────────── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    padding: .6rem 1.1rem;
+    border-radius: 8px;
+    font-size: .85rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all var(--transition);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    background: var(--c-primary);
+    color: #000;
+  }
+  .btn-primary:hover { background: #f0b845; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(232,168,56,.4); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--c-text);
+    border: 1px solid var(--c-border);
+  }
+  .btn-outline:hover { border-color: var(--c-primary); color: var(--c-primary); }
+
+  .btn-ghost {
+    background: var(--c-surface2);
+    color: var(--c-muted);
+    border: 1px solid var(--c-border);
+  }
+  .btn-ghost:hover { color: var(--c-text); background: var(--c-surface); }
+
+  .btn-group { display: flex; gap: .75rem; flex-wrap: wrap; margin: 1.25rem 0; }
+
+  /* ─── PHASE TIMELINE ──────────────────────────────────── */
+  .phase-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1rem;
+    margin: 1.25rem 0;
+  }
+
+  .phase-card {
+    background: var(--c-surface2);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    transition: border-color var(--transition);
+  }
+
+  .phase-card:hover { border-color: var(--c-accent); }
+
+  .phase-num {
+    font-size: .7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--c-accent);
+    margin-bottom: .4rem;
+  }
+
+  .phase-title { font-size: 1rem; font-weight: 700; color: var(--c-text); margin-bottom: .5rem; }
+
+  .phase-sessions { font-size: .8rem; color: var(--c-primary); font-weight: 600; margin-bottom: .5rem; }
+
+  .phase-desc { font-size: .82rem; color: var(--c-muted); line-height: 1.5; }
+
+  /* ─── LINKS ───────────────────────────────────────────── */
+  a { color: var(--c-accent); text-decoration: none; transition: color var(--transition); }
+  a:hover { color: var(--c-primary); }
+
+  /* ─── FOOTER ──────────────────────────────────────────── */
+  .site-footer {
+    background: var(--c-surface);
+    border-top: 1px solid var(--c-border);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    color: var(--c-muted);
+    font-size: .82rem;
+    margin-top: 3rem;
+  }
+
+  .site-footer strong { color: var(--c-text); }
+
+  /* ─── LOADER ──────────────────────────────────────────── */
+  .loader-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.65);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .loader-overlay.active { display: flex; }
+
+  .loader-box {
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-lg);
+    padding: 2rem 2.5rem;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .spinner {
+    width: 40px; height: 40px;
+    border: 3px solid var(--c-border);
+    border-top-color: var(--c-primary);
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+    margin: 0 auto 1rem;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ─── RESPONSIVE ──────────────────────────────────────── */
+  @media (max-width: 768px) {
+    .header-inner { flex-direction: column; align-items: flex-start; gap: .6rem; }
+    .header-meta { text-align: left; }
+    .hero-card { flex-direction: column; }
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    .video-grid { grid-template-columns: 1fr; }
+    .phase-grid { grid-template-columns: 1fr; }
+    .protocol-content { padding: 1rem; }
+    .btn-group { flex-direction: column; }
+  }
+
+  @media print {
+    .site-header, .nav-tabs, .site-footer, .btn-group,
+    .protocol-toolbar-actions, .loader-overlay { display: none !important; }
+    body { background: #fff; color: #000; }
+    .section-panel { display: block !important; }
+  }
+
+    /* --- UX & GAMIFICATION --- */
+    :root {
+      --c-bg-light: #f8fafc; --c-surface-light: #ffffff; --c-surface2-light: #f1f5f9;
+      --c-border-light: #e2e8f0; --c-text-light: #1a202c; --c-muted-light: #4a5568;
+    }
+    body.light-theme {
+      --c-bg: var(--c-bg-light); --c-surface: var(--c-surface-light); 
+      --c-surface2: var(--c-surface2-light); --c-border: var(--c-border-light); 
+      --c-text: var(--c-text-light); --c-muted: var(--c-muted-light);
+    }
+    #scroll-progress { position: fixed; top: 0; left: 0; width: 0%; height: 4px; background: var(--c-primary); z-index: 9999; transition: width 0.1s; }
+    .header-actions { display: flex; gap: 0.5rem; align-items: center; margin-right: 1rem; }
+    .icon-btn { background: var(--c-surface2); border: 1px solid var(--c-border); color: var(--c-text); border-radius: 6px; padding: 0.4rem 0.6rem; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+    .icon-btn:hover { background: var(--c-primary); color: #000; }
+    .search-bar { background: var(--c-surface2); border: 1px solid var(--c-border); color: var(--c-text); border-radius: 6px; padding: 0.4rem 0.8rem; font-size: 0.85rem; width: 160px; }
+    .search-bar:focus { outline: none; border-color: var(--c-primary); }
+    .task-check-wrapper { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; padding: 0.6rem 1rem; background: var(--c-surface); border-radius: 6px; border: 1px solid var(--c-border); border-left: 3px solid var(--c-primary); }
+    .task-check { width: 1.2rem; height: 1.2rem; accent-color: var(--c-primary); cursor: pointer; }
+    .task-check-label { font-size: 0.9rem; cursor: pointer; user-select: none; }
+    .task-done { opacity: 0.6; text-decoration: line-through; filter: grayscale(1); transition: all 0.3s; }
+    #camera-flash { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 10000; opacity: 0; pointer-events: none; }
+    .flash-active { animation: flashAnim 0.6s ease-out; }
+    @keyframes flashAnim { 0% { opacity: 1; } 100% { opacity: 0; } }
+    .focus-mode p:not(.callout-body p), .focus-mode .video-desc { display: none !important; }
+
+</style>
+</head>
+<body>
+    <div id="scroll-progress"></div>
+    <div id="camera-flash"></div>
+
+<!-- ── HEADER ─────────────────────────────────────────────── -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-left">
+      <span class="header-badge">Session 01</span>
+      <div class="header-title">
+        Digitalfotografie & Digitale Bildbearbeitung
+        <span>THI Ingolstadt · SS2026 · Mario Schubert</span>
+      </div>
+    </div>
+    
+            <div class="header-actions">
+                <input type="text" id="live-search" class="search-bar" placeholder="Suchen..." onkeyup="handleSearch()">
+                <button class="icon-btn" onclick="toggleTheme()" title="Dark/Light Mode">🌓 Theme</button>
+                <button class="icon-btn" onclick="toggleFocus()" title="Fokus-Modus">🔍 Fokus</button>
+            </div>
+
+            <div class="header-meta">
+      23. März 2026<br>
+      09:55 – 13:05 · Raum K115
+    </div>
+  </div>
+</header>
+
+<!-- ── NAV ────────────────────────────────────────────────── -->
+<nav class="nav-tabs">
+  <ul class="nav-list">
+    <li><a href="#" onclick="show('overview',this)" class="active">📋 Übersicht</a></li>
+    <li><a href="#" onclick="show('learning',this)">🎬 Videos & Lernen</a></li>
+    <li><a href="#" onclick="show('assignment',this)">📷 Aufgaben</a></li>
+    <li><a href="#" onclick="show('schedule',this)">📅 Termine</a></li>
+    <li><a href="#" onclick="show('protocol',this)">📄 Protokoll & PDF</a></li>
+    <li><a href="#" onclick="show('support',this)">❓ Hilfe</a></li>
+  </ul>
+</nav>
+
+<main class="container">
+
+<!-- ══════════════════════════════════════════════════════════
+     TAB 1 – ÜBERSICHT
+══════════════════════════════════════════════════════════════ -->
+<div id="overview" class="section-panel active">
+  <h2 class="section-title">Willkommen im Kurs 👋</h2>
+  <p class="section-subtitle">Alles Wichtige zur ersten Session auf einen Blick.</p>
+
+  <div class="hero-card">
+    <div class="hero-icon">📸</div>
+    <div class="hero-text">
+      <h2>Kick-off, Sehen lernen & Kameragrundlagen</h2>
+      <p>In dieser ersten Session wurden der Kursaufbau, das Prüfungssystem und alle technischen Voraussetzungen erklärt. Am Ende der Session fand ein gemeinsamer Campus-Fotowalk als erster praktischer Einstieg statt. Alle Angaben sind vorbehaltlich Änderungen – verbindliche Infos kommen immer über Moodle.</p>
+    </div>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-value">13</div>
+      <div class="stat-label">Sessions gesamt</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">4</div>
+      <div class="stat-label">Pflichtabgaben</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">1</div>
+      <div class="stat-label">Abschlussarbeit</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">3h</div>
+      <div class="stat-label">Pro Session</div>
+    </div>
+  </div>
+
+  <h3>🗓️ Ablauf heute</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Block</th>
+          <th>Thema</th>
+          <th>Zeit</th>
+          <th>Dauer</th>
+          <th>Form</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>Begrüßung & Kursvorstellung</td><td>09:55–10:25</td><td>30 Min</td><td>Plenum, Vortrag</td></tr>
+        <tr><td>2</td><td>Prüfungssystem & Pflichtabgaben</td><td>10:25–10:55</td><td>30 Min</td><td>Plenum + Fragen</td></tr>
+        <tr><td>3</td><td>Voraussetzungen & Ausrüstung</td><td>10:55–11:15</td><td>20 Min</td><td>Plenum, Live-Demo</td></tr>
+        <tr><td>4</td><td>Semesterüberblick</td><td>11:15–11:40</td><td>25 Min</td><td>Plenum, Präsentation</td></tr>
+        <tr><td>5–7</td><td>Aufgaben, Tools & Plattformen</td><td>11:40–12:25</td><td>45 Min</td><td>Plenum + Demo</td></tr>
+        <tr><td>8</td><td>Pause</td><td>12:25–12:35</td><td>10 Min</td><td>–</td></tr>
+        <tr><td>9</td><td>Campus-Fotowalk (Praxis)</td><td>12:35–13:00</td><td>25 Min</td><td>Praktische Übung</td></tr>
+        <tr><td>10</td><td>Ausblick & Abschluss</td><td>13:00–13:05</td><td>5 Min</td><td>Plenum</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>📌 Die drei Lernphasen des Semesters</h3>
+  <div class="phase-grid">
+    <div class="phase-card">
+      <div class="phase-num">Phase 1</div>
+      <div class="phase-title">Fundamentals</div>
+      <div class="phase-sessions">Sessions 1 – 4</div>
+      <div class="phase-desc">Sehen lernen, Belichtungsdreieck (Zeit, Blende, ISO), Fokus, RAW-Workflow, Lightroom-Einstieg.</div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num">Phase 2</div>
+      <div class="phase-title">Gestaltung & Kreativität</div>
+      <div class="phase-sessions">Sessions 5 – 8</div>
+      <div class="phase-desc">Portraits, Licht, Farbe, Streetfotografie, Storytelling, Serien, Lightroom-Lab.</div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num">Phase 3</div>
+      <div class="phase-title">Spezialisierung & Prüfung</div>
+      <div class="phase-sessions">Sessions 9 – 13</div>
+      <div class="phase-desc">Langzeitbelichtung, Workflow, Recht, Retusche, Abschlussarbeit, Präsentation, Prüfung.</div>
+    </div>
+  </div>
+
+  <div class="callout warning">
+    <span class="callout-icon">⚠️</span>
+    <div class="callout-body">
+      <strong>Änderungsvorbehalt</strong>
+      Alle genannten Termine, Themen und Abgabeformate sind vorläufig. Verbindliche Informationen werden jeweils in der Session und über Moodle kommuniziert.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     TAB 2 – VIDEOS & LERNEN
+══════════════════════════════════════════════════════════════ -->
+<div id="learning" class="section-panel">
+  <h2 class="section-title">Videos & Lernmaterialien 🎬</h2>
+  <p class="section-subtitle">Alle empfohlenen Tutorials direkt eingebettet – schau sie wann und wo du willst.</p>
+
+  <div class="callout info">
+    <span class="callout-icon">💡</span>
+    <div class="callout-body">
+      <strong>Empfehlung für diese Woche</strong>
+      Schau vor Session 2 mindestens das Belichtungsdreieck-Video von Benjamin Jaworskyj. Das macht den nächsten Termin deutlich einfacher.
+    </div>
+  </div>
+
+  <h3>🎯 Fotografie Basics & Einstieg</h3>
+  <div class="video-grid">
+    <div class="video-card">
+      <div class="video-thumb">
+        <iframe loading="lazy" title="YouTube Video Tutorial" src="https://www.youtube-nocookie.com/embed/bHYs_zlQYtM" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div class="video-info">
+        <div class="video-title">Kostenloser Fotokurs für Anfänger – Komplettpaket</div>
+        <div class="video-meta">
+          <span class="chip chip-gold">Benjamin Jaworskyj</span>
+          <span class="chip chip-muted">3h 20min</span>
+        </div>
+        <p class="video-desc">Von der Kamerabedienung über Komposition bis zum ersten fertigen Bild – alles kostenlos in einem Video.</p>
+      </div>
+    </div>
+
+    <div class="video-card">
+      <div class="video-thumb">
+        <iframe loading="lazy" title="YouTube Video Tutorial" src="https://www.youtube-nocookie.com/embed/vxMR3CB7bTE" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div class="video-info">
+        <div class="video-title">3 Fehler, die 99% der Anfänger machen</div>
+        <div class="video-meta">
+          <span class="chip chip-gold">Benjamin Jaworskyj</span>
+          <span class="chip chip-muted">12min</span>
+        </div>
+        <p class="video-desc">Kurz und direkt: Die häufigsten Anfängerfehler – und wie du sie von Anfang an vermeidest.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>⚙️ Belichtungsdreieck: Zeit, Blende, ISO</h3>
+  <div class="video-grid">
+    <div class="video-card">
+      <div class="video-thumb">
+        <iframe loading="lazy" title="YouTube Video Tutorial" src="https://www.youtube-nocookie.com/embed/PW_pTXwrinA" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div class="video-info">
+        <div class="video-title">Belichtungsdreieck praktisch erklärt</div>
+        <div class="video-meta">
+          <span class="chip chip-gold">Benjamin Jaworskyj</span>
+          <span class="chip chip-teal">Pflichtlektüre</span>
+          <span class="chip chip-muted">10min</span>
+        </div>
+        <p class="video-desc">ISO, Blende und Belichtungszeit – einfach erklärt, ohne Fachchinesisch.</p>
+      </div>
+    </div>
+
+    <div class="video-card">
+      <div class="video-thumb">
+        <iframe loading="lazy" title="YouTube Video Tutorial" src="https://www.youtube-nocookie.com/embed/n5aKaPaShfI" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div class="video-info">
+        <div class="video-title">So belichtest du IMMER korrekt</div>
+        <div class="video-meta">
+          <span class="chip chip-gold">Benjamin Jaworskyj</span>
+          <span class="chip chip-muted">12min</span>
+        </div>
+        <p class="video-desc">Praktische Tipps für jede Lichtsituation – von sonnig bis dunkel.</p>
+      </div>
+    </div>
+
+    <div class="video-card">
+      <div class="video-thumb">
+        <iframe loading="lazy" title="YouTube Video Tutorial" src="https://www.youtube-nocookie.com/embed/45bBbZ0PHA8" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div class="video-info">
+        <div class="video-title">ISO einfach erklärt</div>
+        <div class="video-meta">
+          <span class="chip chip-gold">Benjamin Jaworskyj</span>
+          <span class="chip chip-muted">10min</span>
+        </div>
+        <p class="video-desc">Wann ist hohes ISO okay? Wann zerstört es dein Bild? Klar erklärt.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>💻 Lightroom Classic</h3>
+  <div class="video-grid">
+    <div class="video-card">
+      <div class="video-thumb">
+        <iframe loading="lazy" title="YouTube Video Tutorial" src="https://www.youtube-nocookie.com/embed/Dx1Og7MvJ7A" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div class="video-info">
+        <div class="video-title">Einfach Lightroom lernen – Kompletter Kurs</div>
+        <div class="video-meta">
+          <span class="chip chip-gold">Benjamin Jaworskyj</span>
+          <span class="chip chip-muted">3h 20min</span>
+        </div>
+        <p class="video-desc">Von der Installation bis zum fertigen Look – alles was du brauchst, um in Lightroom einzusteigen.</p>
+      </div>
+    </div>
+
+    <div class="video-card">
+      <div class="video-thumb">
+        <iframe loading="lazy" title="YouTube Video Tutorial" src="https://www.youtube-nocookie.com/embed/3hqna-AFVbs" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div class="video-info">
+        <div class="video-title">Fotos importieren & verwalten in Lightroom</div>
+        <div class="video-meta">
+          <span class="chip chip-gold">Benjamin Jaworskyj</span>
+          <span class="chip chip-teal">Bis Session 2</span>
+          <span class="chip chip-muted">15min</span>
+        </div>
+        <p class="video-desc">Schritt für Schritt: Erste Fotos in Lightroom importieren, Katalog verstehen, Ordnung halten.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     TAB 3 – AUFGABEN
+══════════════════════════════════════════════════════════════ -->
+<div id="assignment" class="section-panel">
+  <h2 class="section-title">Aufgaben dieser Session 📷</h2>
+  <p class="section-subtitle">Eine freiwillige Übung + zwei organisatorische To-dos für diese Woche.</p>
+
+  <div class="task-card">
+    <div class="task-header">
+      <h3>📌 HA1 – Formen-Jagd & Kamerakenntnis</h3>
+      <span class="chip chip-teal">Freiwillig – mit Feedback</span>
+    </div>
+    <div class="task-body" id="task_container_1">
+                    <div class="task-check-wrapper">
+                        <input type="checkbox" class="task-check" id="task_chk_1" onchange="saveTask(1)">
+                        <label class="task-check-label" for="task_chk_1"><strong>Als erledigt markieren</strong></label>
+                    </div>
+      <p><strong>Frist:</strong> Freitag, 29. März 2026 · 23:59 Uhr</p>
+
+      <p><strong>Ziel:</strong> Deine Kamera aktiv ausprobieren und anfangen, geometrische Formen, Linien und Texturen im Alltag bewusst wahrzunehmen.</p>
+
+      <p><strong>Was du fotografierst – 12 Bilder total:</strong></p>
+      <ul>
+        <li>4x <strong>Linien</strong> – vertikal, horizontal, diagonal</li>
+        <li>4x <strong>Formen</strong> – Kreise, Dreiecke, Rechtecke</li>
+        <li>4x <strong>Texturen</strong> – rau, glatt, repetitiv, organisch</li>
+      </ul>
+
+      <p><strong>Wichtig – Perspektiven variieren:</strong> Für jedes Motiv mindestens 3 verschiedene Standpunkte ausprobieren. Von unten, von oben, durch etwas hindurch, mit Gegenlicht.</p>
+
+      <p><strong>Auswahl & Reflexion:</strong> Aus den 12 Bildern wählst du die 5 besten aus und schreibst 3–5 Sätze: Was war schwierig? Was hat funktioniert? Was war überraschend?</p>
+
+      <p><strong>Upload & Abgabe:</strong></p>
+      <ul>
+        <li>Format: <code>ZIP</code> → 5 JPG-Bilder + 1 TXT oder PDF (Reflexion)</li>
+        <li>Dateiname: <code>Vorname_Nachname_HA1.zip</code></li>
+        <li>Upload: <strong>Moodle</strong> (offiziell) + <strong>Google Drive</strong> (geteilter Kursordner)</li>
+      </ul>
+
+      <div class="callout success" style="margin-top:1rem;">
+        <span class="callout-icon">✅</span>
+        <div class="callout-body">
+          <strong>Warum machen?</strong> Diese Hausaufgabe ist freiwillig – aber wer sie einreicht, bekommt direktes, individuelles Feedback. Das ist Gold wert für die erste Pflichtabgabe in zwei Wochen.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card">
+    <div class="task-header">
+      <h3>📬 Kurzmail an den Dozenten</h3>
+      <span class="chip chip-muted">Organisatorisch · bis 27.03.</span>
+    </div>
+    <div class="task-body" id="task_container_2">
+                    <div class="task-check-wrapper">
+                        <input type="checkbox" class="task-check" id="task_chk_2" onchange="saveTask(2)">
+                        <label class="task-check-label" for="task_chk_2"><strong>Als erledigt markieren</strong></label>
+                    </div>
+      <p>Schreib eine formlose Mail an <a href="mailto:mario.schubert@thi.de">mario.schubert@thi.de</a> mit einem Satz:</p>
+      <p><em>„Mein Name ist [Vorname Nachname], und ich besuche den Kurs, weil …"</em></p>
+      <p>Das dient als Anwesenheitscheck und gibt dem Dozenten einen ersten Eindruck von eurer Motivation.</p>
+    </div>
+  </div>
+
+  <div class="task-card">
+    <div class="task-header">
+      <h3>💻 Lightroom installieren</h3>
+      <span class="chip chip-red">Notwendig · bis Session 2</span>
+    </div>
+    <div class="task-body" id="task_container_3">
+                    <div class="task-check-wrapper">
+                        <input type="checkbox" class="task-check" id="task_chk_3" onchange="saveTask(3)">
+                        <label class="task-check-label" for="task_chk_3"><strong>Als erledigt markieren</strong></label>
+                    </div>
+      <p>Adobe Lightroom Classic muss bis zur nächsten Session (30.03.) installiert sein. In Session 2 beginnen wir direkt damit.</p>
+      <ul>
+        <li>Adobe Creative Cloud Foto-Abo – ca. 10 €/Monat (Studierendenrabatt verfügbar)</li>
+        <li>Lightroom Classic – nicht Lightroom CC (Webbrowser-Version)</li>
+        <li>Bei Problemen: Mail an <a href="mailto:mario.schubert@thi.de">mario.schubert@thi.de</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     TAB 4 – TERMINE
+══════════════════════════════════════════════════════════════ -->
+<div id="schedule" class="section-panel">
+  <h2 class="section-title">Termine & Fristen 📅</h2>
+  <p class="section-subtitle">Alle Abgaben und Meilensteine auf einen Blick. Alle Daten vorbehaltlich Änderungen.</p>
+
+  <div class="countdown-box">
+    <div class="countdown-label">Nächste Abgabe (HA1)</div>
+    <div class="countdown-value">6 Tage</div>
+    <div class="countdown-sub">Freitag, 29. März 2026 · 23:59 Uhr</div>
+  </div>
+
+  <h3>📆 Diese Woche</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Datum</th><th>Aufgabe</th><th>Art</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>23.03.2026</td>
+          <td>Session 01 – Kick-off</td>
+          <td><span class="chip chip-muted">Session</span></td>
+          <td><span class="chip chip-green">✓ Abgeschlossen</span></td>
+        </tr>
+        <tr>
+          <td>27.03.2026</td>
+          <td>Kurzmail an Dozenten</td>
+          <td><span class="chip chip-muted">Organisatorisch</span></td>
+          <td><span class="chip chip-gold">Offen</span></td>
+        </tr>
+        <tr>
+          <td>29.03.2026</td>
+          <td>HA1 – Formen-Jagd & Kamerakenntnis</td>
+          <td><span class="chip chip-teal">Freiwillig</span></td>
+          <td><span class="chip chip-gold">Läuft</span></td>
+        </tr>
+        <tr>
+          <td>30.03.2026</td>
+          <td>Lightroom installiert haben</td>
+          <td><span class="chip chip-red">Pflicht</span></td>
+          <td><span class="chip chip-gold">Offen</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>📋 Pflichtabgaben Semester (vorläufig)</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Projekt</th><th>Thema</th><th>Abgabe</th><th>Pflicht für Prüfung</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>P1</strong></td>
+          <td>Sport & Bewegung</td>
+          <td>13.04.2026</td>
+          <td><span class="chip chip-red">JA</span></td>
+        </tr>
+        <tr>
+          <td><strong>P2</strong></td>
+          <td>Kreative Portraits</td>
+          <td>27.04.2026</td>
+          <td><span class="chip chip-red">JA</span></td>
+        </tr>
+        <tr>
+          <td><strong>P3</strong></td>
+          <td>Urban Street & Alltag</td>
+          <td>11.05.2026</td>
+          <td><span class="chip chip-red">JA</span></td>
+        </tr>
+        <tr>
+          <td><strong>P4</strong></td>
+          <td>Ereignis-Dokumentation</td>
+          <td>01.06.2026</td>
+          <td><span class="chip chip-red">JA</span></td>
+        </tr>
+        <tr>
+          <td><strong>Abschlussarbeit</strong></td>
+          <td>Freie Themenwahl</td>
+          <td>28.06.2026</td>
+          <td><span class="chip chip-red">JA</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout warning">
+    <span class="callout-icon">⚠️</span>
+    <div class="callout-body">
+      <strong>Alle 4 Fotoaufgaben sind Voraussetzung für die Prüfung.</strong> Wer eine davon nicht einreicht, kann nicht an der Abschlussprüfung teilnehmen. Ausnahmen (Krankheit etc.) bitte direkt mit dem Dozenten besprechen.
+    </div>
+  </div>
+
+  <h3>🗺️ Vollständiger Semesterplan (vorläufig)</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Datum</th><th>Thema</th><th>Neu / Abgabe</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>01</td><td>23.03.</td><td>Kick-off, Sehen lernen & Kameragrundlagen</td><td>–</td></tr>
+        <tr><td>02</td><td>30.03.</td><td>Belichtungsdreieck, Fokus, RAW & Lightroom-Import</td><td>Start P1</td></tr>
+        <tr><td>03</td><td>13.04.</td><td>Portrait-Grundlagen & Licht</td><td>Abgabe P1 · Start P2</td></tr>
+        <tr><td>04</td><td>20.04.</td><td>Licht & Farbe, Weißabgleich, Farblooks</td><td>–</td></tr>
+        <tr><td>05</td><td>27.04.</td><td>Streetfotografie – Ethik, Technik, Praxis</td><td>Abgabe P2 · Start P3</td></tr>
+        <tr><td>06</td><td>04.05.</td><td>Lightroom-Lab I: Masken, Looks, Export</td><td>–</td></tr>
+        <tr><td>07</td><td>11.05.</td><td>Serien & Storytelling</td><td>Abgabe P3 · Start P4</td></tr>
+        <tr><td>08</td><td>18.05.</td><td>Langzeitbelichtung & Nachtfotografie</td><td>Start P5</td></tr>
+        <tr><td>09</td><td>01.06.</td><td>Workflow, Recht & Start Abschlussarbeit</td><td>Abgabe P4</td></tr>
+        <tr><td>10</td><td>08.06.</td><td>Konzeptwerkstatt + freies Shooting</td><td>M1 Themenskizze</td></tr>
+        <tr><td>11</td><td>15.06.</td><td>Retusche, Schärfen & konsistenter Look</td><td>Abgabe P5 · M2 Rohserie</td></tr>
+        <tr><td>12</td><td>22.06.</td><td>Präsentation, Portfolio & Generalprobe</td><td>M3 nahezu fertig</td></tr>
+        <tr><td>13</td><td>29.06.</td><td>🏁 Prüfungs-Session & Retrospektive</td><td>Finale Abschlussarbeit</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     TAB 5 – PROTOKOLL & PDF
+══════════════════════════════════════════════════════════════ -->
+<div id="protocol" class="section-panel">
+  <h2 class="section-title">Offizielles Session-Protokoll 📄</h2>
+  <p class="section-subtitle">Das sachliche Protokoll der Session – als Nachbereitung, Referenz oder Download.</p>
+
+  <div class="btn-group">
+    <button class="btn btn-primary" onclick="generatePDF()">📥 Als PDF herunterladen</button>
+    <button class="btn btn-outline" onclick="toggleProto()">👁️ Vorschau ein/aus</button>
+    <button class="btn btn-ghost" onclick="window.print()">🖨️ Drucken</button>
+  </div>
+
+  <div class="protocol-viewer" id="protoViewer" style="display:none;">
+    <div class="protocol-toolbar">
+      <span class="protocol-toolbar-label">📄 Session_01_Protokoll.pdf · Version 1.0 · 23.03.2026</span>
+      <div class="protocol-toolbar-actions">
+        <button class="btn btn-ghost" onclick="generatePDF()">📥 PDF</button>
+      </div>
+    </div>
+    <div class="protocol-content" id="pdfContent">
+      <h1>SESSION-PROTOKOLL | SESSION 01</h1>
+      <p><strong>Kurs:</strong> Digitalfotografie & Digitale Bildbearbeitung – SS2026<br>
+      <strong>Datum:</strong> Montag, 23. März 2026<br>
+      <strong>Zeit:</strong> 09:55 – 13:05 Uhr<br>
+      <strong>Raum:</strong> K115<br>
+      <strong>Dozent:</strong> Mario Schubert<br>
+      <strong>Durchführungsform:</strong> Präsenzveranstaltung<br>
+      <strong>Teilnehmende:</strong> [siehe Warteliste]</p>
+
+      <p><em>Alle Angaben sind vorläufig und vorbehaltlich Änderungen. Verbindliche Informationen werden in der Session und über Moodle kommuniziert.</em></p>
+
+      <hr>
+      <h2>1. Ablauf der Session</h2>
+      <table>
+        <thead><tr><th>Block</th><th>Thema</th><th>Zeit</th><th>Dauer</th><th>Form</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Begrüßung & Kursvorstellung</td><td>09:55–10:25</td><td>30 Min</td><td>Plenum, Vortrag</td></tr>
+          <tr><td>2</td><td>Prüfungssystem & Pflichtabgaben</td><td>10:25–10:55</td><td>30 Min</td><td>Plenum, Vortrag + Fragen</td></tr>
+          <tr><td>3</td><td>Voraussetzungen & Ausrüstung</td><td>10:55–11:15</td><td>20 Min</td><td>Plenum, Live-Demo</td></tr>
+          <tr><td>4</td><td>Semesterüberblick</td><td>11:15–11:40</td><td>25 Min</td><td>Plenum, Präsentation</td></tr>
+          <tr><td>5–7</td><td>Aufgaben, Tools & Plattformen</td><td>11:40–12:25</td><td>45 Min</td><td>Plenum + Demo</td></tr>
+          <tr><td>8</td><td>Pause</td><td>12:25–12:35</td><td>10 Min</td><td>–</td></tr>
+          <tr><td>9</td><td>Campus-Fotowalk (Praxis)</td><td>12:35–13:00</td><td>25 Min</td><td>Praktische Übung</td></tr>
+          <tr><td>10</td><td>Ausblick & Abschluss</td><td>13:00–13:05</td><td>5 Min</td><td>Plenum, Ankündigung</td></tr>
+        </tbody>
+      </table>
+
+      <hr>
+      <h2>2. Kursstruktur & Lernziel</h2>
+      <p>Der Kurs richtet sich an Studierende <strong>ohne Vorkenntnisse</strong>. Zentrales Lernziel: <strong>Sehen lernen</strong> – nicht nur Kamera bedienen. 13 Präsenz-Sessions von März bis Juni 2026, montags 09:55–13:05 Uhr, Raum K115.</p>
+      <p>Abstimmung über Anrede „Du" oder „Sie" wurde durchgeführt. Ergebnis gilt für das gesamte Semester.</p>
+
+      <hr>
+      <h2>3. Prüfungssystem</h2>
+      <h3>3.1 Vier Fotoaufgaben (Pflichtleistung)</h3>
+      <table>
+        <thead><tr><th>Projekt</th><th>Thema</th><th>Abgabe (vorläufig)</th><th>Format</th></tr></thead>
+        <tbody>
+          <tr><td>P1</td><td>Sport & Bewegung</td><td>13.04.2026</td><td>5 JPEG</td></tr>
+          <tr><td>P2</td><td>Kreative Portraits</td><td>27.04.2026</td><td>5 JPEG</td></tr>
+          <tr><td>P3</td><td>Urban Street & Alltag</td><td>11.05.2026</td><td>5 JPEG</td></tr>
+          <tr><td>P4</td><td>Ereignis-Dokumentation</td><td>01.06.2026</td><td>5 JPEG</td></tr>
+        </tbody>
+      </table>
+      <p>Alle 4 Aufgaben sind Voraussetzung für die Abschlussprüfung. Fehlende Abgaben führen zum Prüfungsausschluss – Ausnahmen nach Absprache mit dem Dozenten.</p>
+
+      <h3>3.2 Abschlussarbeit (Pflichtleistung)</h3>
+      <ul>
+        <li>Freie Themenwahl, 8–12 bearbeitete Bilder als Serie</li>
+        <li>Kurzes Konzept + Reflexion als PDF</li>
+        <li>Einzelarbeit (Standard) oder Gruppe bis 3 Personen (höhere Erwartung)</li>
+        <li>Abgabe (vorläufig): 28.06.2026</li>
+        <li>Drei Meilenstein-Feedbacks: M1 Themenskizze, M2 Rohserie, M3 nahezu fertig</li>
+      </ul>
+
+      <h3>3.3 Notengewichtung</h3>
+      <p><code>Abschlussnote = [(P1 + P2 + P3 + P4) : 4 + Abschlussarbeit] : 2</code></p>
+
+      <hr>
+      <h2>4. Technische Voraussetzungen</h2>
+      <table>
+        <thead><tr><th>Anforderung</th><th>Details</th><th>Pflicht?</th></tr></thead>
+        <tbody>
+          <tr><td>Kamera mit RAW</td><td>Blende/Zeit/ISO manuell einstellbar</td><td>JA</td></tr>
+          <tr><td>Adobe Lightroom Classic</td><td>~10 €/Monat, Studierendenabo</td><td>JA</td></tr>
+          <tr><td>Stativ</td><td>Ab Session 8 (Langzeitbelichtung)</td><td>Später JA</td></tr>
+        </tbody>
+      </table>
+
+      <hr>
+      <h2>5. Plattformen & Upload</h2>
+      <table>
+        <thead><tr><th>Plattform</th><th>Zweck</th></tr></thead>
+        <tbody>
+          <tr><td>Moodle (THI)</td><td>Offizielle Abgaben, Noten, Fristen</td></tr>
+          <tr><td>Google Drive</td><td>Bildgalerien, informelles Feedback, Kursordner</td></tr>
+        </tbody>
+      </table>
+      <p>Bilder werden <strong>nicht per E-Mail</strong> übermittelt.</p>
+
+      <hr>
+      <h2>6. Erste Hausaufgabe: HA1 „Formen-Jagd & Kamerakenntnis"</h2>
+      <p><strong>Art:</strong> Freiwillig (mit individuellem Feedback) · <strong>Frist:</strong> 29.03.2026, 23:59 Uhr</p>
+      <table>
+        <thead><tr><th>Kategorie</th><th>Anzahl</th><th>Beispiele</th></tr></thead>
+        <tbody>
+          <tr><td>Linien</td><td>4 Bilder</td><td>vertikal, horizontal, diagonal</td></tr>
+          <tr><td>Formen</td><td>4 Bilder</td><td>Kreise, Dreiecke, Rechtecke</td></tr>
+          <tr><td>Texturen</td><td>4 Bilder</td><td>rau, glatt, repetitiv, organisch</td></tr>
+        </tbody>
+      </table>
+      <p>Aus 12 Bildern: 5 beste auswählen + 3–5 Sätze Reflexion. Upload als <code>Vorname_Nachname_HA1.zip</code> auf Moodle + Google Drive.</p>
+
+      <hr>
+      <h2>7. Campus-Fotowalk (Praktische Übung)</h2>
+      <p><strong>Durchführungsform:</strong> Präsenzübung, gemeinsamer Rundgang durch Gebäude/Campus (12:35–13:00 Uhr)</p>
+      <p>Die Studierenden fotografierten gezielt Linien, Formen und Texturen mit mindestens drei verschiedenen Perspektiven je Motiv. Anschließend wurden 2–3 Ergebnisse im Plenum besprochen – mit Fokus auf Perspektiventscheidungen, nicht Bewertung.</p>
+
+      <hr>
+      <h2>8. Aktuelle Aufgaben & Fristen</h2>
+      <table>
+        <thead><tr><th>Aufgabe</th><th>Art</th><th>Frist</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Kurzmail an Dozenten</td><td>Org.</td><td>27.03.2026</td><td>Offen</td></tr>
+          <tr><td>HA1 – Formen-Jagd</td><td>Freiwillig</td><td>29.03.2026</td><td>Läuft</td></tr>
+          <tr><td>Lightroom installieren</td><td>Pflicht-Vorbereitung</td><td>Bis 30.03.</td><td>Offen</td></tr>
+        </tbody>
+      </table>
+      <p><strong>Countdown:</strong> Noch 6 Tage bis HA1 (29.03.2026) · Noch 21 Tage bis P1 (13.04.2026)</p>
+
+      <hr>
+      <p><em>Alle Angaben vorbehaltlich Änderungen. Verbindliche Infos über Moodle.</em><br>
+      <strong>Protokoll:</strong> Mario Schubert · Digitalfotografie SS2026 · THI Ingolstadt · 23.03.2026</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     TAB 6 – HILFE
+══════════════════════════════════════════════════════════════ -->
+<div id="support" class="section-panel">
+  <h2 class="section-title">Hilfe, Links & Kontakt ❓</h2>
+  <p class="section-subtitle">Alles was du brauchst, um den Kurs erfolgreich zu durchlaufen.</p>
+
+  <h3>🔗 Wichtige Links</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Ressource</th><th>Link / Kontakt</th><th>Wofür</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Moodle</strong></td><td><a href="https://moodle.thi.de" target="_blank">moodle.thi.de</a></td><td>Offizielle Abgaben, Noten, Kursunterlagen</td></tr>
+        <tr><td><strong>Google Drive</strong></td><td>Link auf Moodle</td><td>Bildgalerien, informelles Feedback, Kursordner</td></tr>
+        <tr><td><strong>Dozent</strong></td><td><a href="mailto:mario.schubert@thi.de">mario.schubert@thi.de</a></td><td>Fragen, Probleme, Ausnahmen</td></tr>
+        <tr><td><strong>THI</strong></td><td><a href="https://thi.de" target="_blank">thi.de</a></td><td>Stundenplan, Gebäude, Studierendensekretariat</td></tr>
+        <tr><td><strong>Adobe Lightroom</strong></td><td><a href="https://helpx.adobe.com/de/lightroom-classic/" target="_blank">Adobe Help</a></td><td>Offizielle Lightroom-Dokumentation</td></tr>
+        <tr><td><strong>Benjamin Jaworskyj</strong></td><td><a href="https://www.youtube.com/@benjaminjaworskyj" target="_blank">YouTube-Kanal</a></td><td>Kostenlose Fotokurse auf Deutsch</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>💬 Häufige Fragen (FAQ)</h3>
+
+  <div class="callout info" style="margin-bottom:.75rem;">
+    <span class="callout-icon">🎥</span>
+    <div class="callout-body">
+      <strong>Ich habe noch keine Kamera. Was nun?</strong>
+      Direkt an mario.schubert@thi.de schreiben. Es gibt eventuell Leihgeräte oder Alternativen.
+    </div>
+  </div>
+
+  <div class="callout info" style="margin-bottom:.75rem;">
+    <span class="callout-icon">💾</span>
+    <div class="callout-body">
+      <strong>Was ist das RAW-Format?</strong>
+      RAW ist das unkomprimierte „Rohdaten"-Format deiner Kamera – es speichert deutlich mehr Bildinformation als JPEG und erlaubt daher viel bessere Bearbeitung in Lightroom.
+    </div>
+  </div>
+
+  <div class="callout info" style="margin-bottom:.75rem;">
+    <span class="callout-icon">📤</span>
+    <div class="callout-body">
+      <strong>Wohin lade ich meine Bilder hoch?</strong>
+      Pflichtabgaben immer auf Moodle. Bildgalerien und informelles Feedback über den geteilten Google Drive Ordner (Link auf Moodle). Keine Bilder per E-Mail.
+    </div>
+  </div>
+
+  <div class="callout info" style="margin-bottom:.75rem;">
+    <span class="callout-icon">🏠</span>
+    <div class="callout-body">
+      <strong>Sind die Hausaufgaben wirklich freiwillig?</strong>
+      Ja – keine Benotung, kein Zwang. Aber: wer sie abgibt, bekommt direktes Feedback vom Dozenten. Das ist die schnellste Art, sich zu verbessern.
+    </div>
+  </div>
+
+  <div class="callout info">
+    <span class="callout-icon">❌</span>
+    <div class="callout-body">
+      <strong>Was passiert, wenn ich eine Pflichtabgabe verpasse?</strong>
+      Dann ist die Teilnahme an der Abschlussprüfung nicht mehr möglich. Bei echten Gründen (Krankheit etc.) bitte sofort mit dem Dozenten sprechen – wir finden eine Lösung.
+    </div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<footer class="site-footer">
+  <strong>Digitalfotografie & Digitale Bildbearbeitung – SS2026</strong><br>
+  Technische Hochschule Ingolstadt · Dozent: Mario Schubert · Session 01 · 23.03.2026<br>
+  <span style="margin-top:.5rem; display:block;">Alle Angaben vorbehaltlich Änderungen · Verbindliche Infos immer über Moodle</span>
+</footer>
+
+
+
+<script>
+  function show(id, el) {
+    event.preventDefault();
+    document.querySelectorAll('.section-panel').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-list a').forEach(a => a.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    el.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  
+
+      };
+    html2pdf().set(opt).from(el).save().then(() => {
+      loader.classList.remove('active');
+    });
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.ctrlKey && e.key === 'p') { e.preventDefault(); window.print(); }
+  });
+
+  // --- UX JAVASCRIPT ---
+  window.addEventListener('scroll', () => {
+    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    document.getElementById('scroll-progress').style.width = ((winScroll / height) * 100) + '%';
+  });
+
+  function toggleTheme() {
+    document.body.classList.toggle('light-theme');
+    localStorage.setItem('df_theme', document.body.classList.contains('light-theme') ? 'light' : 'dark');
+  }
+  if (localStorage.getItem('df_theme') === 'light') document.body.classList.add('light-theme');
+
+  function toggleFocus() { document.body.classList.toggle('focus-mode'); }
+
+  function saveTask(id) {
+    const cb = document.getElementById('task_chk_' + id);
+    const container = document.getElementById('task_container_' + id);
+    localStorage.setItem('df_task_' + id, cb.checked);
+    if(cb.checked) container.classList.add('task-done');
+    else container.classList.remove('task-done');
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.task-check').forEach(cb => {
+      const id = cb.id.replace('task_chk_', '');
+      if (localStorage.getItem('df_task_' + id) === 'true') {
+        cb.checked = true;
+        document.getElementById('task_container_' + id).classList.add('task-done');
+      }
+    });
+  });
+
+  function handleSearch() {
+    const query = document.getElementById('live-search').value.toLowerCase();
+    const activePanel = document.querySelector('.section-panel.active');
+    if(!activePanel || query.length < 3) return;
+
+    activePanel.querySelectorAll('h2, h3, p, li, td, .video-title').forEach(el => {
+      if(!el.classList.contains('video-desc')) {
+          if (el.textContent.toLowerCase().includes(query)) {
+              el.style.backgroundColor = 'rgba(232, 168, 56, 0.25)';
+          } else {
+              el.style.backgroundColor = 'transparent';
+          }
+      }
+    });
+  }
+
+  
+
+</script>
+</body>
+</html>
