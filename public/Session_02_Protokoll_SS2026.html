@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Session 02 – Belichtungsdreieck | Protokoll & Skript</title>
+<style>
+  /* ── PRINT / PDF OPTIMISED STYLESHEET ── */
+  :root {
+    --c-brand:   #1a56db;
+    --c-gold:    #c67c1a;
+    --c-teal:    #0e7490;
+    --c-red:     #b91c1c;
+    --c-bg-box:  #f0f4ff;
+    --c-bg-warn: #fffbeb;
+    --c-bg-tip:  #f0fdf4;
+    --c-border:  #d1d5db;
+    --c-text:    #111827;
+    --c-muted:   #6b7280;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "Georgia", serif;
+    font-size: 11pt;
+    color: var(--c-text);
+    background: #fff;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2.5rem 3rem;
+    line-height: 1.65;
+  }
+
+  /* ── TYPOGRAPHY ── */
+  h1 { font-size: 22pt; color: var(--c-brand); margin-bottom: .3rem; }
+  h2 { font-size: 14pt; color: var(--c-brand); border-bottom: 2px solid var(--c-brand);
+       padding-bottom: .35rem; margin: 2rem 0 .9rem; }
+  h3 { font-size: 12pt; color: var(--c-gold); margin: 1.5rem 0 .5rem; }
+  h4 { font-size: 11pt; color: var(--c-teal); margin: 1rem 0 .4rem; }
+  p  { margin-bottom: .75rem; }
+  ul, ol { margin: .5rem 0 .75rem 1.4rem; }
+  li { margin-bottom: .3rem; }
+  strong { color: var(--c-text); }
+  em { color: var(--c-muted); font-style: italic; }
+  hr { border: none; border-top: 1px solid var(--c-border); margin: 2rem 0; }
+
+  /* ── HEADER BLOCK ── */
+  .doc-header {
+    border: 2px solid var(--c-brand);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: .5rem 2rem;
+    align-items: start;
+  }
+  .doc-header h1 { grid-column: 1 / -1; }
+  .meta-grid { display: grid; grid-template-columns: auto 1fr; gap: .15rem .75rem; font-size: 10pt; }
+  .meta-label { color: var(--c-muted); font-style: italic; }
+  .badge {
+    display: inline-block; font-size: 9pt; font-weight: bold;
+    padding: .2rem .7rem; border-radius: 99px; white-space: nowrap;
+  }
+  .badge-blue  { background: #dbeafe; color: var(--c-brand); border: 1px solid #93c5fd; }
+  .badge-gold  { background: #fef3c7; color: var(--c-gold);  border: 1px solid #fcd34d; }
+  .badge-red   { background: #fee2e2; color: var(--c-red);   border: 1px solid #fca5a5; }
+  .badge-green { background: #dcfce7; color: #15803d;        border: 1px solid #86efac; }
+
+  /* ── CALLOUT BOXES ── */
+  .callout {
+    border-left: 4px solid; border-radius: 0 6px 6px 0;
+    padding: .9rem 1.1rem; margin: 1rem 0;
+  }
+  .callout-info    { border-color: var(--c-brand); background: var(--c-bg-box); }
+  .callout-warn    { border-color: #d97706;        background: var(--c-bg-warn); }
+  .callout-tip     { border-color: #16a34a;        background: var(--c-bg-tip); }
+  .callout-red     { border-color: var(--c-red);   background: #fff5f5; }
+  .callout-title   { font-weight: bold; font-size: 10pt; margin-bottom: .35rem; }
+
+  /* ── TABLES ── */
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.25rem; font-size: 10pt; }
+  th { background: var(--c-brand); color: white; padding: .6rem .8rem; text-align: left; font-weight: 600; }
+  td { padding: .55rem .8rem; border-bottom: 1px solid var(--c-border); vertical-align: top; }
+  tr:nth-child(even) td { background: #f8faff; }
+  tr:last-child td { border-bottom: none; }
+  .td-center { text-align: center; }
+
+  /* ── BELICHTUNGS-VISUALISIERUNG (ASCII art mit CSS) ── */
+  .triangle-container {
+    display: flex; gap: 1.5rem; align-items: flex-start;
+    margin: 1.25rem 0; flex-wrap: wrap;
+  }
+  .triangle-item {
+    flex: 1; min-width: 200px;
+    border: 1.5px solid var(--c-border);
+    border-radius: 8px; padding: 1rem;
+    text-align: center;
+  }
+  .triangle-item .icon { font-size: 2rem; display: block; margin-bottom: .4rem; }
+  .triangle-item h4 { color: var(--c-brand); margin-bottom: .5rem; text-align: center; }
+  .triangle-item p  { font-size: 9.5pt; text-align: left; }
+  .scale-bar {
+    width: 100%; height: 14px; border-radius: 3px; margin: .5rem 0;
+    display: flex; overflow: hidden; font-size: 7pt;
+  }
+  .scale-left  { background: #dbeafe; flex: 1; display: flex; align-items: center; justify-content: flex-start; padding-left: 4px; color: #1e40af; }
+  .scale-right { background: #fee2e2; flex: 1; display: flex; align-items: center; justify-content: flex-end; padding-right: 4px; color: #991b1b; }
+
+  /* ── PRAXIS-BOXEN ── */
+  .praxis-box {
+    border: 2px dashed var(--c-gold); border-radius: 8px;
+    padding: 1rem 1.25rem; margin: 1.25rem 0;
+    background: #fffbf0;
+  }
+  .praxis-box .praxis-title {
+    font-size: 10pt; font-weight: bold; color: var(--c-gold);
+    text-transform: uppercase; letter-spacing: .05em;
+    margin-bottom: .6rem; display: flex; align-items: center; gap: .4rem;
+  }
+
+  /* ── FAQ ── */
+  .faq-item { border: 1px solid var(--c-border); border-radius: 6px; margin-bottom: .75rem; overflow: hidden; }
+  .faq-q { background: #f3f4f6; padding: .6rem .9rem; font-weight: 600; font-size: 10.5pt; }
+  .faq-a { padding: .6rem .9rem; font-size: 10pt; }
+
+  /* ── CHECKLISTE ── */
+  .check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem; margin: .75rem 0; }
+  .check-item {
+    display: flex; align-items: flex-start; gap: .4rem;
+    font-size: 10pt; padding: .4rem .6rem;
+    border: 1px solid var(--c-border); border-radius: 4px;
+    background: #fafafa;
+  }
+  .check-box {
+    width: 14px; height: 14px; border: 1.5px solid #9ca3af;
+    border-radius: 2px; flex-shrink: 0; margin-top: 2px;
+  }
+
+  /* ── AUFGABEN-KARTEN ── */
+  .aufgabe-card {
+    border: 2px solid; border-radius: 8px;
+    padding: 1.1rem 1.3rem; margin: 1rem 0;
+  }
+  .aufgabe-card.pflicht { border-color: var(--c-red); background: #fff5f5; }
+  .aufgabe-card.freiwillig { border-color: var(--c-teal); background: #f0f9ff; }
+  .aufgabe-card .aufgabe-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: .6rem; border-bottom: 1px solid rgba(0,0,0,.1);
+    padding-bottom: .5rem;
+  }
+  .aufgabe-card h3 { margin: 0; font-size: 12pt; }
+
+  /* ── TAKE-AWAYS ── */
+  .takeaway-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1rem 0; }
+  .takeaway-item { border: 1.5px solid var(--c-border); border-radius: 6px; padding: .8rem; text-align: center; }
+  .takeaway-item .ta-icon { font-size: 1.6rem; display: block; margin-bottom: .35rem; }
+  .takeaway-item .ta-label { font-size: 9pt; color: var(--c-muted); display: block; }
+  .takeaway-item strong { font-size: 10pt; }
+
+  /* ── VIDEO LINKS ── */
+  .video-row { display: flex; align-items: center; gap: .75rem; padding: .6rem; border: 1px solid var(--c-border); border-radius: 6px; margin-bottom: .5rem; }
+  .video-thumb-placeholder { width: 70px; height: 44px; background: #e5e7eb; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+  .video-info { flex: 1; }
+  .video-info strong { font-size: 10pt; display: block; }
+  .video-info span { font-size: 9pt; color: var(--c-muted); }
+
+  /* ── PRINT CONTROL ── */
+  @media print {
+    body { padding: 1.5cm 2cm; }
+    .no-print { display: none !important; }
+    h2 { page-break-before: auto; }
+    .praxis-box, .callout, .aufgabe-card { page-break-inside: avoid; }
+  }
+
+  /* ── SCREEN ONLY: PDF-BUTTON ── */
+  .pdf-bar {
+    position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 999;
+    display: flex; gap: .5rem;
+  }
+  .pdf-btn {
+    background: var(--c-brand); color: white; border: none;
+    padding: .7rem 1.3rem; border-radius: 99px; font-size: 10pt;
+    font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(26,86,219,.35);
+    transition: all .2s;
+  }
+  .pdf-btn:hover { background: #1e40af; transform: translateY(-2px); }
+</style>
+</head>
+<body>
+
+<!-- PDF-BUTTON (nur Bildschirm) -->
+<div class="pdf-bar no-print">
+  <button class="pdf-btn" onclick="window.print()">🖨️ Als PDF speichern</button>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     KOPFZEILE
+═══════════════════════════════════════════ -->
+<div class="doc-header">
+  <h1>Session 02 – Das Belichtungsdreieck</h1>
+  <p style="grid-column:1/-1; color:var(--c-muted); font-size:10pt; margin:0 0 .8rem;">
+    Technik-Intensiv: Verschlusszeit · Blende · ISO · Fokus · RAW & Lightroom-Import
+  </p>
+  <div class="meta-grid">
+    <span class="meta-label">Kurs</span>      <span>Digitalfotografie & Digitale Bildbearbeitung – SS2026</span>
+    <span class="meta-label">Datum</span>     <span>Montag, 30. März 2026</span>
+    <span class="meta-label">Zeit</span>      <span>09:55 – 13:05 Uhr (190 Min.)</span>
+    <span class="meta-label">Raum</span>      <span>K115, Technische Hochschule Ingolstadt</span>
+    <span class="meta-label">Dozent</span>    <span>Mario Schubert</span>
+    <span class="meta-label">Lernbereich</span><span>Kamera / Belichtung / Technik</span>
+  </div>
+  <div style="text-align:right;">
+    <span class="badge badge-blue">Session 02 / 13</span>
+  </div>
+</div>
+
+<div class="callout callout-info">
+  <div class="callout-title">ℹ️ Warum dieses Dokument?</div>
+  <p>
+    Dieses Protokoll richtet sich an alle Studierenden – unabhängig davon, ob du heute anwesend warst oder nicht. 
+    Es enthält den <strong>vollständigen Ablauf der Session</strong>, alle theoretischen Inhalte mit Erklärungen und Praxisbeispielen, 
+    die vergebenen Aufgaben sowie Checklisten für deine Selbstkontrolle. 
+    Lies es aktiv und hake die Punkte ab – nicht einfach überfliegen.
+  </p>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     AGENDA
+═══════════════════════════════════════════ -->
+<h2>Ablauf & Zeitplan</h2>
+
+<p>Die Session war als <strong>Technik-Intensiv</strong> aufgebaut. Kein Campus-Walk, keine Aufwärmrunde. Es wurde sofort tief in die Materie eingestiegen. Das war bewusst so – wer Session 1 mitgemacht und HA1 erledigt hat, kennt seine Kamera bereits ein Stück weit. Jetzt folgt das Warum hinter der Technik.</p>
+
+<table>
+  <thead>
+    <tr><th>Block</th><th>Thema</th><th>Uhrzeit</th><th>Dauer</th><th>Format</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>1</td><td>Belichtungsdreieck Deep-Dive I: Verschlusszeit</td><td>09:55 – 10:45</td><td>50 Min.</td><td>Theorie + Live-Beispiele</td></tr>
+    <tr><td>2</td><td>Blende & Schärfentiefe</td><td>10:45 – 11:35</td><td>50 Min.</td><td>Theorie + Stationsübung</td></tr>
+    <tr><td>3</td><td>ISO & Fokus-Arten</td><td>11:35 – 12:15</td><td>40 Min.</td><td>Theorie + Kameratests</td></tr>
+    <tr><td>—</td><td>Pause</td><td>12:15 – 12:25</td><td>10 Min.</td><td>–</td></tr>
+    <tr><td>4</td><td>RAW vs. JPEG & Lightroom-Import</td><td>12:25 – 13:05</td><td>40 Min.</td><td>Live-Demo am Beamer</td></tr>
+  </tbody>
+</table>
+
+<!-- ═══════════════════════════════════════════
+     BLOCK 1: BELICHTUNGSDREIECK – ÜBERBLICK
+═══════════════════════════════════════════ -->
+<h2>Block 1 – Das Belichtungsdreieck: Überblick & Verschlusszeit (50 Min.)</h2>
+
+<h3>Was passiert hier?</h3>
+<p>
+  Bevor wir einzelne Parameter durchgehen, wurde das Gesamtkonzept des Belichtungsdreiecks eingeführt.
+  Das Belichtungsdreieck ist kein Einstellungssystem – es ist ein <strong>Gleichgewichtssystem</strong>.
+  Drei Variable steuern gemeinsam, wie viel Licht auf den Sensor fällt und welche kreativen Effekte dabei entstehen.
+  Ändert man eine Variable, muss man mindestens eine andere korrigieren, um die Gesamthelligkeit zu erhalten.
+</p>
+
+<div class="callout callout-info">
+  <div class="callout-title">📐 Die Grundformel</div>
+  <p>
+    <strong>Belichtung = Verschlusszeit × Blende × ISO</strong><br>
+    Diese drei Parameter bestimmen zusammen, ob ein Bild korrekt belichtet ist.
+    Korrekt bedeutet nicht automatisch gut – es bedeutet, dass Details in Lichtern und Schatten erkennbar sind.
+    Gewollte Über- oder Unterbelichtung ist ein kreatives Mittel.
+  </p>
+</div>
+
+<div class="triangle-container">
+  <div class="triangle-item">
+    <span class="icon">⏱️</span>
+    <h4>Verschlusszeit</h4>
+    <div class="scale-bar">
+      <div class="scale-left">Kurz 1/4000s</div>
+      <div class="scale-right">Lang 30s</div>
+    </div>
+    <p><strong>Was sie kontrolliert:</strong> Bewegung.<br>
+    Kurz = eingefroren. Lang = verschwommen/Spur.</p>
+  </div>
+  <div class="triangle-item">
+    <span class="icon">🔆</span>
+    <h4>Blende (f-Zahl)</h4>
+    <div class="scale-bar">
+      <div class="scale-left">Offen f/1.4</div>
+      <div class="scale-right">Geschl. f/22</div>
+    </div>
+    <p><strong>Was sie kontrolliert:</strong> Schärfentiefe.<br>
+    Offen = Bokeh. Geschlossen = alles scharf.</p>
+  </div>
+  <div class="triangle-item">
+    <span class="icon">📡</span>
+    <h4>ISO-Wert</h4>
+    <div class="scale-bar">
+      <div class="scale-left">Niedrig ISO 100</div>
+      <div class="scale-right">Hoch ISO 25600</div>
+    </div>
+    <p><strong>Was er kontrolliert:</strong> Rauschen.<br>
+    Niedrig = sauber. Hoch = körnig/laut.</p>
+  </div>
+</div>
+
+<div class="callout callout-warn">
+  <div class="callout-title">⚠️ Wichtig: Die gegenseitige Abhängigkeit</div>
+  <p>
+    Wenn du die Verschlusszeit auf 1/1000s setzt (um Bewegung einzufrieren), kommt weniger Licht rein.
+    Um das auszugleichen, musst du entweder die <strong>Blende öffnen</strong> (kleinere f-Zahl) 
+    oder den <strong>ISO erhöhen</strong>. Beides hat Konsequenzen (Schärfentiefe ändert sich / Rauschen steigt).
+    Fotografie im manuellen Modus ist immer eine Abwägung zwischen diesen drei Faktoren.
+  </p>
+</div>
+
+<!-- VERSCHLUSSZEIT DETAILLIERT -->
+<h3>1.1 Verschlusszeit (Shutter Speed / Time) – Im Detail</h3>
+
+<p>
+  Die Verschlusszeit beschreibt, wie lange der Verschluss der Kamera geöffnet ist, um Licht auf den Sensor zu lassen.
+  Die Einheit ist Sekunden oder Bruchteile davon. Eine Verschlusszeit von <code>1/500</code> bedeutet: 
+  der Verschluss ist genau ein Fünfhundertstel einer Sekunde lang offen.
+</p>
+
+<table>
+  <thead>
+    <tr><th>Verschlusszeit</th><th>Wirkung auf Bewegung</th><th>Praxisbeispiel</th><th>Typischer Einsatz</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>1/4000 – 1/1000s</strong></td><td>Bewegung vollständig eingefroren</td><td>Tropfen in der Luft, Vogel im Flug, Sportler beim Sprung</td><td>Sport, Naturfotografie, Action</td></tr>
+    <tr><td><strong>1/500 – 1/250s</strong></td><td>Bewegung weitgehend eingefroren</td><td>Fahrendes Fahrrad, spielende Kinder</td><td>Alltagsfotografie, Portraitfotografie draußen</td></tr>
+    <tr><td><strong>1/125 – 1/60s</strong></td><td>Sehr leichte Bewegungsunschärfe möglich</td><td>Gehende Person (ggf. leicht unscharf an Füßen/Händen)</td><td>Standard, ruhige Motive drinnen</td></tr>
+    <tr><td><strong>1/30 – 1/8s</strong></td><td>Bewegung klar sichtbar verschwommen</td><td>Wischende Hände, Wasserbewegung beginnt weich zu werden</td><td>Kreative Unschärfe, Low-Light ohne Stativ riskant</td></tr>
+    <tr><td><strong>1s – 30s</strong></td><td>Alles, was sich bewegt, wird zur Spur</td><td>Autolichter bei Nacht, Wasserfall weich, Sternbahnen</td><td>Stativ zwingend, Langzeitbelichtung</td></tr>
+  </tbody>
+</table>
+
+<h4>Die Faustregel für scharfe Bilder aus der Hand</h4>
+<p>
+  Damit ein freihand (ohne Stativ) aufgenommenes Bild nicht durch Verwacklung unscharf wird, gilt folgende Grundregel:
+</p>
+<div class="callout callout-tip">
+  <div class="callout-title">✅ Faustregel: 1 ÷ Brennweite</div>
+  <p>
+    Die Verschlusszeit darf nicht länger sein als <strong>1 geteilt durch die Brennweite</strong> deines Objektivs.<br><br>
+    <strong>Beispiele:</strong><br>
+    – Objektiv bei 50mm → Verschlusszeit mindestens <strong>1/50s</strong> (besser 1/80s oder kürzer)<br>
+    – Objektiv bei 18mm → mindestens <strong>1/20s</strong><br>
+    – Objektiv bei 200mm → mindestens <strong>1/200s</strong><br><br>
+    Je länger das Objektiv (Tele), desto empfindlicher reagiert das Bild auf Verwacklung, 
+    da kleine Handbewegungen stark vergrößert werden.
+  </p>
+</div>
+
+<div class="praxis-box">
+  <div class="praxis-title">🎯 Praxis-Test: Verschlusszeit erleben</div>
+  <p><strong>Stell dir folgendes Szenario vor</strong> (oder teste es zuhause):</p>
+  <ol>
+    <li>Stelle deine Kamera in den <strong>Tv/S-Modus</strong> (Zeitvorwahl).</li>
+    <li>Stelle ISO auf 400. Steh auf. Wackle beim Auslösen bewusst leicht.</li>
+    <li>Mache eine Reihe mit: <strong>1/500 → 1/250 → 1/60 → 1/15 → 1/4</strong>.</li>
+    <li>Schaue die Ergebnisse am Display an: ab wann wird es unscharf?</li>
+    <li>Jetzt: Bitte jemanden, sich von dir weg zu gehen. Fotografiere bei <strong>1/1000 vs. 1/30</strong>. Was passiert?</li>
+  </ol>
+  <p style="margin-top:.5rem; font-size:9.5pt; color:var(--c-muted);">
+    ➜ Du wirst feststellen: Das Bild bei 1/30s ist nicht immer schlecht. Wenn das Motiv stillsteht, kann es trotzdem scharf sein – 
+    nur <em>du</em> darfst dich nicht bewegen.
+  </p>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     BLOCK 2: BLENDE
+═══════════════════════════════════════════ -->
+<h2>Block 2 – Blende & Schärfentiefe (50 Min.)</h2>
+
+<h3>Was ist die Blende?</h3>
+<p>
+  Die Blende ist eine verstellbare Öffnung im Objektiv – wie eine Iris im Auge.
+  Sie bestimmt, wie viel Licht ins Objektiv fällt und – viel entscheidender für den kreativen Einsatz –
+  wie groß der Bereich ist, der scharf abgebildet wird. Dieser Bereich heißt <strong>Schärfentiefe</strong>.
+</p>
+
+<div class="callout callout-warn">
+  <div class="callout-title">⚠️ Die verwirrende Logik der f-Zahlen</div>
+  <p>
+    Die Blende wird als sogenannter <strong>f-Stop</strong> oder <strong>f-Wert</strong> angegeben (z.B. f/2.8 oder f/11).
+    Die Logik wirkt zunächst kontraintuitiv: <strong>Je kleiner die Zahl, desto größer die Öffnung</strong> – und umgekehrt.<br><br>
+    Warum? Weil f/2.8 bedeutet: die Öffnung beträgt 1/2.8 des Brennweitendurchmessers. Daher: f/2.8 ist viel 
+    größer als f/16.
+  </p>
+</div>
+
+<table>
+  <thead>
+    <tr><th>Blende (f-Wert)</th><th>Öffnung</th><th>Schärfentiefe</th><th>Lichtmenge</th><th>Typischer Einsatz</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>f/1.4 – f/2</strong></td><td>Sehr groß (weit offen)</td><td>Sehr gering – nur wenige cm scharf</td><td>Maximal</td><td>Portrait (Bokeh-Effekt), Low Light</td></tr>
+    <tr><td><strong>f/2.8 – f/4</strong></td><td>Groß (offen)</td><td>Gering – Motiv scharf, Hintergrund weich</td><td>Hoch</td><td>Portrait, Reportage, Veranstaltungen</td></tr>
+    <tr><td><strong>f/5.6 – f/8</strong></td><td>Mittel</td><td>Mittel – gut für Person im Kontext</td><td>Mittel</td><td>Allzweck, Reise, Street</td></tr>
+    <tr><td><strong>f/11 – f/16</strong></td><td>Klein (geschlossen)</td><td>Groß – alles von nah bis weit scharf</td><td>Gering</td><td>Landschaft, Architektur, Gruppen</td></tr>
+    <tr><td><strong>f/22</strong></td><td>Sehr klein</td><td>Maximal – aber Beugungs-Unschärfe kann entstehen</td><td>Minimal</td><td>Nur bei Stativ & spezifischen Zwecken</td></tr>
+  </tbody>
+</table>
+
+<h3>Bokeh – Was ist das eigentlich?</h3>
+<p>
+  Bokeh (aus dem Japanischen „Boke" = Unschärfe, Verschwommenheit) bezeichnet die ästhetische Qualität der
+  Unschärfe im Bild. Die kreisförmigen Lichtpunkte, die bei offener Blende im Hintergrund entstehen, 
+  sind keine Fehler – sie sind ein bewusst eingesetztes Gestaltungsmittel.
+</p>
+
+<div class="praxis-box">
+  <div class="praxis-title">🎯 Praxis-Test: Schärfentiefe sehen</div>
+  <p><strong>Stelle folgendes auf:</strong></p>
+  <ol>
+    <li>Stelle dir 3–4 Gegenstände in einer Linie auf (z.B. Stift, Flasche, Tasse, Buch) mit je ~30cm Abstand.</li>
+    <li>Gehe ca. 1–1.5 Meter zurück. Fotografiere dieselbe Szene bei <strong>f/2.8, f/5.6, f/11</strong>.</li>
+    <li>Vergleiche: Bei f/2.8 ist nur der erste Gegenstand scharf. Bei f/11 sind alle scharf.</li>
+  </ol>
+  <p style="margin-top:.5rem; font-size:9.5pt; color:var(--c-muted);">
+    ➜ Das gleiche Prinzip funktioniert bei Portraits: Du willst die Person scharf, den Hintergrund weich? 
+    Gehe nah ran, nutze eine offene Blende (z.B. f/2 oder f/2.8) und stelle sicher, dass dein Fokus 
+    exakt auf den Augen der Person liegt.
+  </p>
+</div>
+
+<h3>Faktoren, die die Schärfentiefe beeinflussen</h3>
+<p>Die Blende ist nicht der einzige Faktor. Folgende drei Aspekte steuern die Schärfentiefe gemeinsam:</p>
+
+<table>
+  <thead>
+    <tr><th>Faktor</th><th>Kleiner Schärfebereich (Bokeh)</th><th>Großer Schärfebereich</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Blende</strong></td><td>f/1.4 – f/2.8 (offen)</td><td>f/8 – f/16 (geschlossen)</td></tr>
+    <tr><td><strong>Abstand Kamera → Motiv</strong></td><td>Sehr nah (z.B. 50cm)</td><td>Weit entfernt (z.B. 5m+)</td></tr>
+    <tr><td><strong>Brennweite des Objektivs</strong></td><td>Langes Tele (z.B. 200mm)</td><td>Weitwinkel (z.B. 16mm)</td></tr>
+  </tbody>
+</table>
+
+<div class="callout callout-tip">
+  <div class="callout-title">💡 Merksatz</div>
+  <p>
+    <strong>„Je näher du am Motiv bist, je offener die Blende, je länger das Objektiv – desto weniger ist scharf."</strong><br>
+    Das ist die Grundformel für Bokeh-Portraits. Für Landschaften machst du das Gegenteil.
+  </p>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     BLOCK 3: ISO & FOKUS
+═══════════════════════════════════════════ -->
+<h2>Block 3 – ISO & Fokus-Arten (40 Min.)</h2>
+
+<h3>3.1 ISO – Die Sensorempfindlichkeit</h3>
+<p>
+  ISO steht für „International Organization for Standardization" und ist aus der Filmfotografie übernommen worden.
+  Bei analogen Filmen bezeichnete er die Lichtempfindlichkeit des Films (früher: ASA).
+  Bei Digitalkameras beschreibt er die elektronische Verstärkung des Sensorsignals.
+</p>
+<p>
+  Vereinfacht: <strong>Je höher der ISO-Wert, desto empfindlicher reagiert der Sensor auf Licht.</strong>
+  Das klingt gut – aber es hat einen Preis: Die Verstärkung verstärkt nicht nur das Licht, 
+  sondern auch das elektronische Rauschen im Sensor. Das Bild wird „körnig" oder „verrauscht".
+</p>
+
+<table>
+  <thead>
+    <tr><th>ISO-Wert</th><th>Lichtempfindlichkeit</th><th>Rauschen</th><th>Typische Situation</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>ISO 100</strong></td><td>Niedrig</td><td>Minimal (maximale Qualität)</td><td>Sonniger Tag draußen, Stativ-Aufnahmen</td></tr>
+    <tr><td><strong>ISO 200 – 400</strong></td><td>Niedrig–Mittel</td><td>Kaum sichtbar</td><td>Bewölkter Tag, helle Innenräume</td></tr>
+    <tr><td><strong>ISO 800 – 1600</strong></td><td>Mittel</td><td>Leicht sichtbar bei 100% Ansicht</td><td>Dämmerung, schlechte Innenraumbeleuchtung</td></tr>
+    <tr><td><strong>ISO 3200 – 6400</strong></td><td>Hoch</td><td>Deutlich sichtbar</td><td>Dunkle Veranstaltungen, Konzerte, Nacht</td></tr>
+    <tr><td><strong>ISO 12800+</strong></td><td>Sehr hoch</td><td>Stark körnig / Qualitätsverlust</td><td>Extremsituationen, Not-Lösung</td></tr>
+  </tbody>
+</table>
+
+<div class="callout callout-tip">
+  <div class="callout-title">✅ Die goldene ISO-Regel</div>
+  <p>
+    <strong>ISO immer so niedrig wie möglich, so hoch wie nötig.</strong><br>
+    Ein leicht verrauschtes, aber scharfes Bild ist in 99% der Fälle besser als ein rauschfreies,
+    aber verwackeltes oder zu dunkles Bild. Rauschen kann in Lightroom teilweise herausgerechnet werden – 
+    ein verwackeltes oder zu dunkles Bild ist nicht zu retten.
+  </p>
+</div>
+
+<div class="praxis-box">
+  <div class="praxis-title">🎯 Praxis-Test: ISO-Rauschen sehen</div>
+  <ol>
+    <li>Stelle die Kamera auf ein Stativ oder lege sie auf einem ruhigen Untergrund ab.</li>
+    <li>Fotografiere dasselbe Motiv (z.B. eine Textur, ein Muster) bei <strong>ISO 100, 400, 1600, 6400</strong>. Halte Blende und Zeit konstant.</li>
+    <li>Importiere die Bilder in Lightroom und zoome auf 100%. Beobachte den Qualitätsunterschied in den dunklen Bereichen.</li>
+  </ol>
+  <p style="margin-top:.5rem; font-size:9.5pt; color:var(--c-muted);">
+    ➜ Dunkle Flächen (z.B. Schatten, dunkle Wände) zeigen Rauschen zuerst und am stärksten.
+    Helle Flächen sehen länger sauber aus. Das ist kein Zufall – es ist physikalisch bedingt.
+  </p>
+</div>
+
+<h3>3.2 Fokus-Arten im Detail</h3>
+<p>
+  Die Kamera fokussiert nicht einfach „die Szene". Sie fokussiert auf einen definierten Punkt 
+  im Bild, den du ihr vorgibst. Ob dieser Punkt ein stehendes oder ein sich bewegendes Objekt ist,
+  entscheidet, welchen Autofokus-Modus du verwenden solltest.
+</p>
+
+<table>
+  <thead>
+    <tr><th>Modus</th><th>Bezeichnung (Canon / Sony / Nikon)</th><th>Funktionsweise</th><th>Einsatz</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>AF-S (Einzel)</strong></td>
+      <td>One-Shot / AF-S / AF-A</td>
+      <td>Fokus wird beim halben Durchdrücken des Auslösers einmalig gesetzt und <strong>eingefroren</strong>. Die Kamera "piept" zur Bestätigung.</td>
+      <td>Stillstehende Motive: Landschaft, Architektur, ruhige Portraits, Produkte</td>
+    </tr>
+    <tr>
+      <td><strong>AF-C (Kontinuierlich)</strong></td>
+      <td>AI-Servo / AF-C / Tracking</td>
+      <td>Die Kamera <strong>rechnet kontinuierlich nach</strong> und verfolgt das Motiv, solange der Auslöser halb gedrückt ist. Bei schnellen Motiven berechnet sie, wo das Objekt bei Auslösung sein wird (Predictive AF).</td>
+      <td>Bewegte Motive: Sport, spielende Kinder, Tiere in Bewegung, fahrende Fahrzeuge</td>
+    </tr>
+    <tr>
+      <td><strong>AF-A (Automatisch)</strong></td>
+      <td>AI Focus / AF-A</td>
+      <td>Kamera wechselt <strong>selbstständig</strong> zwischen AF-S und AF-C, je nachdem ob sich das Motiv bewegt.</td>
+      <td>Unvorhersehbare Situationen (Street, Kinder, Tiere) – aber: weniger präzise Kontrolle</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4>Fokusfelder (AF-Messpunkte)</h4>
+<p>
+  Zusätzlich zum Modus kannst du festlegen, <em>wo im Bild</em> die Kamera fokussiert.
+  Je nach Kamera gibt es 9 bis über 700 Fokusfelder (Messpunkte), die über das Bild verteilt sind.
+</p>
+
+<table>
+  <thead>
+    <tr><th>Feldauswahl</th><th>Beschreibung</th><th>Empfehlung</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Einzelfeld (Spot)</strong></td><td>Ein einzelnes, von dir gewähltes Feld fokussiert. Maximale Kontrolle.</td><td>Standardeinstellung im Kurs – du entscheidest bewusst, was scharf sein soll.</td></tr>
+    <tr><td><strong>Zonenfeld</strong></td><td>Eine Gruppe von Feldern in einem bestimmten Bereich ist aktiv.</td><td>Gut für sich bewegende Motive, die in einem Bildbereich bleiben.</td></tr>
+    <tr><td><strong>Vollautomatisch</strong></td><td>Die Kamera wählt selbst den Fokuspunkt (meist: nächstes Objekt oder Gesicht).</td><td>Für Einsteiger okay, aber du verlierst Kontrolle über die Komposition.</td></tr>
+  </tbody>
+</table>
+
+<div class="callout callout-info">
+  <div class="callout-title">📷 Empfehlung für diesen Kurs</div>
+  <p>
+    Wir arbeiten standardmäßig mit <strong>Einzelfeld AF-S</strong> und wählen das Fokusfeld manuell.
+    Für Sport (Projekt P1) wechselst du auf <strong>Einzelfeld AF-C</strong> und aktivierst 
+    ggf. Zonen-AF, wenn das Motiv sich schnell bewegt.
+  </p>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     BLOCK 4: RAW & LIGHTROOM
+═══════════════════════════════════════════ -->
+<h2>Block 4 – RAW vs. JPEG & Lightroom-Import (40 Min.)</h2>
+
+<h3>4.1 Was ist der Unterschied zwischen RAW und JPEG?</h3>
+<p>
+  Wenn deine Kamera ein Foto aufnimmt, verarbeitet der Sensor Lichtinformationen zu Bilddaten.
+  Wie diese Daten gespeichert werden, entscheidet über deine Möglichkeiten in der Nachbearbeitung.
+</p>
+
+<table>
+  <thead>
+    <tr><th></th><th>RAW (.CR3, .ARW, .NEF etc.)</th><th>JPEG (.jpg)</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Was gespeichert wird</strong></td><td>Alle rohen Sensordaten – unkomprimiert, unkverarbeitet</td><td>Fertig berechnetes Bild – von der Kamera verarbeitet und komprimiert</td></tr>
+    <tr><td><strong>Dateigröße</strong></td><td>20–50 MB pro Bild</td><td>3–8 MB pro Bild</td></tr>
+    <tr><td><strong>Belichtungskorrekturen</strong></td><td>±3–5 EV möglich ohne sichtbaren Qualitätsverlust</td><td>Nur ±1 EV sinnvoll, danach sieht man Artefakte</td></tr>
+    <tr><td><strong>Weißabgleich</strong></td><td>Nachträglich vollständig änderbar</td><td>Eingebrannt – schwierig zu korrigieren</td></tr>
+    <tr><td><strong>Kameraverarbeitung</strong></td><td>Keine – du entscheidest in Lightroom</td><td>Kamera wendet eigene Schärfung, Sättigung etc. an</td></tr>
+    <tr><td><strong>Verwendung im Kurs</strong></td><td>✅ Standard für alle Abgaben (RAW + JPG Export)</td><td>Nur für Abgabe-JPGs (Export aus Lightroom)</td></tr>
+  </tbody>
+</table>
+
+<div class="praxis-box">
+  <div class="praxis-title">🎯 Praxis-Analogie: RAW vs. JPEG</div>
+  <p>
+    <strong>JPEG</strong> ist wie ein Fertigessen aus der Mikrowelle: schnell, okay, aber du kannst 
+    die Zutaten nicht mehr ändern.<br><br>
+    <strong>RAW</strong> ist wie rohe Zutaten: Du hast den Teig, die Sauce, alles separat – und entscheidest 
+    selbst, wie das Gericht am Ende schmeckt. Es dauert länger, aber das Ergebnis ist individuell und qualitativ besser.
+  </p>
+</div>
+
+<h3>4.2 Lightroom-Import – Gemeinsame Live-Demo</h3>
+<p>
+  Im Beamer-Teil dieser Session wurde der erste gemeinsame Lightroom-Import durchgeführt.
+  Die Schritte sind hier dokumentiert, damit du es zuhause nachvollziehen kannst:
+</p>
+
+<ol>
+  <li>
+    <strong>Speicherkarte einlegen / Kamera anschließen</strong><br>
+    Lightroom Classic erkennt die Karte automatisch und öffnet das Import-Fenster.
+    Alternativ: Bilder auf den Computer kopieren und über <em>Hinzufügen</em> importieren.
+  </li>
+  <li>
+    <strong>Import-Methode wählen</strong><br>
+    Im Import-Dialog oben: <em>Kopieren</em> (bevorzugt) oder <em>Hinzufügen</em> (ohne Kopieren – Bilder bleiben am Quellort).
+    <br><em>Empfehlung: Kopieren auf deinen Computer, mit sinnvoller Ordnerstruktur.</em>
+  </li>
+  <li>
+    <strong>Zielordner festlegen</strong><br>
+    Struktur: <code>Fotos / SS2026 / Session_01 / </code> etc. Konsistenz ist entscheidend für den späteren Workflow.
+  </li>
+  <li>
+    <strong>Vorschau generieren (optional)</strong><br>
+    Bei großen Mengen: <em>Standard</em>-Vorschauen reichen. Nur bei finaler Bearbeitung: 1:1-Vorschauen erstellen.
+  </li>
+  <li>
+    <strong>Import starten</strong><br>
+    Klick auf <em>Importieren</em> (unten rechts). Lightroom kopiert und catalogisiert die Bilder automatisch.
+  </li>
+</ol>
+
+<div class="callout callout-warn">
+  <div class="callout-title">⚠️ Was ist ein Lightroom-Katalog?</div>
+  <p>
+    Lightroom speichert keine Bilder intern. Es verwaltet nur eine <strong>Datenbank (Katalog)</strong>,
+    die Verweise auf die Originaldateien auf deiner Festplatte enthält.
+    Das bedeutet: Wenn du Bilder verschiebst oder löschst, verliert Lightroom den Bezug.
+    <strong>Verschiebe Bilder immer innerhalb von Lightroom, niemals im Finder/Explorer!</strong>
+  </p>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     AUFGABEN
+═══════════════════════════════════════════ -->
+<h2>Ausgegebene Aufgaben</h2>
+
+<div class="aufgabe-card pflicht">
+  <div class="aufgabe-header">
+    <h3 style="color:var(--c-red);">P1 – Sport & Bewegung</h3>
+    <span class="badge badge-red">PFLICHTPROJEKT – Benotet</span>
+  </div>
+  <p><strong>Start:</strong> Heute (Session 2) | <strong>Abgabe:</strong> 13.04.2026, zu Beginn von Session 3</p>
+  <p><strong>Kernthema:</strong> Verschlusszeit bewusst als Gestaltungsmittel einsetzen.</p>
+  <ul>
+    <li>Zeige Bewegung <strong>eingefroren</strong> (kurze Zeit): z.B. 1/1000s bei einem Sportler, einem fahrenden Fahrzeug, einem Tier.</li>
+    <li>Zeige Bewegung <strong>verwischt als Absicht</strong> (lange Zeit): z.B. 1/30s bei Laufen, Fahrzeug, Wasser. <em>Das Bild muss als bewusste Entscheidung erkennbar sein.</em></li>
+    <li><strong>Abgabeformat:</strong> 5 RAW-Originale + 5 bearbeitete JPGs (je eines pro Bild) + 1 PDF Kurzreflexion (ca. 10 Sätze: Welche Einstellungen hast du warum gewählt?)</li>
+    <li><strong>Upload:</strong> Moodle (Pflicht) + PicDrop (für Galerie-Walk in Session 3)</li>
+  </ul>
+  <div class="callout callout-red" style="margin-top:.75rem;">
+    <p><strong>Nicht abgegeben = Nicht zur Abschlussprüfung zugelassen.</strong> Kein Kommentar dazu – so steht es in den Kursregeln.</p>
+  </div>
+</div>
+
+<div class="aufgabe-card freiwillig">
+  <div class="aufgabe-header">
+    <h3 style="color:var(--c-teal);">HA2 – Belichtungsdreieck-Experiment</h3>
+    <span class="badge badge-blue">Freiwillig – mit direktem Feedback</span>
+  </div>
+  <p><strong>Abgabe:</strong> 12.04.2026, 23:59 Uhr | <strong>Format:</strong> ZIP mit 12 JPG + 1 TXT/PDF Reflexion</p>
+  <p><strong>Aufgabe:</strong> Du machst drei isolierte Experimentrihen – jedes Mal veränderst du nur <em>eine</em> Variable:</p>
+  <ul>
+    <li><strong>Serie 1 (Verschlusszeit):</strong> Dasselbe Motiv, 3 verschiedene Zeiten. ISO und Blende konstant, Helligkeit variiert. → Schreibe: Was passiert mit dem Motiv?</li>
+    <li><strong>Serie 2 (Blende):</strong> Dasselbe Motiv, 3 verschiedene f-Werte. → Schreibe: Was passiert mit der Schärfentiefe?</li>
+    <li><strong>Serie 3 (ISO):</strong> Dasselbe Motiv, 3 verschiedene ISO-Werte. → Schreibe: Ab wann siehst du Rauschen?</li>
+    <li><strong>Bonus (Action):</strong> 3 Bilder einer schnellen Bewegung – Versuche, sie einmal einzufrieren und einmal absichtlich zu verwischen.</li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     FAQ
+═══════════════════════════════════════════ -->
+<h2>Häufige Fragen (FAQ) aus der Session</h2>
+
+<div class="faq-item">
+  <div class="faq-q">❓ Meine Kamera hat keinen M-Modus. Was soll ich tun?</div>
+  <div class="faq-a">Nutze den <strong>Av/A-Modus</strong> (Blendenvorwahl) für Tiefenschärfe-Experimente und <strong>Tv/S-Modus</strong> für Verschlusszeit-Experimente. In diesen Modi übernimmt die Kamera jeweils die andere Variable. Das ist nicht ideal für den Kurs, aber ein solider Einstieg.</div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-q">❓ Ich habe ein Kit-Objektiv (z.B. 18–55mm f/3.5–5.6). Funktioniert das für Bokeh?</div>
+  <div class="faq-a">Ja, eingeschränkt. Stelle die maximale Brennweite (55mm) ein, öffne die Blende vollständig (f/5.6 bei 55mm), gehe sehr nah ans Motiv. Du wirst Bokeh sehen – es wird nicht so extrem sein wie bei einem 50mm f/1.8, aber erkennbar. Für Projekt P1 reicht das.</div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-q">❓ Wie finde ich den richtigen ISO-Wert für eine Situation?</div>
+  <div class="faq-a">Starte mit ISO 100 oder 200. Stelle dann die gewünschte Verschlusszeit und Blende ein. Wenn das Bild zu dunkel ist, erhöhe den ISO schrittweise (100 → 200 → 400 → 800 ...) bis das Bild korrekt belichtet ist. Nie von oben nach unten – immer von unten nach oben, um Rauschen zu minimieren.</div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-q">❓ Muss ich wirklich immer im RAW-Format fotografieren?</div>
+  <div class="faq-a">Für alle Kursabgaben: Ja. RAW gibt dir maximale Flexibilität in Lightroom. Wenn deine Speicherkarte klein ist, kaufe eine größere (32 GB ab ~10 Euro). Es gibt keine Ausrede, mit JPEG abzugeben, wenn du RAW-Unterstützung hast.</div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-q">❓ Was ist ein Belichtungsmesser und wie lese ich ihn ab?</div>
+  <div class="faq-a">Im Sucher oder Display deiner Kamera gibt es eine Skala mit Strichen: sie geht von –3 bis +3. Der mittlere Strich (0) bedeutet: die Kamera hält das Bild für korrekt belichtet. Links (–) = unterbelichtet. Rechts (+) = überbelichtet. Im M-Modus zeigt die Skala dir, wie weit du von der "korrekten" Belichtung entfernt bist. Es bleibt aber dir überlassen, ob das gut ist.</div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     VIDEO-MATERIAL
+═══════════════════════════════════════════ -->
+<h2>Empfohlenes Video-Selbststudium</h2>
+<p>Diese Videos wurden in der Session empfohlen oder dienen der Vertiefung:</p>
+
+<div class="video-row">
+  <div class="video-thumb-placeholder">▶️</div>
+  <div class="video-info">
+    <strong>Crashkurs: ISO, Blende, Verschlusszeit für Anfänger</strong>
+    <span>Benjamin Jaworskyj · ca. 12 Min · Deutsch</span>
+    <span style="color: var(--c-brand)">youtube.com/watch?v=yMyObFiSSIg</span>
+  </div>
+  <span class="badge badge-gold">Pflicht</span>
+</div>
+
+<div class="video-row">
+  <div class="video-thumb-placeholder">▶️</div>
+  <div class="video-info">
+    <strong>Belichtungsdreieck in der Praxis – Tipps am Holstentor</strong>
+    <span>On-Location Demo · ca. 10 Min · Deutsch</span>
+    <span style="color: var(--c-brand)">youtube.com/watch?v=EWlHH4PPh4Y</span>
+  </div>
+  <span class="badge badge-blue">Empfohlen</span>
+</div>
+
+<div class="video-row">
+  <div class="video-thumb-placeholder">▶️</div>
+  <div class="video-info">
+    <strong>Bilder importieren – Lightroom Classic 2025</strong>
+    <span>Import-Tutorial · ca. 8 Min · Deutsch</span>
+    <span style="color: var(--c-brand)">youtube.com/watch?v=vxLpi-DwDZA</span>
+  </div>
+  <span class="badge badge-red">Vor Session 3</span>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TAKE-AWAYS
+═══════════════════════════════════════════ -->
+<h2>Die wichtigsten Take-Aways</h2>
+
+<div class="takeaway-grid">
+  <div class="takeaway-item">
+    <span class="ta-icon">⚖️</span>
+    <strong>Gleichgewicht</strong>
+    <span class="ta-label">Zeit, Blende & ISO stehen immer in Beziehung zueinander. Änderst du einen Wert, verändert sich die gesamte Belichtung.</span>
+  </div>
+  <div class="takeaway-item">
+    <span class="ta-icon">🎨</span>
+    <strong>Kreatives Werkzeug</strong>
+    <span class="ta-label">Verschlusszeit und Blende sind keine rein technischen Einstellungen – sie entscheiden über die Aussage und Wirkung des Bildes.</span>
+  </div>
+  <div class="takeaway-item">
+    <span class="ta-icon">⬇️</span>
+    <strong>ISO: Immer unten starten</strong>
+    <span class="ta-label">Starte mit ISO 100. Erhöhe nur, wenn es wirklich nötig ist. Rauschen ist der Feind der Bildqualität.</span>
+  </div>
+  <div class="takeaway-item">
+    <span class="ta-icon">📂</span>
+    <strong>RAW ist kein Luxus</strong>
+    <span class="ta-label">RAW ist das Negativ des digitalen Zeitalters. Es gibt dir in der Nachbearbeitung Fehler korrigieren, die JPEG nicht verzeiht.</span>
+  </div>
+  <div class="takeaway-item">
+    <span class="ta-icon">🎯</span>
+    <strong>Fokus = Kompositionsmittel</strong>
+    <span class="ta-label">Wähle dein Fokusfeld bewusst. Was scharf ist, hat im Bild das größte Gewicht für den Betrachter.</span>
+  </div>
+  <div class="takeaway-item">
+    <span class="ta-icon">🔄</span>
+    <strong>Übung ersetzt Theorie</strong>
+    <span class="ta-label">Dieses Protokoll erklärt das Warum. Aber verstehen entsteht nur durch Ausprobieren. Mach HA2 – auch wenn sie freiwillig ist.</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     CHECKLISTE
+═══════════════════════════════════════════ -->
+<h2>Session-Checkliste – Hast du das mitgenommen?</h2>
+<p>Hake diese Punkte ab, bevor du das Protokoll schließt. Wenn du einen Punkt nicht abhaken kannst, lies den entsprechenden Abschnitt nochmals durch.</p>
+
+<div class="check-grid">
+  <div class="check-item"><div class="check-box"></div>Ich verstehe, was das Belichtungsdreieck ist und wie die drei Variablen zusammenhängen.</div>
+  <div class="check-item"><div class="check-box"></div>Ich weiß, was eine kurze und eine lange Verschlusszeit am Bild bewirkt.</div>
+  <div class="check-item"><div class="check-box"></div>Ich verstehe die f-Zahl-Logik (kleine Zahl = große Öffnung).</div>
+  <div class="check-item"><div class="check-box"></div>Ich weiß, was Schärfentiefe bedeutet und wie ich sie beeinflusse.</div>
+  <div class="check-item"><div class="check-box"></div>Ich kenne den Unterschied zwischen AF-S (statisch) und AF-C (Tracking).</div>
+  <div class="check-item"><div class="check-box"></div>Ich weiß, wann ich den ISO erhöhen darf und was das kostet (Rauschen).</div>
+  <div class="check-item"><div class="check-box"></div>Ich habe Lightroom Classic installiert und weiß, wie ich Bilder importiere.</div>
+  <div class="check-item"><div class="check-box"></div>Ich habe P1 (Sport & Bewegung) notiert und kenne die Abgabefrist (13.04.2026).</div>
+  <div class="check-item"><div class="check-box"></div>Ich kenne den Unterschied zwischen RAW und JPEG.</div>
+  <div class="check-item"><div class="check-box"></div>Ich habe mindestens eine Praxis-Übung aus diesem Protokoll ausprobiert oder geplant.</div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     AUSBLICK
+═══════════════════════════════════════════ -->
+<h2>Ausblick: Session 3 (13.04.2026)</h2>
+<p><strong>Thema:</strong> Feedback P1 + Portrait-Grundlagen & Licht</p>
+<p>
+  In der nächsten Session schaust du dir gemeinsam mit der Gruppe deine P1-Ergebnisse an.
+  Danach geht es direkt in die Theorie und Praxis der Portraitfotografie:
+  Brennweite, Abstand, Lichtführung, Posing-Basics.
+  <strong>P1 muss bis Session 3 vollständig abgegeben sein.</strong>
+</p>
+
+<hr>
+<p style="font-size:9pt; color:var(--c-muted); text-align:center;">
+  Kurs: Digitalfotografie & Digitale Bildbearbeitung – SS2026 | Dozent: Mario Schubert | THI Ingolstadt<br>
+  Kontakt: mario.schubert@thi.de | Moodle | thi-kurs.vercel.app
+</p>
+
+</body>
+</html>
