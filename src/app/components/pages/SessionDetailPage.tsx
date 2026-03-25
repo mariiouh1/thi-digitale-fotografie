@@ -431,11 +431,28 @@ export function SessionDetailPage() {
         </motion.div>
       )}
 
+      {/* Secondary Gallery – optional second gallery */}
+      {session.secondaryGalleryFolderId && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="mt-8"
+        >
+          <Gallery
+            folderId={session.secondaryGalleryFolderId}
+            password={courseInfo.galleryPassword}
+            title={`Zusätzliche Galerie – Session ${session.sessionNumber}`}
+            subtitle="Weitere Fotos aus dieser Kursstunde"
+          />
+        </motion.div>
+      )}
+
       {/* Prev / Next Navigation */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
+        transition={{ duration: 0.5, delay: 0.5 }}
         className="mt-12 grid gap-3 sm:grid-cols-2"
       >
         {prevSession ? (

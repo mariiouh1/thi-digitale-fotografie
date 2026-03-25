@@ -53,6 +53,7 @@ export interface CourseSessionRaw {
   tutorials: CourseTutorial[];
   materials: CourseMaterial[];
   galleryFolderId: string; // Google Drive folder ID for session gallery
+  secondaryGalleryFolderId?: string; // Optional second gallery folder ID
 }
 
 export type SessionStatus = "upcoming" | "completed" | "current";
