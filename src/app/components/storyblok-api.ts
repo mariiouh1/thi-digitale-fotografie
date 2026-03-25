@@ -201,6 +201,7 @@ function transformSession(story: any): CourseSessionRaw {
     tutorials: (c.tutorials || []).map(transformTutorial),
     materials: (c.materials || []).map(transformMaterial),
     galleryFolderId: extractText(c.gallery_folder_id),
+    secondaryGalleryFolderId: extractText(c.secondary_gallery_folder_id),
   };
 }
 
