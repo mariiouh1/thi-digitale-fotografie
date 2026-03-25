@@ -8,35 +8,45 @@
 /* ==========================================================================
    2026 UX & COLOR PSYCHOLOGY FOUNDATION (Minimalism + Trust)
    ========================================================================== */
+
 :root {
+  /* DARK THEME (DEFAULT) */
   --bg-base:        #060913; 
   --bg-surface:     #0a0e1c;
-
   --glass-bg:       rgba(255, 255, 255, 0.03);
   --glass-hover:    rgba(255, 255, 255, 0.06);
   --glass-border:   rgba(255, 255, 255, 0.08);
   --glass-border-hi:rgba(255, 255, 255, 0.18);
   --glass-blur:     blur(24px) saturate(160%);
   --specular:       linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 100%);
-
   --c-primary:      #3b82f6; 
   --c-accent:       #f5a623; 
   --c-accent-glow:  rgba(245, 166, 35, 0.2);
   --c-secondary:    #10b981; 
   --c-danger:       #ef4444; 
   --c-purple:       #8b5cf6; 
-
   --text-primary:   rgba(255, 255, 255, 0.95);
   --text-secondary: rgba(255, 255, 255, 0.7);
   --text-tertiary:  rgba(255, 255, 255, 0.45);
-
-  --radius-sm:      12px;
-  --radius-md:      18px;
-  --radius-lg:      24px;
-  --radius-pill:    999px;
-
-  --transition:     all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  --text-invert:    #000;
+  --sim-bg:         rgba(0,0,0,0.6);
 }
+
+[data-theme="light"] {
+  --bg-base:        #f3f4f6; 
+  --bg-surface:     #ffffff;
+  --glass-bg:       rgba(255, 255, 255, 0.7);
+  --glass-hover:    rgba(255, 255, 255, 0.9);
+  --glass-border:   rgba(0, 0, 0, 0.1);
+  --glass-border-hi:rgba(0, 0, 0, 0.2);
+  --specular:       linear-gradient(180deg, rgba(255,255,255,0.8) 0%, transparent 100%);
+  --text-primary:   #111827;
+  --text-secondary: #4b5563;
+  --text-tertiary:  #6b7280;
+  --text-invert:    #fff;
+  --sim-bg:         rgba(255,255,255,0.8);
+}
+
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -189,7 +199,38 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
 .video-meta { font-size: 0.85rem; color: var(--text-secondary); }
 
 .header-top a:hover { background: var(--c-primary) !important; color: white !important; border-color: var(--c-primary) !important; }
+
+  a[download]:hover {
+    transform: translateY(-5px) scale(1.02);
+    background: var(--c-accent) !important;
+    color: #000 !important;
+  }
+
+.img-container, .img-split > div { position: relative; overflow: hidden; border-radius: var(--radius-md); }
+.exif-overlay { 
+  position: absolute; bottom: 0; left: 0; right: 0; 
+  background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); 
+  color: #fff; padding: 1rem; 
+  transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex; justify-content: space-around; font-family: monospace; font-size: 0.9rem; font-weight: bold; border-top: 1px solid rgba(255,255,255,0.2);
+}
+.img-container:hover .exif-overlay, .img-split > div:hover .exif-overlay { transform: translateY(0); }
+.exif-item { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.exif-label { font-size: 0.65rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
+
+
+.flashcard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; perspective: 1000px; }
+.flashcard { background: transparent; height: 200px; cursor: pointer; }
+.flashcard-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+.flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+.flashcard-front, .flashcard-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: var(--radius-md); display: flex; flex-direction: column; justify-content: center; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid var(--glass-border); }
+.flashcard-front { background: var(--bg-surface); color: var(--text-primary); }
+.flashcard-back { background: var(--c-primary); color: white; transform: rotateY(180deg); border: none; }
+.fc-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+.fc-hint { font-size: 0.7rem; color: var(--text-tertiary); position: absolute; bottom: 10px; left:0; right:0; text-transform:uppercase; letter-spacing:1px; }
+
 </style>
+
 </head>
 <body>
 
@@ -202,10 +243,15 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
       </div>
       
 <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
-  <div style="font-size: 0.85rem; color: var(--text-secondary);">30. März 2026 | Raum K115</div>
+  <div style='display:flex; align-items:center; gap: 15px;'>
+<button onclick="toggleTheme()" id="theme-toggle" style="background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); color: var(--text-primary); padding: 5px 10px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 0.8rem; transition: var(--transition);">
+  🌓 Theme
+</button>
+<div style="font-size: 0.85rem; color: var(--text-secondary);">30. März 2026 | Raum K115</div></div>
   <div style="display: flex; gap: 10px; font-size: 0.8rem;">
+    <a href="./Session02_Theorie_Skript.pdf" target="_blank" download style="background: rgba(139, 92, 246, 0.15); padding: 4px 10px; border-radius: 4px; border: 1px solid rgba(139, 92, 246, 0.4); color: #c4b5fd; text-decoration: none; transition: var(--transition); font-weight: 600;">📖 Theorie-Skript PDF</a>
     <a href="https://thi-digitale-fotografie.vercel.app" target="_blank" style="background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 4px; border: 1px solid var(--glass-border); color: var(--text-secondary); text-decoration: none; transition: var(--transition);">📱 Kurs-App</a>
-    <a href="https://drive.google.com/drive/folders/1v9A50ESoPDHCuBwayciKuWJDxZIrdpAB?usp=share_link" target="_blank" style="background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 4px; border: 1px solid var(--glass-border); color: var(--text-secondary); text-decoration: none; transition: var(--transition);">📁 Google Drive</a>
+    <a href="https://drive.google.com/drive/folders/1UH51-IITEBtJWu-0LeSY5gTEZfv_ccJy?usp=share_link" target="_blank" style="background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 4px; border: 1px solid var(--glass-border); color: var(--text-secondary); text-decoration: none; transition: var(--transition);">📁 Google Drive</a>
     <a href="https://moodle.thi.de/course/index.php?categoryid=2233" target="_blank" style="background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 4px; border: 1px solid var(--glass-border); color: var(--text-secondary); text-decoration: none; transition: var(--transition);">🎓 Moodle</a>
   </div>
 </div>
@@ -221,6 +267,7 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
       <li><button class="tab-btn" onclick="switchTab('assignments')">📝 07 | Übungen & P1</button></li>
       <li><button class="tab-btn" onclick="switchTab('faq')">💡 08 | Knowledge Base</button></li>
       <li><button class="tab-btn" onclick="switchTab('videos')">🎬 09 | Videos</button></li>
+    <li><button class="tab-btn" onclick="switchTab('tools')">🧮 10 | Tools & Rechner</button></li>
     </ul>
   </div>
 </header>
@@ -231,6 +278,17 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
   <div id="overview" class="tab-panel active">
     <h1 class="page-title">Technik-Intensiv & Praxis</h1>
     <p class="page-subtitle">Wir steigen heute tief in das physikalische Herzstück deiner Kamera ein – und setzen es direkt in Kursübungen (KÜs) um.</p>
+
+    
+    <div style="background: rgba(139, 92, 246, 0.08); border: 1px solid rgba(139, 92, 246, 0.3); border-left: 4px solid var(--c-purple); padding: 1.5rem; border-radius: var(--radius-md); margin-bottom: 3rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <h3 style="color: var(--c-purple); margin-bottom: 0.2rem; margin-top: 0; font-size: 1.2rem;">📖 Offizielles Theorie-Skript (PDF)</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 0; font-size: 0.95rem;">Lade dir hier das ausführliche Text-Skript zu allen theoretischen Inhalten dieser Session (Blende, Zeit, ISO) herunter.</p>
+      </div>
+      <a href="./Session02_Theorie_Skript.pdf" download target="_blank" style="background: var(--c-purple); color: white; padding: 0.6rem 1.2rem; border-radius: var(--radius-sm); font-weight: 600; text-decoration: none; transition: all 0.3s; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); white-space: nowrap;">
+        📥 Skript Herunterladen
+      </a>
+    </div>
 
     <h2 style="color: var(--c-primary); margin-bottom: 1rem;">Das Belichtungsdreieck (Interaktiv)</h2>
     <p style="color: var(--text-secondary); margin-bottom: 2rem;">Das Belichtungsdreieck ist ein <strong>Gleichgewichtssystem</strong>. Ändere die Parameter und beobachte live, wie sich Bildhelligkeit (EV), Schärfentiefe (Bokeh), Bewegungsunschärfe und Rauschen verhalten.</p>
@@ -273,7 +331,8 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
           <li><strong>11:45</strong> – Pause</li>
           <li><strong>11:55</strong> – RAW vs. JPEG Workflow</li>
           <li><strong>12:15</strong> – KÜ 2.5: Das Dreieck beherrschen (Outdoor)</li>
-        </ul>
+        <li><button class="tab-btn" onclick="switchTab('tools')">🧮 10 | Tools & Rechner</button></li>
+    </ul>
       </div>
       <div class="glass" style="padding: 2rem; border-left: 4px solid var(--c-secondary);">
         <h3 style="color: var(--c-secondary); margin-bottom: 1rem; margin-top:0;">📋 Alle Kursübungen (KÜ) heute</h3>
@@ -283,7 +342,8 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
           <li>KÜ 2.3 – Rauschen spüren (ISO)</li>
           <li>KÜ 2.4 – Fokus setzen (AF)</li>
           <li>KÜ 2.5 – Kombinationsübung Outdoor</li>
-        </ul>
+        <li><button class="tab-btn" onclick="switchTab('tools')">🧮 10 | Tools & Rechner</button></li>
+    </ul>
         <p style="font-size:0.8rem; color:var(--text-tertiary); margin-top:1rem;">Alle KÜs werden als JPEG direkt in der Kamera belassen. Keine Nachbearbeitung nötig!</p>
       </div>
     </div>
@@ -293,16 +353,37 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
   <div id="theory-basis" class="tab-panel">
     <h1 class="page-title">Verschlusszeit (Shutter Speed)</h1>
     <p class="page-subtitle">Zeit als gestalterisches Werkzeug. Einfrieren oder Fließen lassen.</p>
+    <div style="background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2); border-left: 3px solid var(--c-primary); border-radius: 8px; padding: 1rem; margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <strong style="color: var(--c-primary); font-size: 1.05rem;">📝 Spickzettel: Verschlusszeit</strong><br>
+        <span style="font-size: 0.85rem; color: var(--text-secondary);">Kompakte Übersicht für die Kameratasche (aus dem Google Drive).</span>
+      </div>
+      <a href="https://drive.google.com/drive/folders/193SV9Ak1JLWEz7t5qZB9m_MFqvgKH70x?usp=share_link" target="_blank" style="background: rgba(59, 130, 246, 0.15); color: var(--c-primary); padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: bold; border: 1px solid rgba(59, 130, 246, 0.3); transition: var(--transition);">📥 Zum Spickzettel-Ordner</a>
+    </div>
 
     <div class="img-split">
       <div>
         <div class="img-badge">1/1000s</div>
         <img src="https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=800&auto=format&fit=crop" alt="Eingefrorene Bewegung Sport">
+    <div class="exif-overlay">
+      <div class="exif-item"><span class="exif-label">Blende</span><span style="color:var(--c-accent)">f/4.0</span></div>
+      <div class="exif-item"><span class="exif-label">Zeit</span><span style="color:var(--c-primary)">1/2000s</span></div>
+      <div class="exif-item"><span class="exif-label">ISO</span><span style="color:var(--c-purple)">800</span></div>
+      <div class="exif-item"><span class="exif-label">Brennweite</span><span style="color:var(--c-secondary)">200mm</span></div>
+    </div>
+    
         <div class="img-caption">Kurze Verschlusszeit: Bewegung wird scharf eingefroren (Erzählt den präzisen Moment).</div>
       </div>
       <div>
         <div class="img-badge">1/15s</div>
         <img src="https://images.unsplash.com/photo-1505356822725-08ad25f3ffe4?q=80&w=800&auto=format&fit=crop" alt="Bewegungsunschärfe Panning">
+    <div class="exif-overlay">
+      <div class="exif-item"><span class="exif-label">Blende</span><span style="color:var(--c-accent)">f/11</span></div>
+      <div class="exif-item"><span class="exif-label">Zeit</span><span style="color:var(--c-primary)">1/15s</span></div>
+      <div class="exif-item"><span class="exif-label">ISO</span><span style="color:var(--c-purple)">100</span></div>
+      <div class="exif-item"><span class="exif-label">Brennweite</span><span style="color:var(--c-secondary)">50mm</span></div>
+    </div>
+    
         <div class="img-caption">Lange Verschlusszeit (Panning): Bewegung wird als Dynamik/Energie dargestellt.</div>
       </div>
     </div>
@@ -350,7 +431,8 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
       <ul>
         <li><strong>Aufnahme 1:</strong> Verschlusszeit <strong>1/500s oder kürzer</strong> → Bewegung soll eingefroren aussehen.</li>
         <li><strong>Aufnahme 2:</strong> Verschlusszeit <strong>1/15s oder länger</strong> → Bewegung soll als Wischspur sichtbar sein.</li>
-      </ul>
+      <li><button class="tab-btn" onclick="switchTab('tools')">🧮 10 | Tools & Rechner</button></li>
+    </ul>
 
       <div class="grid-2" style="margin-top:2rem;">
         <div>
@@ -368,7 +450,8 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
             <li>Bei <strong>1/15s</strong> wackelt auch ihr selbst! Ellenbogen anlehnen!</li>
             <li>Bei <strong>1/500s</strong> innen (wenig Licht) wird das Bild evtl. zu dunkel. (ISO wird das später lösen).</li>
             <li>Mutige: Kamera bei 1/15s <strong>mitschwenken (Panning)</strong>.</li>
-          </ul>
+          <li><button class="tab-btn" onclick="switchTab('tools')">🧮 10 | Tools & Rechner</button></li>
+    </ul>
         </div>
       </div>
 
@@ -382,16 +465,37 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
   <div id="theory-blende" class="tab-panel">
     <h1 class="page-title">Blende (Aperture) & Bokeh</h1>
     <p class="page-subtitle">Das optische Werkzeug für Tiefe. Kleine Zahl = Großes Loch.</p>
+    <div style="background: rgba(245, 166, 35, 0.05); border: 1px solid rgba(245, 166, 35, 0.2); border-left: 3px solid var(--c-accent); border-radius: 8px; padding: 1rem; margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <strong style="color: var(--c-accent); font-size: 1.05rem;">📝 Spickzettel: Blende & Tiefe</strong><br>
+        <span style="font-size: 0.85rem; color: var(--text-secondary);">Kompakte Übersicht für die Kameratasche (aus dem Google Drive).</span>
+      </div>
+      <a href="https://drive.google.com/drive/folders/193SV9Ak1JLWEz7t5qZB9m_MFqvgKH70x?usp=share_link" target="_blank" style="background: rgba(245, 166, 35, 0.15); color: var(--c-accent); padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: bold; border: 1px solid rgba(245, 166, 35, 0.3); transition: var(--transition);">📥 Zum Spickzettel-Ordner</a>
+    </div>
 
     <div class="img-split">
       <div>
         <div class="img-badge">f/1.8 (Offen)</div>
         <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop" alt="Portrait mit starkem Bokeh">
+    <div class="exif-overlay">
+      <div class="exif-item"><span class="exif-label">Blende</span><span style="color:var(--c-accent)">f/1.8</span></div>
+      <div class="exif-item"><span class="exif-label">Zeit</span><span style="color:var(--c-primary)">1/500s</span></div>
+      <div class="exif-item"><span class="exif-label">ISO</span><span style="color:var(--c-purple)">100</span></div>
+      <div class="exif-item"><span class="exif-label">Brennweite</span><span style="color:var(--c-secondary)">85mm</span></div>
+    </div>
+    
         <div class="img-caption">Fokus liegt stark auf den Augen. Hintergrund verschwimmt komplett (Bokeh).</div>
       </div>
       <div>
         <div class="img-badge">f/16 (Geschlossen)</div>
         <img src="https://images.unsplash.com/photo-1506744626753-1fa44df31c7f?q=80&w=800&auto=format&fit=crop" alt="Landschaft scharf">
+    <div class="exif-overlay">
+      <div class="exif-item"><span class="exif-label">Blende</span><span style="color:var(--c-accent)">f/16</span></div>
+      <div class="exif-item"><span class="exif-label">Zeit</span><span style="color:var(--c-primary)">1/60s</span></div>
+      <div class="exif-item"><span class="exif-label">ISO</span><span style="color:var(--c-purple)">100</span></div>
+      <div class="exif-item"><span class="exif-label">Brennweite</span><span style="color:var(--c-secondary)">24mm</span></div>
+    </div>
+    
         <div class="img-caption">Sehr große Schärfentiefe. Vordergrund und Hintergrund sind gleichermaßen scharf.</div>
       </div>
     </div>
@@ -440,7 +544,8 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
         <li><strong>Aufnahme 1:</strong> Blende <strong>so offen wie möglich</strong> (z.B. f/1.8 oder f/3.5)</li>
         <li><strong>Aufnahme 2:</strong> Blende <strong>mittig</strong> (f/5.6)</li>
         <li><strong>Aufnahme 3:</strong> Blende <strong>geschlossen</strong> (f/11 oder weiter)</li>
-      </ul>
+      <li><button class="tab-btn" onclick="switchTab('tools')">🧮 10 | Tools & Rechner</button></li>
+    </ul>
 
       <div class="grid-2" style="margin-top:2rem;">
         <div>
@@ -459,7 +564,8 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
             <li>Dein Körper darf sich <strong>nicht bewegen</strong>!</li>
             <li>Je <strong>größer der Abstand</strong> zwischen den Objekten, desto dramatischer das Bokeh.</li>
             <li>Bei f/11 wird die Verschlusszeit lang – Ellenbogen aufstützen!</li>
-          </ul>
+          <li><button class="tab-btn" onclick="switchTab('tools')">🧮 10 | Tools & Rechner</button></li>
+    </ul>
         </div>
       </div>
 
@@ -473,15 +579,36 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
   <div id="theory-iso" class="tab-panel">
     <h1 class="page-title">ISO, Kameraprogramme & EV</h1>
     <p class="page-subtitle">Elektronische Verstärkung und die Logik des Lichtwerts.</p>
+    <div style="background: rgba(139, 92, 246, 0.05); border: 1px solid rgba(139, 92, 246, 0.2); border-left: 3px solid var(--c-purple); border-radius: 8px; padding: 1rem; margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <strong style="color: var(--c-purple); font-size: 1.05rem;">📝 Spickzettel: ISO & Rauschen</strong><br>
+        <span style="font-size: 0.85rem; color: var(--text-secondary);">Kompakte Übersicht für die Kameratasche (aus dem Google Drive).</span>
+      </div>
+      <a href="https://drive.google.com/drive/folders/193SV9Ak1JLWEz7t5qZB9m_MFqvgKH70x?usp=share_link" target="_blank" style="background: rgba(139, 92, 246, 0.15); color: var(--c-purple); padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: bold; border: 1px solid rgba(139, 92, 246, 0.3); transition: var(--transition);">📥 Zum Spickzettel-Ordner</a>
+    </div>
 
     <div class="img-split">
       <div>
         <div class="img-badge">ISO 100 (Clean)</div>
         <img src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?q=80&w=800&auto=format&fit=crop" style="object-position: center 30%;" alt="Sauberes Bild ISO 100">
+    <div class="exif-overlay">
+      <div class="exif-item"><span class="exif-label">Blende</span><span style="color:var(--c-accent)">f/8</span></div>
+      <div class="exif-item"><span class="exif-label">Zeit</span><span style="color:var(--c-primary)">2s (Stativ)</span></div>
+      <div class="exif-item"><span class="exif-label">ISO</span><span style="color:var(--c-purple)">100</span></div>
+      <div class="exif-item"><span class="exif-label">Brennweite</span><span style="color:var(--c-secondary)">35mm</span></div>
+    </div>
+    
       </div>
       <div>
         <div class="img-badge">ISO 6400 (Rauschen)</div>
         <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?q=80&w=800&auto=format&fit=crop" alt="Konzert Fotografie ISO Rauschen">
+    <div class="exif-overlay">
+      <div class="exif-item"><span class="exif-label">Blende</span><span style="color:var(--c-accent)">f/2.8</span></div>
+      <div class="exif-item"><span class="exif-label">Zeit</span><span style="color:var(--c-primary)">1/250s</span></div>
+      <div class="exif-item"><span class="exif-label">ISO</span><span style="color:var(--c-purple)">6400</span></div>
+      <div class="exif-item"><span class="exif-label">Brennweite</span><span style="color:var(--c-secondary)">70mm</span></div>
+    </div>
+    
       </div>
     </div>
 
@@ -521,7 +648,8 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
         <li><strong>Aufnahme 1:</strong> ISO <strong>100</strong> (oder niedrigster Wert)</li>
         <li><strong>Aufnahme 2:</strong> ISO <strong>800</strong></li>
         <li><strong>Aufnahme 3:</strong> ISO <strong>3200</strong> (oder max)</li>
-      </ul>
+      <li><button class="tab-btn" onclick="switchTab('tools')">🧮 10 | Tools & Rechner</button></li>
+    </ul>
 
       <div class="grid-2" style="margin-top:2rem;">
         <div>
@@ -540,7 +668,8 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
             <li>Der Unterschied ist ohne Zoom auf dem kleinen Display oft kaum sichtbar.</li>
             <li>Je <strong>dunkler der Bereich</strong>, desto mehr Rauschen (Körnung/Punkte) zeigt sich.</li>
             <li>Ältere DSLRs rauschen deutlich stärker als neue Modelle. Das ist Physik!</li>
-          </ul>
+          <li><button class="tab-btn" onclick="switchTab('tools')">🧮 10 | Tools & Rechner</button></li>
+    </ul>
         </div>
       </div>
 
@@ -557,6 +686,13 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
 
     <div class="img-container">
       <img class="img-showcase" src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?q=80&w=1200&auto=format&fit=crop" style="object-position: center 30%;" alt="Scharfes Auge im Makro">
+    <div class="exif-overlay">
+      <div class="exif-item"><span class="exif-label">Blende</span><span style="color:var(--c-accent)">f/2.8</span></div>
+      <div class="exif-item"><span class="exif-label">Zeit</span><span style="color:var(--c-primary)">1/200s</span></div>
+      <div class="exif-item"><span class="exif-label">ISO</span><span style="color:var(--c-purple)">400</span></div>
+      <div class="exif-item"><span class="exif-label">Brennweite</span><span style="color:var(--c-secondary)">100mm Macro</span></div>
+    </div>
+    
       <div class="img-caption">Der Fokus muss präzise sitzen. Mit dem "Einzelfeld" bestimmst du exakt (z.B. auf das Auge), was scharf sein soll.</div>
     </div>
 
@@ -598,7 +734,8 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
         <li><strong>Teil A (Aussage wechseln):</strong> Zwei Objekte in Tiefe. Macht zwei Bilder – einmal Fokus auf vorn, einmal auf hinten.</li>
         <li><strong>Teil B (Portrait-Fokus):</strong> Portrait einer Person (1-2m Abstand). Blende offen (f/2). Fokus GEZIELT nur auf das Auge! (Einzelfeld-AF).</li>
         <li><strong>Teil C (AF-S vs AF-C):</strong> Person geht langsam 5m auf euch zu. 3 Bilder mit AF-S, danach 3 mit AF-C. Wo sind mehr scharf?</li>
-      </ul>
+      <li><button class="tab-btn" onclick="switchTab('tools')">🧮 10 | Tools & Rechner</button></li>
+    </ul>
 
       <div class="grid-2" style="margin-top:2rem;">
         <div>
@@ -617,7 +754,8 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
             <li>Bei f/1.4 kann ein Auge scharf und das andere schon unscharf sein!</li>
             <li>Wenn der AF pumpt: Zu dunkel oder zu wenig Kontrast.</li>
             <li>Für Teil C (Gehen): Person soll sehr gleichmäßig und ruhig gehen.</li>
-          </ul>
+          <li><button class="tab-btn" onclick="switchTab('tools')">🧮 10 | Tools & Rechner</button></li>
+    </ul>
         </div>
       </div>
 
@@ -661,7 +799,8 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
         <li style="margin-bottom: 1rem;"><kbd>X</kbd> <strong>Ablehnen</strong>: Setzt ein schwarzes Fähnchen (für den virtuellen Papierkorb).</li>
         <li style="margin-bottom: 1rem;"><kbd>U</kbd> <strong>Unflagged (Rückgängig)</strong>: Entfernt alle Fähnchen.</li>
         <li style="margin-bottom: 1rem;"><kbd>Z</kbd> <strong>Zoom (100%)</strong>: Springt sofort auf 100% Vergrößerung.</li>
-      </ul>
+      <li><button class="tab-btn" onclick="switchTab('tools')">🧮 10 | Tools & Rechner</button></li>
+    </ul>
     </div>
   </div>
 
@@ -685,7 +824,8 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
         <li><strong>Serie A (Zeit):</strong> Tv-Modus. Einmal eingefroren (1/1000s), einmal Wischspur (1/30s), einmal euer Mittelweg.</li>
         <li><strong>Serie B (Blende):</strong> Av-Modus. Hintergrund unscharf (f/2), mittel (f/8), komplett scharf (f/16).</li>
         <li><strong>Serie C (ISO):</strong> M-Modus im Dunklen. (ISO 400 vs. 1600 vs. MAX).</li>
-      </ul>
+      <li><button class="tab-btn" onclick="switchTab('tools')">🧮 10 | Tools & Rechner</button></li>
+    </ul>
       <div class="ku-insight" style="border-left-color: var(--c-danger);">
         <strong>👁 Blick schulen:</strong> Welches Bild aus jeder Serie erzählt am meisten? Technisch korrekt ≠ gutes Bild! Markiert die besten drei Bilder (A1, B2, etc.) für Session 3!
       </div>
@@ -709,7 +849,8 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
             <li><strong>Fokus:</strong> AF-C (AI Servo) + Einzelfeld!</li>
             <li><strong>Drive:</strong> Burst Mode / Serienbild</li>
             <li><strong>Format:</strong> RAW!</li>
-          </ul>
+          <li><button class="tab-btn" onclick="switchTab('tools')">🧮 10 | Tools & Rechner</button></li>
+    </ul>
         </div>
         <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
           <h4 style="color: var(--c-danger); margin-bottom: 0.5rem; font-size: 0.9rem;">Die 2 Deadlines für Pflichtabgaben:</h4>
@@ -717,8 +858,12 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
             <li style="color: var(--text-primary);"><strong>Soft-Deadline (Google Drive):</strong> Sonntag, 12.04.2026, 23:59 Uhr<br>
             <span style="color: var(--text-secondary); font-size: 0.8rem;">Damit wir die Bilder am Montagmorgen in der Session gemeinsam auf dem Beamer als Peer-Review besprechen können.</span></li>
             <li style="color: var(--c-danger); margin-top: 0.5rem;"><strong>Hard-Deadline (Moodle):</strong> Montag, 13.04.2026, 09:55 Uhr<br>
-            <span style="color: var(--text-secondary); font-size: 0.8rem;">Der offizielle Prüfungs-Upload für die Benotung. Wer hier fehlt, verliert den Prüfungsanspruch!</span></li>
-          </ul>
+            <span style="color: var(--text-secondary); font-size: 0.8rem;">Der offizielle Prüfungs-Upload für die Benotung. Wer hier fehlt, verliert den Prüfungsanspruch!</span><br>
+            <a href="https://moodle.thi.de/course/index.php?categoryid=2233" target="_blank" style="display: inline-block; background: var(--c-danger); color: white; padding: 0.5rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 600; text-decoration: none; margin-top: 10px; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); transition: all 0.3s ease;">
+              🎓 Direkt-Upload P1 (Moodle)
+            </a></li>
+          <li><button class="tab-btn" onclick="switchTab('tools')">🧮 10 | Tools & Rechner</button></li>
+    </ul>
         </div>
       </div>
 
@@ -734,10 +879,11 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
           <li><strong>Serie B (Blende):</strong> 3 Bilder. Schärfentiefe variieren (f/2, f/5.6, f/11).</li>
           <li><strong>Serie C (ISO):</strong> 3 Bilder. Den Rauschpunkt der Kamera finden.</li>
           <li><strong>+3 Action-Shots:</strong> Bewegungsmotiv. Bewusst für Einfrieren oder Wischen entscheiden.</li>
-        </ul>
+        <li><button class="tab-btn" onclick="switchTab('tools')">🧮 10 | Tools & Rechner</button></li>
+    </ul>
         <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1rem;"><strong>Abgabe in Google Drive:</strong> Erstelle im Drive-Ordner einen Unterordner mit deinem Namen (z.B. <em>'Max_Mustermann_FÜ2'</em>) und lade dort deine 12 JPGs + 1 TXT/PDF (Reflexion) hoch.</p>
         <div style="color: var(--c-primary); font-size: 0.9rem; font-weight: 600; margin-bottom: 1rem;">Deadline: 12.04.2026, 23:59 Uhr.</div>
-        <a href="https://drive.google.com/drive/folders/1v9A50ESoPDHCuBwayciKuWJDxZIrdpAB?usp=share_link" target="_blank" style="display: inline-block; background: var(--c-primary); color: white; padding: 0.6rem 1.2rem; border-radius: var(--radius-sm); font-size: 0.9rem; font-weight: 600; text-decoration: none; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); transition: all 0.3s ease;">
+        <a href="https://drive.google.com/drive/folders/1UH51-IITEBtJWu-0LeSY5gTEZfv_ccJy?usp=share_link" target="_blank" style="display: inline-block; background: var(--c-primary); color: white; padding: 0.6rem 1.2rem; border-radius: var(--radius-sm); font-size: 0.9rem; font-weight: 600; text-decoration: none; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); transition: all 0.3s ease;">
           <svg style="width:16px; height:16px; vertical-align:middle; margin-right:5px; margin-top:-2px;" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 2L2 22h20L12 2zm0 3.8l6.4 12.8H5.6L12 5.8z"/>
           </svg> Upload in Google Drive
@@ -751,7 +897,56 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
     <h1 class="page-title">Knowledge Base (FAQ)</h1>
     <p class="page-subtitle">Die wichtigsten Antworten zu Technik, Speicherkarten und Workflow.</p>
 
-    <div class="faq-grid">
+    
+    <h2 style="color: var(--c-primary); margin-bottom: 1rem; margin-top:2rem;">Brain-Trainer (Prüfungsvorbereitung)</h2>
+    <p style="color: var(--text-secondary); margin-bottom: 2rem;">Klicke auf die Karten, um dein Wissen zu testen, bevor du ins Projekt gehst.</p>
+
+    <div class="flashcard-grid">
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <div class="fc-icon">🎯</div>
+            <h3 style="margin:0; font-size:1.1rem;">Wofür steht AF-C?</h3>
+            <div class="fc-hint">Tippen zum Drehen</div>
+          </div>
+          <div class="flashcard-back">
+            <h3 style="margin:0; font-size:1.1rem; color:white;">AI-Servo (Continuous)</h3>
+            <p style="font-size:0.9rem; margin-top:0.5rem; opacity:0.9;">Der Autofokus fokussiert permanent nach. Zwingend nötig für Sport & P1!</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <div class="fc-icon">👁️</div>
+            <h3 style="margin:0; font-size:1.1rem;">Bedeutet f/16 viel oder wenig Bokeh?</h3>
+            <div class="fc-hint">Tippen zum Drehen</div>
+          </div>
+          <div class="flashcard-back" style="background: var(--c-accent); color: black;">
+            <h3 style="margin:0; font-size:1.1rem; color:black;">Kein Bokeh!</h3>
+            <p style="font-size:0.9rem; margin-top:0.5rem; opacity:0.9;">f/16 ist eine stark geschlossene Blende. Das gesamte Bild von vorne bis hinten wird scharf.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <div class="fc-icon">⏱️</div>
+            <h3 style="margin:0; font-size:1.1rem;">Verschlusszeit bei 50mm Objektiv aus der Hand?</h3>
+            <div class="fc-hint">Tippen zum Drehen</div>
+          </div>
+          <div class="flashcard-back" style="background: var(--c-danger);">
+            <h3 style="margin:0; font-size:1.1rem; color:white;">Minimal 1/50s</h3>
+            <p style="font-size:0.9rem; margin-top:0.5rem; opacity:0.9;">Faustregel gegen Verwacklung: Die Verschlusszeit darf nicht länger sein als 1/Brennweite.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="border-bottom: 1px solid var(--glass-border); margin: 3rem 0;"></div>
+<div class="faq-grid">
       <!-- Kategorie 1 -->
       <div class="faq-category">1. Belichtung & Technik-Probleme</div>
 
@@ -812,7 +1007,73 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
     </div>
   </div>
 
+
+
+  <footer style="margin-top: 5rem; padding-top: 2.5rem; border-top: 1px solid var(--glass-border); text-align: center; color: var(--text-tertiary); font-size: 0.85rem; padding-bottom: 2rem;">
+    <div style="max-width: 700px; margin: 0 auto; background: var(--glass-bg); padding: 1.5rem; border-radius: var(--radius-sm); border: 1px solid var(--glass-border);">
+      <p style="margin-bottom: 0.8rem; font-weight: 600; color: var(--text-secondary);">📸 Rechtliche Hinweise & Bildnutzung</p>
+      <p style="margin-bottom: 0.8rem; line-height: 1.5;">Im Rahmen der praktischen Übungen entstehen im Kurs Fotografien, auf denen auch Kursteilnehmende abgebildet sein können. Diese Bilder werden zur gemeinsamen Bildbesprechung, im Skript (als Best-Practice) und auf der passwortgeschützten Kurs-Plattform genutzt. Der Umgang mit deinen Daten erfolgt selbstverständlich vertraulich und DSGVO-konform.</p>
+      <p style="margin-bottom: 0;">Solltest du <strong>nicht</strong> damit einverstanden sein, dass Fotos von dir gezeigt oder im Rahmen des Kurses genutzt werden, ist das absolut kein Problem. Es genügt eine kurze, formlose Nachricht an: <a href="mailto:mario.schubert@thi.de" style="color: var(--c-primary); text-decoration: none; font-weight: bold;">mario.schubert@thi.de</a>.</p>
+    </div>
+  </footer>
+
+  <!-- Floating PDF Download Button -->
+  <a href="./Session_02_Protokoll_Handout.pdf" download style="position: fixed; bottom: 30px; right: 30px; background: var(--c-primary); color: white; padding: 12px 20px; border-radius: 50px; font-weight: 600; font-size: 0.95rem; text-decoration: none; box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4); display: flex; align-items: center; gap: 8px; z-index: 1000; transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), background 0.3s;">
+    <svg style="width:20px; height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+    Protokoll als PDF laden
+  </a>
+
+<!-- ================= TAB 10: TOOLS & RECHNER ================= -->
+  <div id="tools" class="tab-panel">
+    <h1 class="page-title">Digitaler Belichtungsrechner</h1>
+    <p class="page-subtitle">Die moderne "Sunny 16"-Regel. Wenn der Belichtungsmesser ausfällt oder du einen perfekten Startwert für manuelle Settings (M-Modus) suchst.</p>
+
+    <div class="theory-card glass" style="border-left-color: var(--c-primary); max-width: 800px; margin: 0 auto;">
+      <h2 style="color: var(--c-primary);">Sunny 16 Kalkulator</h2>
+      <p style="margin-bottom: 2rem;">Gib das aktuelle Wetter und deinen eingestellten ISO-Wert an. Das Tool berechnet dir mathematisch korrekte Startwerte für verschiedene Blenden.</p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+        <div>
+          <label style="display:block; font-weight:600; margin-bottom:0.5rem;">Wie ist das Wetter? ☀️☁️</label>
+          <select id="calc-weather" onchange="calcSunny16()" style="width:100%; padding:10px; background:var(--bg-surface); color:var(--text-primary); border:1px solid var(--glass-border); border-radius:var(--radius-sm); font-size:1rem; outline:none;">
+            <option value="16">Sonne pur (Harter Schatten)</option>
+            <option value="11">Leicht bewölkt (Weicher Schatten)</option>
+            <option value="8">Bewölkt (Kein Schatten)</option>
+            <option value="5.6">Stark bewölkt / Regnerisch</option>
+            <option value="4">Sonnenuntergang / Dämmerung</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block; font-weight:600; margin-bottom:0.5rem;">Dein ISO-Wert ✨</label>
+          <select id="calc-iso" onchange="calcSunny16()" style="width:100%; padding:10px; background:var(--bg-surface); color:var(--text-primary); border:1px solid var(--glass-border); border-radius:var(--radius-sm); font-size:1rem; outline:none;">
+            <option value="100">ISO 100</option>
+            <option value="200">ISO 200</option>
+            <option value="400">ISO 400</option>
+            <option value="800">ISO 800</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 1.5rem;">
+        <h3 style="margin-top:0; color:var(--text-secondary); font-size:0.9rem; text-transform:uppercase; letter-spacing:1px;">Richtige Kamera-Einstellungen:</h3>
+        <table id="calc-results" style="margin-top: 1rem;">
+          <thead>
+            <tr>
+              <th style="color:var(--c-accent)">Wunsch-Blende</th>
+              <th style="color:var(--c-primary)">Nötige Verschlusszeit</th>
+              <th>Effekt</th>
+            </tr>
+          </thead>
+          <tbody id="calc-body">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
 </main>
+
 
 <script>
   function switchTab(tabId) {
@@ -877,6 +1138,118 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
 
   // Init
   updateSimulator();
+
+  // Theme Toggle
+  function toggleTheme() {
+    const html = document.documentElement;
+    const current = html.getAttribute('data-theme');
+    if (current === 'light') {
+      html.removeAttribute('data-theme');
+      localStorage.setItem('thi-theme', 'dark');
+    } else {
+      html.setAttribute('data-theme', 'light');
+      localStorage.setItem('thi-theme', 'light');
+    }
+  }
+
+  // Load Theme on start
+  if (localStorage.getItem('thi-theme') === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+
+  // Progress Tracker Local Storage
+  function saveProgress() {
+    for(let i=1; i<=5; i++) {
+      const chk = document.getElementById('chk' + i);
+      if(chk) {
+        localStorage.setItem('thi-chk-' + i, chk.checked);
+      }
+    }
+    const successMsg = document.getElementById('progress-success');
+    successMsg.style.display = 'block';
+    setTimeout(() => { successMsg.style.display = 'none'; }, 2000);
+
+    // Check if all are done, animate parent
+    let allDone = true;
+    for(let i=1; i<=5; i++) { if(!document.getElementById('chk'+i).checked) allDone = false; }
+    if(allDone) {
+      document.getElementById('self-check-list').style.borderLeft = "4px solid var(--c-secondary)";
+      document.getElementById('self-check-list').style.paddingLeft = "10px";
+    } else {
+      document.getElementById('self-check-list').style.borderLeft = "none";
+      document.getElementById('self-check-list').style.paddingLeft = "0";
+    }
+  }
+
+  // Load Progress on start
+  window.addEventListener('DOMContentLoaded', () => {
+    for(let i=1; i<=5; i++) {
+      const state = localStorage.getItem('thi-chk-' + i);
+      const chk = document.getElementById('chk' + i);
+      if(state === 'true' && chk) chk.checked = true;
+    }
+    // Init Sunny 16 calc
+    if(typeof calcSunny16 === 'function') calcSunny16();
+  });
+
+  // Sunny 16 Logic
+  function calcSunny16() {
+    const wVal = parseFloat(document.getElementById('calc-weather').value);
+    const isoVal = parseInt(document.getElementById('calc-iso').value);
+    const tbody = document.getElementById('calc-body');
+    if(!tbody) return;
+
+    // Base rule: At f/weatherVal, Shutter = 1/ISO
+    // We want to calculate shutter speed for apertures: f/2.8, f/5.6, f/8, f/16
+    const apertures = [
+      { f: 2.8, name: "f/2.8", fx: "Sehr starkes Bokeh (Portrait)" },
+      { f: 5.6, name: "f/5.6", fx: "Mittelweg (Street)" },
+      { f: 8.0, name: "f/8", fx: "Sweet Spot (Scharf)" },
+      { f: 16.0, name: "f/16", fx: "Alles Scharf (Landschaft)" }
+    ];
+
+    // Helper to calculate stops difference from base weather aperture
+    // standard stops: 1.4, 2, 2.8, 4, 5.6, 8, 11, 16, 22
+    const stops = [1.4, 2, 2.8, 4, 5.6, 8, 11, 16, 22];
+
+    let html = "";
+
+    apertures.forEach(ap => {
+      // find index difference
+      let wIdx = stops.reduce((prev, curr) => Math.abs(curr - wVal) < Math.abs(prev - wVal) ? curr : prev);
+      let aIdx = stops.reduce((prev, curr) => Math.abs(curr - ap.f) < Math.abs(prev - ap.f) ? curr : prev);
+
+      let stopDiff = stops.indexOf(wIdx) - stops.indexOf(aIdx);
+
+      // Calculate resulting shutter speed
+      // Shutter base = 1/ISO
+      let shutterVal = isoVal * Math.pow(2, stopDiff);
+
+      // Format shutter string nicely
+      let shutterStr = "";
+      if(shutterVal >= 1) {
+        let rounded = Math.round(shutterVal);
+        if (rounded > 8000) rounded = 8000;
+
+        // Standardize to common camera shutter speeds
+        const stdSpeeds = [1, 2, 4, 8, 15, 30, 60, 125, 250, 500, 1000, 2000, 4000, 8000];
+        rounded = stdSpeeds.reduce((prev, curr) => Math.abs(curr - rounded) < Math.abs(prev - rounded) ? curr : prev);
+
+        shutterStr = "1/" + rounded + "s";
+      } else {
+        shutterStr = Math.round(1/shutterVal) + "s";
+      }
+
+      html += `<tr>
+        <td style="font-weight:bold; color:var(--c-accent)">${ap.name}</td>
+        <td style="font-weight:bold; font-family:monospace; color:var(--c-primary)">${shutterStr}</td>
+        <td style="font-size:0.85rem">${ap.fx}</td>
+      </tr>`;
+    });
+
+    tbody.innerHTML = html;
+  }
+
 </script>
 </body>
 </html>
