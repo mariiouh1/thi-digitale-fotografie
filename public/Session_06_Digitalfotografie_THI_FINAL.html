@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Session 06 – Tierfotografie & Feedback P2 | THI Digitalfotografie</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-primary:    #0d1117;
+      --bg-secondary:  #141d1a;
+      --bg-card:       #1a2620;
+      --bg-card-alt:   #1f2e29;
+      --accent:        #34d399;
+      --accent-warm:   #10b981;
+      --accent-soft:   rgba(52, 211, 153, 0.10);
+      --accent-glow:   rgba(52, 211, 153, 0.22);
+      --text-primary:  #ecfdf5;
+      --text-secondary:#96b8a6;
+      --text-muted:    #4a7060;
+      --border:        rgba(52, 211, 153, 0.14);
+      --border-strong: rgba(52, 211, 153, 0.38);
+      --red:           #f87171;
+      --red-soft:      rgba(248, 113, 113, 0.11);
+      --amber:         #fbbf24;
+      --amber-soft:    rgba(251, 191, 36, 0.11);
+      --blue:          #60a5fa;
+      --blue-soft:     rgba(96, 165, 250, 0.11);
+      --tag-bg:        rgba(52, 211, 153, 0.13);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.7; min-height: 100vh; }
+
+    /* NOISE */
+    body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events:none; z-index:0; opacity:0.4; }
+
+    /* HEADER */
+    .site-header { background:linear-gradient(135deg,#141d1a 0%,#1a2e22 50%,#141d1a 100%); border-bottom:1px solid var(--border-strong); padding:0 2rem; position:sticky; top:0; z-index:100; backdrop-filter:blur(12px); }
+    .header-inner { max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:64px; }
+    .header-logo { display:flex; align-items:center; gap:12px; text-decoration:none; }
+    .logo-icon { width:36px; height:36px; background:linear-gradient(135deg,var(--accent),var(--accent-warm)); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px; }
+    .logo-text { font-size:0.85rem; font-weight:600; color:var(--text-primary); letter-spacing:0.02em; }
+    .logo-sub { font-size:0.7rem; color:var(--text-muted); font-weight:400; }
+    .header-badge { background:var(--accent-soft); border:1px solid var(--border-strong); color:var(--accent); font-size:0.7rem; font-weight:700; padding:4px 12px; border-radius:20px; letter-spacing:0.08em; text-transform:uppercase; }
+
+    /* HERO */
+    .hero { background:linear-gradient(160deg,#141d1a 0%,#0d2018 40%,#0d1117 100%); border-bottom:1px solid var(--border); padding:4rem 2rem 3rem; position:relative; overflow:hidden; }
+    .hero::after { content:'S6'; position:absolute; right:-20px; top:-20px; font-size:18rem; font-weight:900; color:rgba(52,211,153,0.04); line-height:1; pointer-events:none; }
+    .hero-inner { max-width:1100px; margin:0 auto; position:relative; z-index:1; }
+    .hero-eyebrow { display:flex; align-items:center; gap:10px; margin-bottom:1.2rem; flex-wrap:wrap; }
+    .tag { font-size:0.72rem; font-weight:700; padding:4px 12px; border-radius:20px; text-transform:uppercase; letter-spacing:0.08em; }
+    .tag-session { background:var(--tag-bg); color:var(--accent); border:1px solid var(--border-strong); }
+    .tag-feedback { background:var(--amber-soft); color:var(--amber); border:1px solid rgba(251,191,36,0.35); }
+    .tag-tier { background:var(--accent-soft); color:var(--accent); border:1px solid var(--border-strong); }
+    .tag-info { background:var(--blue-soft); color:var(--blue); border:1px solid rgba(96,165,250,0.35); }
+    .tag-red { background:var(--red-soft); color:var(--red); border:1px solid rgba(248,113,113,0.35); }
+    .hero h1 { font-size:clamp(2rem,5vw,3.2rem); font-weight:800; line-height:1.15; margin-bottom:0.8rem; letter-spacing:-0.02em; }
+    .hero h1 span { color:var(--accent); }
+    .hero-sub { font-size:1.05rem; color:var(--text-secondary); max-width:680px; margin-bottom:2rem; }
+    .hero-meta { display:flex; flex-wrap:wrap; gap:1.5rem; }
+    .hero-meta-item { display:flex; align-items:center; gap:8px; font-size:0.85rem; color:var(--text-secondary); }
+    .hero-meta-item strong { color:var(--text-primary); }
+    .meta-dot { width:6px; height:6px; border-radius:50%; background:var(--accent); }
+
+    /* AGENDA BANNER */
+    .agenda-banner { max-width:1100px; margin:2.5rem auto 0; padding:0 2rem; }
+    .agenda-box { background:linear-gradient(135deg,rgba(52,211,153,0.06),rgba(52,211,153,0.02)); border:1px solid var(--border-strong); border-radius:14px; padding:1.4rem 1.8rem; display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:0.8rem; }
+    .agenda-item { display:flex; align-items:center; gap:10px; }
+    .agenda-num { flex-shrink:0; width:26px; height:26px; border-radius:50%; background:var(--accent-soft); border:1px solid var(--border-strong); display:flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:800; color:var(--accent); }
+    .agenda-item p { font-size:0.82rem; color:var(--text-secondary); line-height:1.4; }
+    .agenda-item p strong { color:var(--text-primary); display:block; }
+
+    /* MAIN */
+    .main { max-width:1100px; margin:0 auto; padding:3rem 2rem 6rem; display:grid; grid-template-columns:1fr 340px; gap:2.5rem; align-items:start; }
+    @media(max-width:860px){ .main{ grid-template-columns:1fr; } }
+
+    /* SECTION LABELS */
+    .section-label { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent); margin-bottom:0.6rem; display:flex; align-items:center; gap:8px; }
+    .section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+    h2.block-title { font-size:1.5rem; font-weight:700; margin-bottom:1.2rem; letter-spacing:-0.01em; }
+    h3.sub-title { font-size:1.05rem; font-weight:600; margin-bottom:0.6rem; }
+
+    /* CARDS */
+    .card { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:1.8rem; margin-bottom:1.8rem; transition:border-color 0.2s; }
+    .card:hover { border-color:var(--border-strong); }
+    .card-accent { border-color:rgba(52,211,153,0.28); background:linear-gradient(135deg,var(--bg-card) 0%,rgba(52,211,153,0.04) 100%); }
+    .card-amber { border-color:rgba(251,191,36,0.28); background:linear-gradient(135deg,var(--bg-card) 0%,rgba(251,191,36,0.04) 100%); }
+    .card-blue { border-color:rgba(96,165,250,0.28); background:linear-gradient(135deg,var(--bg-card) 0%,rgba(96,165,250,0.04) 100%); }
+    .card-red { border-color:rgba(248,113,113,0.28); background:linear-gradient(135deg,var(--bg-card) 0%,rgba(248,113,113,0.04) 100%); }
+
+    /* FEEDBACK BLOCK */
+    .feedback-steps { display:flex; flex-direction:column; gap:0.9rem; margin-bottom:1.4rem; }
+    .feedback-step { display:flex; gap:1rem; align-items:flex-start; }
+    .step-dot { flex-shrink:0; width:28px; height:28px; border-radius:50%; background:var(--amber-soft); border:1px solid rgba(251,191,36,0.38); display:flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:800; color:var(--amber); margin-top:2px; }
+    .feedback-step p { font-size:0.9rem; color:var(--text-secondary); line-height:1.65; }
+    .feedback-step p strong { color:var(--text-primary); }
+
+    /* BULLET LIST */
+    .bullet-list { list-style:none; display:flex; flex-direction:column; gap:0.7rem; }
+    .bullet-list li { display:flex; gap:10px; align-items:flex-start; font-size:0.9rem; color:var(--text-secondary); line-height:1.6; }
+    .bullet-list li::before { content:'→'; color:var(--accent); flex-shrink:0; font-weight:600; margin-top:1px; }
+    .bullet-list li strong { color:var(--text-primary); }
+
+    /* HIGHLIGHT BOX */
+    .highlight-box { background:var(--accent-soft); border:1px solid var(--border-strong); border-radius:10px; padding:1rem 1.2rem; margin:1rem 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.65; }
+    .highlight-box strong { color:var(--accent); }
+    .highlight-box-amber { background:var(--amber-soft); border:1px solid rgba(251,191,36,0.3); border-radius:10px; padding:1rem 1.2rem; margin:1rem 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.65; }
+    .highlight-box-amber strong { color:var(--amber); }
+
+    /* ACCORDION */
+    .accordion { display:flex; flex-direction:column; gap:0.8rem; margin-bottom:1.5rem; }
+    .accordion-item { background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; overflow:hidden; transition:border-color 0.2s; }
+    .accordion-item:hover { border-color:var(--border-strong); }
+    .accordion-toggle { width:100%; display:flex; align-items:center; justify-content:space-between; padding:1rem 1.2rem; background:none; border:none; color:var(--text-primary); font-size:0.92rem; font-weight:600; cursor:pointer; text-align:left; gap:1rem; font-family:inherit; }
+    .accordion-icon { width:24px; height:24px; border-radius:50%; background:var(--accent-soft); border:1px solid var(--border-strong); display:flex; align-items:center; justify-content:center; font-size:0.8rem; color:var(--accent); flex-shrink:0; transition:transform 0.25s; }
+    .accordion-toggle.open .accordion-icon { transform:rotate(45deg); }
+    .accordion-body { display:none; padding:0 1.2rem 1.2rem; }
+    .accordion-body.open { display:block; }
+    .accordion-body p, .accordion-body li { font-size:0.88rem; color:var(--text-secondary); line-height:1.7; }
+    .accordion-body ul { list-style:none; display:flex; flex-direction:column; gap:0.5rem; }
+    .accordion-body li { display:flex; gap:10px; }
+    .accordion-body li::before { content:'·'; color:var(--accent); font-size:1.2rem; line-height:1.4; flex-shrink:0; }
+    .accordion-body li strong { color:var(--text-primary); }
+
+    /* VERGLEICHS-GRID */
+    .compare-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin:1.2rem 0; }
+    @media(max-width:580px){ .compare-grid{ grid-template-columns:1fr; } }
+    .compare-col { border-radius:12px; padding:1.2rem; }
+    .compare-col ul { list-style:none; display:flex; flex-direction:column; gap:0.5rem; }
+    .compare-col li { font-size:0.82rem; color:var(--text-secondary); display:flex; gap:8px; }
+    .compare-col li strong { color:var(--text-primary); }
+
+    /* PORTFOLIO ÜBUNG */
+    .portfolio-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.2rem; }
+    @media(max-width:580px){ .portfolio-grid{ grid-template-columns:1fr; } }
+    .portfolio-item { background:var(--bg-secondary); border:1px solid var(--border); border-radius:10px; padding:1rem 1.2rem; }
+    .portfolio-item .pi-num { font-size:1.6rem; font-weight:900; color:var(--accent); line-height:1; margin-bottom:0.4rem; }
+    .portfolio-item .pi-title { font-size:0.88rem; font-weight:700; margin-bottom:0.3rem; }
+    .portfolio-item .pi-desc { font-size:0.8rem; color:var(--text-secondary); line-height:1.55; }
+
+    /* BTN */
+    .btn { display:inline-flex; align-items:center; gap:8px; padding:10px 22px; border-radius:8px; font-size:0.88rem; font-weight:600; text-decoration:none; transition:all 0.2s; cursor:pointer; border:none; font-family:inherit; }
+    .btn-primary { background:linear-gradient(135deg,var(--accent),var(--accent-warm)); color:#0d1117; }
+    .btn-primary:hover { filter:brightness(1.1); transform:translateY(-1px); }
+    .btn-outline { background:transparent; color:var(--accent); border:1px solid var(--border-strong); }
+    .btn-outline:hover { background:var(--accent-soft); }
+
+    /* AUSBLICK */
+    .next-week-card { background:linear-gradient(135deg,#161a2a 0%,#1a2035 100%); border:1px solid rgba(96,165,250,0.3); border-radius:16px; padding:1.8rem; margin-bottom:1.8rem; position:relative; overflow:hidden; }
+    .next-week-card::before { content:'→'; position:absolute; right:1.5rem; bottom:-0.5rem; font-size:6rem; color:rgba(96,165,250,0.05); font-weight:900; }
+    .next-week-card .nw-date { font-size:0.72rem; font-family:'JetBrains Mono',monospace; color:var(--blue); font-weight:700; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:0.4rem; }
+    .next-week-card h3 { font-size:1.25rem; font-weight:700; margin-bottom:0.8rem; }
+    .next-week-card p { font-size:0.88rem; color:var(--text-secondary); margin-bottom:1rem; line-height:1.65; }
+    .nw-chips { display:flex; flex-wrap:wrap; gap:0.5rem; }
+    .chip { padding:4px 12px; border-radius:20px; font-size:0.75rem; font-weight:600; }
+    .chip-green { background:var(--accent-soft); color:var(--accent); border:1px solid var(--border-strong); }
+    .chip-amber { background:var(--amber-soft); color:var(--amber); border:1px solid rgba(251,191,36,0.3); }
+    .chip-blue { background:var(--blue-soft); color:var(--blue); border:1px solid rgba(96,165,250,0.3); }
+
+    /* P3 REMINDER */
+    .reminder-card { background:linear-gradient(135deg,rgba(248,113,113,0.06),rgba(248,113,113,0.02)); border:1px solid rgba(248,113,113,0.28); border-left:4px solid var(--red); border-radius:12px; padding:1.4rem 1.6rem; margin-bottom:1.8rem; display:flex; gap:1.2rem; align-items:flex-start; }
+    .reminder-card .ri { font-size:1.6rem; flex-shrink:0; }
+    .reminder-card h3 { font-size:1rem; font-weight:700; color:var(--red); margin-bottom:0.3rem; }
+    .reminder-card p { font-size:0.88rem; color:var(--text-secondary); line-height:1.6; }
+    .reminder-card p strong { color:var(--text-primary); }
+
+    /* SIDEBAR */
+    .sidebar { display:flex; flex-direction:column; gap:1.5rem; }
+    .sidebar-card { background:var(--bg-card); border:1px solid var(--border); border-radius:14px; padding:1.4rem; }
+    .sidebar-card h3 { font-size:0.88rem; font-weight:700; color:var(--text-primary); margin-bottom:1rem; display:flex; align-items:center; gap:8px; }
+
+    /* DEADLINE LIST */
+    .deadline-list { display:flex; flex-direction:column; gap:0.7rem; }
+    .deadline-item { display:flex; align-items:center; gap:10px; padding:0.7rem; border-radius:8px; background:var(--bg-secondary); border:1px solid var(--border); }
+    .deadline-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+    .dot-red { background:var(--red); box-shadow:0 0 8px var(--red); }
+    .dot-amber { background:var(--amber); box-shadow:0 0 8px var(--amber); }
+    .dot-green { background:var(--accent); box-shadow:0 0 8px var(--accent); }
+    .deadline-info .name { font-size:0.82rem; font-weight:600; }
+    .deadline-info .date { font-size:0.72rem; color:var(--text-muted); font-family:'JetBrains Mono',monospace; }
+
+    /* PREVIEW */
+    .preview-item { display:flex; gap:10px; padding:0.8rem; border-radius:10px; background:var(--bg-secondary); border:1px solid var(--border); margin-bottom:0.7rem; align-items:flex-start; }
+    .preview-icon { width:36px; height:36px; border-radius:8px; background:var(--accent-soft); display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+    .preview-item .title { font-size:0.85rem; font-weight:600; }
+    .preview-item .desc { font-size:0.75rem; color:var(--text-muted); line-height:1.4; }
+
+    /* PROGRESS */
+    .progress-wrap { margin-top:0.5rem; }
+    .progress-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:0.6rem; }
+    .progress-label { font-size:0.8rem; color:var(--text-secondary); }
+    .progress-val { font-size:0.75rem; font-weight:700; color:var(--accent); font-family:'JetBrains Mono',monospace; }
+    .progress-bar { height:4px; border-radius:2px; background:rgba(255,255,255,0.06); margin-bottom:1rem; overflow:hidden; }
+    .progress-fill { height:100%; border-radius:2px; background:linear-gradient(90deg,var(--accent),var(--accent-warm)); transition:width 1s ease; }
+
+    /* RESOURCE LINKS */
+    .resource-link { display:flex; align-items:center; gap:10px; padding:0.7rem 0.9rem; border-radius:8px; border:1px solid var(--border); background:var(--bg-secondary); text-decoration:none; color:var(--text-primary); font-size:0.83rem; font-weight:500; transition:all 0.2s; margin-bottom:0.6rem; }
+    .resource-link:hover { border-color:var(--border-strong); background:var(--bg-card-alt); }
+    .resource-link .rl-icon { flex-shrink:0; font-size:1rem; }
+    .resource-link .rl-label { flex:1; }
+    .resource-link .rl-arrow { color:var(--text-muted); font-size:0.75rem; }
+
+    /* DIVIDER */
+    .divider { height:1px; background:var(--border); margin:2rem 0; }
+
+    /* FOOTER */
+    .site-footer { border-top:1px solid var(--border); padding:2rem; text-align:center; }
+    .site-footer p { font-size:0.8rem; color:var(--text-muted); margin-bottom:0.3rem; }
+    .site-footer a { color:var(--accent); text-decoration:none; }
+    .site-footer a:hover { text-decoration:underline; }
+
+    @media(max-width:600px){ .hero{ padding:2.5rem 1.5rem 2rem; } .main{ padding:2rem 1.5rem 4rem; } .agenda-banner{ padding:0 1.5rem; } }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="https://thi-kurs.vercel.app" class="header-logo">
+      <div class="logo-icon">📷</div>
+      <div>
+        <div class="logo-text">Mario Schubert</div>
+        <div class="logo-sub">THI · Digitalfotografie SS 2026</div>
+      </div>
+    </a>
+    <div class="header-badge">Session 06 · 04.05.2026</div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <span class="tag tag-session">Session 06</span>
+      <span class="tag tag-feedback">Feedback P2</span>
+      <span class="tag tag-tier">Tierfotografie</span>
+      <span class="tag tag-info">Portfolio-Präsentation</span>
+    </div>
+    <h1>Tierfotografie<br/><span>&amp; Feedback P2</span></h1>
+    <p class="hero-sub">
+      Heute holen wir das Feedback zu P2 nach, tauchen in die Welt der Tierfotografie ein und präsentieren eure Portraits im Plenum. Außerdem gilt: P3 läuft, die Uhr tickt.
+    </p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><div class="meta-dot"></div><span>04. Mai 2026</span></div>
+      <div class="hero-meta-item"><div class="meta-dot"></div><span>Feedback P2: <strong>Portraits besprechen</strong></span></div>
+      <div class="hero-meta-item"><div class="meta-dot"></div><span>P3 Deadline: <strong>11.05.2026, 23:59 Uhr</strong></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- AGENDA -->
+<div class="agenda-banner">
+  <div style="margin-top:2.5rem;"></div>
+  <div class="agenda-box">
+    <div class="agenda-item">
+      <div class="agenda-num">1</div>
+      <p><strong>Bestes Bild</strong>Freiwillig, 10 Min.</p>
+    </div>
+    <div class="agenda-item">
+      <div class="agenda-num">2</div>
+      <p><strong>Feedback P2</strong>Portraits, ~35 Min.</p>
+    </div>
+    <div class="agenda-item">
+      <div class="agenda-num">3</div>
+      <p><strong>Tierfotografie</strong>Theorie + Technik, ~30 Min.</p>
+    </div>
+    <div class="agenda-item">
+      <div class="agenda-num">4</div>
+      <p><strong>Portfolio-Präsentation</strong>Eigene Bilder zeigen, ~20 Min.</p>
+    </div>
+    <div class="agenda-item">
+      <div class="agenda-num">5</div>
+      <p><strong>Ausblick S7</strong>P3-Reminder + nächste Woche</p>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main class="main">
+<div class="content">
+
+  <!-- FEEDBACK P2 -->
+  <div class="section-label">Feedback P2</div>
+  <h2 class="block-title">📸 Feedback: Kreative Portraits</h2>
+
+  <div class="card card-amber">
+    <p style="font-size:0.92rem;color:var(--text-secondary);line-height:1.7;margin-bottom:1.4rem;">
+      Wir haben das Feedback zu P2 heute nachgeholt. Es geht nicht darum, Bilder zu zerpflücken, sondern zu verstehen, was funktioniert und warum. Jede Besprechung hat die gleiche Struktur: eine Stärke, eine Bildidee, ein konkreter Verbesserungshinweis. Nicht mehr, nicht weniger.
+    </p>
+
+    <h3 class="sub-title">So läuft das Feedback ab</h3>
+    <div class="feedback-steps">
+      <div class="feedback-step">
+        <div class="step-dot">1</div>
+        <p><strong>Bild auf dem Beamer</strong> – wir schauen gemeinsam drauf, ohne dass jemand sofort kommentiert. 10 Sekunden nur schauen.</p>
+      </div>
+      <div class="feedback-step">
+        <div class="step-dot">2</div>
+        <p><strong>Was funktioniert?</strong> – zuerst eine konkrete Stärke benennen. Nicht "schönes Bild", sondern: "Die Lichtsituation im Hintergrund erzeugt Tiefe."</p>
+      </div>
+      <div class="feedback-step">
+        <div class="step-dot">3</div>
+        <p><strong>Was ist die Bildidee?</strong> – Haben wir verstanden, was die Person zeigen wollte? Kommt das rüber?</p>
+      </div>
+      <div class="feedback-step">
+        <div class="step-dot">4</div>
+        <p><strong>Ein konkreter nächster Schritt</strong> – kein Rundumschlag, sondern eine einzige, umsetzbare Verbesserung.</p>
+      </div>
+    </div>
+
+    <div class="highlight-box-amber">
+      💡 <strong>Wichtig:</strong> Wer sein Bild zeigt, darf danach kurz sagen, was die eigene Absicht war. Manchmal klaffen Absicht und Wirkung auseinander. Das ist keine Niederlage, das ist der Lernmoment.
+    </div>
+  </div>
+
+  <!-- FEEDBACK KRITERIEN -->
+  <div class="card">
+    <h3 class="sub-title" style="margin-bottom:1rem;">Worauf schauen wir bei P2-Portraits genau?</h3>
+    <div class="accordion">
+
+      <div class="accordion-item">
+        <button class="accordion-toggle" onclick="toggleAccordion(this)">
+          💡 Licht: Qualität und Richtung
+          <span class="accordion-icon">+</span>
+        </button>
+        <div class="accordion-body">
+          <ul>
+            <li><strong>Hartes vs. weiches Licht:</strong> Kommt das Licht direkt oder gebrochen? Harte Schatten können dramatisch wirken, weiches Licht schmeichelt Gesichtern.</li>
+            <li><strong>Richtung:</strong> Frontlicht flacht ab, Seitenlicht formt, Gegenlicht dramatisiert. War die Lichtrichtung eine bewusste Entscheidung?</li>
+            <li><strong>Goldene Stunde:</strong> Wer das Abend- oder Morgenlicht genutzt hat, bekommt von Natur aus eine wärmere, weichere Lichtqualität.</li>
+            <li><strong>Available Light:</strong> Künstliches Licht aus Innenräumen kann spannend wirken, erfordert aber hohe ISO und zeigt sich im Weißabgleich.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-toggle" onclick="toggleAccordion(this)">
+          🎯 Fokus: Was ist scharf, was nicht?
+          <span class="accordion-icon">+</span>
+        </button>
+        <div class="accordion-body">
+          <ul>
+            <li><strong>Augenfokus:</strong> Bei Portraits muss das dem Betrachter nähere Auge scharf sein. Alles andere ist ein Fehler.</li>
+            <li><strong>Schärfentiefe als Stilmittel:</strong> Bewusst geringer DOF erzeugt Trennung vom Hintergrund. Zu wenig DOF und das falsche Auge ist unscharf.</li>
+            <li><strong>Fokuspunkt gesetzt oder zufällig?</strong> Hat die Person den Fokuspunkt aktiv gewählt oder hat die Kamera entschieden?</li>
+            <li><strong>Bewegungsunschärfe:</strong> Wenn das Motiv sich bewegt hat, war AF-C gesetzt? Zeigt die Unschärfe Absicht oder Fehler?</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-toggle" onclick="toggleAccordion(this)">
+          📐 Bildaufbau: Komposition und Bildschnitt
+          <span class="accordion-icon">+</span>
+        </button>
+        <div class="accordion-body">
+          <ul>
+            <li><strong>Wo ist das Hauptmotiv platziert?</strong> Mitte ist oft uninteressant. Drittelregel oder bewusster Negativraum?</li>
+            <li><strong>Schaut die Person aus dem Bild raus?</strong> Dann braucht es mehr Raum in Blickrichtung.</li>
+            <li><strong>Was passiert am Bildrand?</strong> Abgeschnittene Hände oder Körperteile wirken oft unbeabsichtigt. War das Absicht?</li>
+            <li><strong>Hoch- oder Querformat?</strong> Portraits funktionieren häufig im Hochformat, aber das ist kein Gesetz.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-toggle" onclick="toggleAccordion(this)">
+          🤝 Nähe zum Motiv und Beziehung
+          <span class="accordion-icon">+</span>
+        </button>
+        <div class="accordion-body">
+          <ul>
+            <li><strong>Wie nah war die Person ran?</strong> Viele Portraits wirken schwach, weil der Fotograf zu weit weg stand. Nähergehen ändert das Bild grundlegend.</li>
+            <li><strong>Wirkt die Person entspannt oder angespannt?</strong> Das hat viel mit der Beziehung zwischen Fotografin/Fotograf und Motiv zu tun.</li>
+            <li><strong>Kontakt oder kein Kontakt?</strong> Direkter Blick in die Kamera erzeugt eine andere Spannung als ein abgewandter Blick. Beides kann stark sein.</li>
+            <li><strong>Kontext und Umgebung:</strong> Erzählt der Hintergrund etwas über die Person? Oder stört er?</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PORTFOLIO PRÄSENTATION -->
+  <div class="section-label" style="margin-top:2.5rem;">Portfolio-Präsentation</div>
+  <h2 class="block-title">🗂 Eure Bilder zeigen</h2>
+  <div class="card card-accent">
+    <p style="font-size:0.92rem;color:var(--text-secondary);line-height:1.7;margin-bottom:1.4rem;">
+      Jede Person wählt <strong>ein Bild aus P2</strong> aus, das sie kurz vorstellt. Kein langer Vortrag, kein Rechtfertigen, kein Entschuldigen. Einfach zeigen, was ihr gemacht habt und sagen, was euch daran wichtig ist.
+    </p>
+    <div class="portfolio-grid">
+      <div class="portfolio-item">
+        <div class="pi-num">01</div>
+        <div class="pi-title">Bild zeigen</div>
+        <div class="pi-desc">Euer Lieblingsbild aus P2 auf den Beamer, ohne Vorrede.</div>
+      </div>
+      <div class="portfolio-item">
+        <div class="pi-num">02</div>
+        <div class="pi-title">Absicht nennen</div>
+        <div class="pi-desc">Einen Satz: Was wolltet ihr mit diesem Bild zeigen?</div>
+      </div>
+      <div class="portfolio-item">
+        <div class="pi-num">03</div>
+        <div class="pi-title">Peer-Reaktion</div>
+        <div class="pi-desc">Die Gruppe sagt kurz: Was kommt an? Was fehlt noch?</div>
+      </div>
+      <div class="portfolio-item">
+        <div class="pi-num">04</div>
+        <div class="pi-title">Weiter</div>
+        <div class="pi-desc">Nächste Person. Keine langen Diskussionen, Tempo halten.</div>
+      </div>
+    </div>
+    <div class="highlight-box">
+      🎯 <strong>Ziel:</strong> Jede Person soll einmal gesehen worden sein. Das ist keine Prüfung, sondern ein Spiegel. Ihr lernt genauso viel aus den Bildern der anderen wie aus eurem eigenen.
+    </div>
+  </div>
+
+  <!-- TIERFOTOGRAFIE -->
+  <div class="section-label" style="margin-top:2.5rem;">Theorie</div>
+  <h2 class="block-title">🐾 Tierfotografie</h2>
+
+  <div class="card card-accent">
+    <p style="font-size:0.92rem;color:var(--text-secondary);line-height:1.7;margin-bottom:1.4rem;">
+      Tierfotografie ist technisch das Anspruchsvollste, was wir bisher im Kurs hatten. Das Motiv entscheidet, wann der Moment kommt. Ihr reagiert nur. Das bedeutet: die Kamera muss auf alles vorbereitet sein, bevor das Tier sich bewegt.
+    </p>
+
+    <h3 class="sub-title" style="margin-bottom:0.9rem;">Die wichtigsten Grundregeln</h3>
+    <ul class="bullet-list" style="margin-bottom:1.4rem;">
+      <li><strong>AF-C (kontinuierlicher Autofokus):</strong> Pflicht, sobald das Tier sich bewegt. AF-S verliert das Motiv beim ersten Schritt.</li>
+      <li><strong>Verschlusszeit ab 1/500 s:</strong> Für normale Bewegungen. Schnell laufende Tiere brauchen 1/1000 s oder kürzer.</li>
+      <li><strong>Augenfokus aktivieren:</strong> Neuere Kameras haben Animal-Eye-AF. Wenn verfügbar, einschalten. Schärfe liegt dann automatisch auf dem Auge.</li>
+      <li><strong>Augenhöhe mit dem Tier:</strong> Hinknien, hinlegen. Fotos von oben auf Tiere wirken immer wie Touristenfotos. Augenhöhe gibt Würde.</li>
+      <li><strong>Geduld und Antizipation:</strong> Tier beobachten, Muster erkennen, Kamera schon bereit halten. Den Moment wartet man nicht ab, man sieht ihn kommen.</li>
+      <li><strong>ISO Auto bis 6400:</strong> Tiere warten nicht auf besseres Licht. Lieber ein rauschendes Bild mit dem Moment als ein rauscharmes Bild ohne.</li>
+      <li><strong>Hintergrund freistellen:</strong> Offene Blende (f/4 oder weiter) hebt das Tier vom Hintergrund ab und lenkt den Blick.</li>
+    </ul>
+
+    <div class="highlight-box">
+      💡 <strong>Einstieg ohne teures Equipment:</strong> Zoo, Haustiere, Vögel im Garten oder am Futterhaus. Alles davon reicht für beeindruckende Bilder, wenn Technik und Geduld stimmen.
+    </div>
+  </div>
+
+  <!-- TIERFOTO vs. ARCHITEKTUR -->
+  <div class="card">
+    <div class="section-label" style="font-size:0.68rem;">Abgrenzung</div>
+    <h3 class="sub-title" style="margin-bottom:0.8rem;">🐾 vs. 🏛 Tierfotografie ≠ Architekturfotografie</h3>
+    <p style="font-size:0.88rem;color:var(--text-secondary);line-height:1.7;margin-bottom:1.2rem;">
+      Beide Genres teilen oft denselben Schauplatz, folgen aber grundlegend anderen Regeln. Der Unterschied liegt nicht im Motiv, sondern in der Zeitdimension der Fotografie.
+    </p>
+    <div class="compare-grid">
+      <div class="compare-col" style="background:rgba(52,211,153,0.07);border:1px solid rgba(52,211,153,0.25);">
+        <div style="font-size:1.4rem;margin-bottom:0.5rem;">🐾</div>
+        <div style="font-size:0.8rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.7rem;">Tierfotografie</div>
+        <ul>
+          <li><span style="color:var(--accent);">✓</span><span>Das Motiv <strong>bewegt sich</strong>, du reagierst</span></li>
+          <li><span style="color:var(--accent);">✓</span><span><strong>Zeit ist alles</strong>, der Moment entscheidet</span></li>
+          <li><span style="color:var(--accent);">✓</span><span>Perspektive: <strong>Augenhöhe des Tieres</strong></span></li>
+          <li><span style="color:var(--accent);">✓</span><span><strong>AF-C, kurze Zeiten</strong>, hohe ISO</span></li>
+          <li><span style="color:var(--accent);">✓</span><span>Schärfe liegt auf dem <strong>Auge des Tieres</strong></span></li>
+          <li><span style="color:var(--accent);">✓</span><span>Hintergrund <strong>gezielt unscharf</strong></span></li>
+        </ul>
+      </div>
+      <div class="compare-col" style="background:rgba(96,165,250,0.07);border:1px solid rgba(96,165,250,0.25);">
+        <div style="font-size:1.4rem;margin-bottom:0.5rem;">🏛</div>
+        <div style="font-size:0.8rem;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.7rem;">Architekturfotografie</div>
+        <ul>
+          <li><span style="color:var(--blue);">✓</span><span>Das Motiv <strong>steht still</strong>, du planst</span></li>
+          <li><span style="color:var(--blue);">✓</span><span><strong>Licht und Tageszeit</strong> entscheiden alles</span></li>
+          <li><span style="color:var(--blue);">✓</span><span>Perspektive: <strong>Fluchtpunkte und Linien</strong></span></li>
+          <li><span style="color:var(--blue);">✓</span><span><strong>Stativ, lange Zeiten</strong>, niedrige ISO</span></li>
+          <li><span style="color:var(--blue);">✓</span><span>Schärfe: <strong>möglichst alles scharf</strong> f/8–f/11</span></li>
+          <li><span style="color:var(--blue);">✓</span><span>Hintergrund ist <strong>Teil des Bildes</strong></span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="highlight-box">
+      ⚡ <strong>Kurz gesagt:</strong> Bei Tieren <strong>reagierst du</strong> auf das Motiv. Bei Architektur <strong>planst du</strong> das Bild. Beides braucht Aufmerksamkeit, aber in völlig unterschiedlichen Zeitdimensionen.
+    </div>
+  </div>
+
+  <!-- KAMERA-EINSTELLUNGEN TIERFOTO -->
+  <div class="card">
+    <h3 class="sub-title" style="margin-bottom:1rem;">⚙️ Empfohlene Einstellungen für Tierfotografie</h3>
+    <div class="accordion">
+
+      <div class="accordion-item">
+        <button class="accordion-toggle" onclick="toggleAccordion(this)">
+          🦁 Tiere in Bewegung: Zoo, Hund, Vögel
+          <span class="accordion-icon">+</span>
+        </button>
+        <div class="accordion-body">
+          <ul>
+            <li><strong>Modus:</strong> Tv/S (Zeitvorwahl) oder M – Verschlusszeit selbst wählen, ISO auf Auto.</li>
+            <li><strong>Verschlusszeit:</strong> ab 1/500 s für normale Bewegungen, 1/1000 s für Rennen oder Fliegen.</li>
+            <li><strong>Blende:</strong> f/4 bis f/6.3 – genug Tiefenschärfe für das Tier, Hintergrund unscharf.</li>
+            <li><strong>ISO:</strong> Auto bis 3200 oder 6400 – je nach Lichtsituation. Rauschen ist besser als Bewegungsunschärfe.</li>
+            <li><strong>Fokusmodus:</strong> AF-C + Zone-AF oder Tracking-AF. Den Fokus auf das Tier legen und halten.</li>
+            <li><strong>Serienbildmodus:</strong> Aktivieren und mehrere Bilder in Folge schießen. Aus 10 Bildern das beste auswählen.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-toggle" onclick="toggleAccordion(this)">
+          🦅 Vögel im Flug
+          <span class="accordion-icon">+</span>
+        </button>
+        <div class="accordion-body">
+          <ul>
+            <li><strong>Verschlusszeit:</strong> Mindestens 1/1000 s, besser 1/2000 s für gespreizten Flügel ohne Unschärfe.</li>
+            <li><strong>AF-C + Tracking:</strong> Vogel im Sucher halten, Kamera lernt die Flugbahn und folgt nach.</li>
+            <li><strong>Serienbildmodus (High):</strong> Schnelle Burst-Rate erhöht die Chance, den perfekten Moment zu erwischen.</li>
+            <li><strong>Tipp:</strong> Gegen den hellen Himmel fotografieren ist schwierig (Überbelichtung). Besser seitliches Licht oder Vogel vor dunklem Hintergrund suchen.</li>
+            <li><strong>Belichtungskorrektur:</strong> Gegen hellen Himmel -1 EV einsetzen, damit das Tier nicht zu dunkel wird.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-toggle" onclick="toggleAccordion(this)">
+          🐈 Haustiere: Katzen und Hunde zuhause
+          <span class="accordion-icon">+</span>
+        </button>
+        <div class="accordion-body">
+          <ul>
+            <li><strong>Natürliches Fensterlicht:</strong> Das beste Licht für Haustierfotos. Tier in die Nähe des Fensters locken.</li>
+            <li><strong>Augenhöhe ist Pflicht:</strong> Auf dem Boden liegen, um auf Augenhöhe des Tieres zu sein.</li>
+            <li><strong>Augenfokus:</strong> Falls vorhanden, Animal-Eye-AF aktivieren. Sonst manuell auf das dem Betrachter nähere Auge fokussieren.</li>
+            <li><strong>Mit Leckerlis locken:</strong> Tiere schauen zum Leckerli, du kannst den Fokus halten und den richtigen Moment abwarten.</li>
+            <li><strong>Warte auf den "Peak-Moment":</strong> Gähnen, Dehnen, Springen, Schlafen, Spielen. Tier beobachten und antizipieren.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- P3 REMINDER -->
+  <div class="reminder-card">
+    <div class="ri">⏰</div>
+    <div>
+      <h3>P3 läuft noch – Deadline: 11.05.2026, 23:59 Uhr</h3>
+      <p>
+        Ihr habt noch Zeit bis zum <strong>11. Mai</strong>. Denkt an den Licht-Hinweis: <strong>nicht zwischen 11:00 und 17:00 Uhr fotografieren.</strong> Die Sonne steht zu hoch, die Schatten sind flach und uninteressant. Morgens vor 10:00 Uhr oder abends ab 17:30 Uhr. Mindestens 1,5 Stunden einplanen, in zwei Runden gehen.
+      </p>
+    </div>
+  </div>
+
+  <!-- AUSBLICK -->
+  <div class="section-label" style="margin-top:2.5rem;">Vorschau</div>
+  <div class="next-week-card">
+    <div class="nw-date">11. Mai 2026 · Session 07</div>
+    <h3>🌿 Nächste Woche: Feedback P3 + Landschaft, Natur &amp; Architektur</h3>
+    <p>
+      Nächste Woche besprechen wir eure Street-Aufnahmen aus P3 im Galerie-Walk. Außerdem: Einstieg in Landschafts- und Architekturfotografie sowie der Startschuss für P4 Ereignis-Dokumentation.
+    </p>
+    <div class="nw-chips">
+      <span class="chip chip-amber">📸 Feedback P3</span>
+      <span class="chip chip-green">🌿 Landschaft & Natur</span>
+      <span class="chip chip-green">🏛 Architektur</span>
+      <span class="chip chip-blue">📋 P4 wird gestellt</span>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+  <div class="sidebar-card">
+    <h3><span>⏰</span> Deadlines</h3>
+    <div class="deadline-list">
+      <div class="deadline-item">
+        <div class="deadline-dot dot-red"></div>
+        <div class="deadline-info">
+          <div class="name">P3 Urban Street &amp; Alltag</div>
+          <div class="date">11.05.2026 · 23:59</div>
+        </div>
+      </div>
+      <div class="deadline-item">
+        <div class="deadline-dot dot-amber"></div>
+        <div class="deadline-info">
+          <div class="name">Feedback P2 heute</div>
+          <div class="date">04.05.2026 · in Session 6</div>
+        </div>
+      </div>
+      <div class="deadline-item">
+        <div class="deadline-dot dot-green"></div>
+        <div class="deadline-info">
+          <div class="name">P4 Ereignis-Dokumentation</div>
+          <div class="date">ab 11.05. · Ausgabe in S7</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar-card">
+    <h3><span>📊</span> Kursfortschritt</h3>
+    <div class="progress-wrap">
+      <div class="progress-row"><span class="progress-label">Sessions</span><span class="progress-val">6 / 13</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="prog1" style="width:46%"></div></div>
+      <div class="progress-row"><span class="progress-label">Prüfungsaufgaben</span><span class="progress-val">P3 läuft</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="prog2" style="width:35%"></div></div>
+      <div class="progress-row"><span class="progress-label">Semester</span><span class="progress-val">SS 2026</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="prog3" style="width:47%"></div></div>
+    </div>
+  </div>
+
+  <div class="sidebar-card">
+    <h3><span>📅</span> Session 07 – 11.05.</h3>
+    <div class="preview-item">
+      <div class="preview-icon">📸</div>
+      <div>
+        <div class="title">Feedback P3</div>
+        <div class="desc">Galerie-Walk – Street-Bilder besprechen</div>
+      </div>
+    </div>
+    <div class="preview-item">
+      <div class="preview-icon">🌿</div>
+      <div>
+        <div class="title">Landschaft &amp; Architektur</div>
+        <div class="desc">Planung, Licht, Fluchtpunkte</div>
+      </div>
+    </div>
+    <div class="preview-item">
+      <div class="preview-icon">📋</div>
+      <div>
+        <div class="title">P4 wird gestellt</div>
+        <div class="desc">Ereignis-Dokumentation als Serie</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar-card">
+    <h3><span>📚</span> Bisher im Kurs gelernt</h3>
+    <div style="display:flex;flex-direction:column;gap:0.5rem;">
+      <div style="display:flex;gap:8px;align-items:center;padding:0.55rem 0.7rem;background:var(--bg-secondary);border:1px solid var(--border);border-radius:7px;">
+        <span style="font-size:0.85rem;">📷</span>
+        <span style="font-size:0.78rem;color:var(--text-secondary);"><strong style="color:var(--text-primary);">S1</strong> Kameragrundlagen &amp; Sehen</span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;padding:0.55rem 0.7rem;background:var(--bg-secondary);border:1px solid var(--border);border-radius:7px;">
+        <span style="font-size:0.85rem;">⚙️</span>
+        <span style="font-size:0.78rem;color:var(--text-secondary);"><strong style="color:var(--text-primary);">S2</strong> Belichtungsdreieck &amp; RAW</span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;padding:0.55rem 0.7rem;background:var(--bg-secondary);border:1px solid var(--border);border-radius:7px;">
+        <span style="font-size:0.85rem;">📐</span>
+        <span style="font-size:0.78rem;color:var(--text-secondary);"><strong style="color:var(--text-primary);">S3</strong> Komposition &amp; Lichtgrundlagen</span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;padding:0.55rem 0.7rem;background:var(--bg-secondary);border:1px solid var(--border);border-radius:7px;">
+        <span style="font-size:0.85rem;">🌅</span>
+        <span style="font-size:0.78rem;color:var(--text-secondary);"><strong style="color:var(--text-primary);">S4</strong> Available-Light-Portraits</span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;padding:0.55rem 0.7rem;background:var(--bg-secondary);border:1px solid var(--border);border-radius:7px;">
+        <span style="font-size:0.85rem;">🏙️</span>
+        <span style="font-size:0.78rem;color:var(--text-secondary);"><strong style="color:var(--text-primary);">S5</strong> Streetfotografie &amp; P3</span>
+      </div>
+      <a href="https://thi-kurs.vercel.app" target="_blank" style="display:flex;align-items:center;gap:8px;padding:0.55rem 0.7rem;background:var(--accent-soft);border:1px solid var(--border-strong);border-radius:7px;text-decoration:none;margin-top:0.3rem;">
+        <span style="font-size:0.85rem;">🏠</span>
+        <span style="font-size:0.78rem;font-weight:600;color:var(--accent);">Alle Kursmaterialien</span>
+        <span style="margin-left:auto;font-size:0.7rem;color:var(--text-muted);">↗</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="sidebar-card" style="background:linear-gradient(135deg,var(--bg-card),rgba(52,211,153,0.05));border-color:var(--border-strong);">
+    <h3><span>👤</span> Dein Dozent</h3>
+    <a href="https://www.linkedin.com/in/marioschub/" target="_blank" class="resource-link">
+      <span class="rl-icon">💼</span>
+      <span class="rl-label">LinkedIn</span>
+      <span class="rl-arrow">↗</span>
+    </a>
+    <a href="https://www.instagram.com/marioschub/" target="_blank" class="resource-link">
+      <span class="rl-icon">📷</span>
+      <span class="rl-label">Instagram</span>
+      <span class="rl-arrow">↗</span>
+    </a>
+  </div>
+
+</aside>
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>THI Ingolstadt · Digitalfotografie und digitale Bildbearbeitung · SS 2026</p>
+  <p>Dozent: <a href="https://thi-kurs.vercel.app">Mario Schubert</a> · Session 06 · 04. Mai 2026</p>
+</footer>
+
+<script>
+  function toggleAccordion(btn) {
+    const body = btn.nextElementSibling;
+    const isOpen = btn.classList.contains('open');
+    document.querySelectorAll('.accordion-toggle').forEach(b => {
+      b.classList.remove('open');
+      b.nextElementSibling.classList.remove('open');
+    });
+    if (!isOpen) { btn.classList.add('open'); body.classList.add('open'); }
+  }
+  window.addEventListener('load', () => {
+    document.querySelectorAll('.progress-fill').forEach(bar => {
+      const w = bar.style.width; bar.style.width = '0';
+      setTimeout(() => { bar.style.width = w; }, 300);
+    });
+  });
+</script>
+</body>
+</html>
