@@ -1,0 +1,1697 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Session 05 – P3 Urban Street & Alltag | THI Digitalfotografie</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-primary:   #141210;
+      --bg-secondary: #1e1b17;
+      --bg-card:      #252019;
+      --bg-card-alt:  #2c2620;
+      --accent:       #e8a030;
+      --accent-warm:  #d4623a;
+      --accent-soft:  rgba(232, 160, 48, 0.12);
+      --accent-glow:  rgba(232, 160, 48, 0.25);
+      --text-primary: #f2ede6;
+      --text-secondary:#b8a990;
+      --text-muted:   #756a5c;
+      --border:       rgba(232, 160, 48, 0.15);
+      --border-strong:rgba(232, 160, 48, 0.4);
+      --red:          #e85d4a;
+      --red-soft:     rgba(232, 93, 74, 0.12);
+      --green:        #5aab7c;
+      --green-soft:   rgba(90, 171, 124, 0.12);
+      --blue:         #5a9fd4;
+      --blue-soft:    rgba(90, 159, 212, 0.12);
+      --tag-bg:       rgba(232, 160, 48, 0.15);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ─── NOISE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* ─── HEADER ─── */
+    .site-header {
+      background: linear-gradient(135deg, #1e1b17 0%, #2a2015 50%, #1e1b17 100%);
+      border-bottom: 1px solid var(--border-strong);
+      padding: 0 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-warm));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .logo-text {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: 0.02em;
+    }
+    .logo-sub {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+    .header-badge {
+      background: var(--red-soft);
+      border: 1px solid rgba(232, 93, 74, 0.35);
+      color: var(--red);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      animation: pulse 2.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.6; }
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      background: linear-gradient(160deg, #1e1b17 0%, #2a1f0e 40%, #1a1510 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 4rem 2rem 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: 'S5';
+      position: absolute;
+      right: -20px;
+      top: -20px;
+      font-size: 18rem;
+      font-weight: 900;
+      color: rgba(232, 160, 48, 0.04);
+      line-height: 1;
+      pointer-events: none;
+    }
+    .hero-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1.2rem;
+      flex-wrap: wrap;
+    }
+    .tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .tag-session  { background: var(--tag-bg); color: var(--accent); border: 1px solid var(--border-strong); }
+    .tag-cancelled{ background: var(--red-soft); color: var(--red); border: 1px solid rgba(232,93,74,0.35); }
+    .tag-p3       { background: var(--green-soft); color: var(--green); border: 1px solid rgba(90,171,124,0.35); }
+    .tag-info     { background: var(--blue-soft); color: var(--blue); border: 1px solid rgba(90,159,212,0.35); }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 0.8rem;
+      letter-spacing: -0.02em;
+    }
+    .hero h1 span { color: var(--accent); }
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 680px;
+      margin-bottom: 2rem;
+    }
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+    .hero-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+    .hero-meta-item strong { color: var(--text-primary); }
+    .meta-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+    /* ─── CANCELLED BANNER ─── */
+    .cancelled-banner {
+      max-width: 1100px;
+      margin: 2.5rem auto 0;
+      padding: 0 2rem;
+    }
+    .banner-box {
+      background: linear-gradient(135deg, rgba(232,93,74,0.08), rgba(232,93,74,0.04));
+      border: 1px solid rgba(232, 93, 74, 0.3);
+      border-left: 4px solid var(--red);
+      border-radius: 12px;
+      padding: 1.5rem 2rem;
+      display: flex;
+      gap: 1.2rem;
+      align-items: flex-start;
+    }
+    .banner-icon { font-size: 1.8rem; flex-shrink: 0; margin-top: 2px; }
+    .banner-box h2 { font-size: 1.1rem; font-weight: 700; color: var(--red); margin-bottom: 0.4rem; }
+    .banner-box p  { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; }
+    .banner-box p strong { color: var(--text-primary); }
+
+    /* ─── MAIN LAYOUT ─── */
+    .main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 3rem 2rem 6rem;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 2.5rem;
+      align-items: start;
+    }
+    @media(max-width: 860px) {
+      .main { grid-template-columns: 1fr; }
+    }
+
+    /* ─── SECTION HEADERS ─── */
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    h2.block-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      letter-spacing: -0.01em;
+    }
+    h3.sub-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+      color: var(--text-primary);
+    }
+
+    /* ─── CARDS ─── */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.8rem;
+      margin-bottom: 1.8rem;
+      transition: border-color 0.2s;
+    }
+    .card:hover { border-color: var(--border-strong); }
+    .card-accent {
+      border-color: rgba(232,160,48,0.3);
+      background: linear-gradient(135deg, var(--bg-card) 0%, rgba(232,160,48,0.04) 100%);
+    }
+    .card-green {
+      border-color: rgba(90,171,124,0.3);
+      background: linear-gradient(135deg, var(--bg-card) 0%, rgba(90,171,124,0.04) 100%);
+    }
+    .card-blue {
+      border-color: rgba(90,159,212,0.3);
+      background: linear-gradient(135deg, var(--bg-card) 0%, rgba(90,159,212,0.04) 100%);
+    }
+
+    /* ─── P3 AUFGABE ─── */
+    .p3-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+      flex-wrap: wrap;
+    }
+    .p3-badge {
+      font-size: 3rem;
+      font-weight: 900;
+      color: var(--accent);
+      line-height: 1;
+      letter-spacing: -0.04em;
+      font-variant-numeric: tabular-nums;
+    }
+    .p3-deadline-pill {
+      background: linear-gradient(135deg, var(--accent), var(--accent-warm));
+      color: #141210;
+      font-weight: 700;
+      font-size: 0.8rem;
+      padding: 6px 16px;
+      border-radius: 20px;
+      white-space: nowrap;
+      letter-spacing: 0.02em;
+    }
+
+    .aufgabe-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.4rem 0;
+    }
+    @media(max-width: 600px) { .aufgabe-grid { grid-template-columns: 1fr; } }
+    .aufgabe-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+    }
+    .aufgabe-item .label {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+    .aufgabe-item .value {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .aufgabe-item .value.mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+    }
+    .aufgabe-item .value.accent { color: var(--accent); }
+    .aufgabe-item .value.red    { color: var(--red); }
+
+    /* ─── STEP LIST ─── */
+    .step-list { list-style: none; display: flex; flex-direction: column; gap: 0.9rem; }
+    .step-list li {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      border: 1px solid var(--border-strong);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-top: 2px;
+    }
+    .step-list li p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .step-list li p strong { color: var(--text-primary); }
+
+    /* ─── BULLET LIST ─── */
+    .bullet-list { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+    .bullet-list li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .bullet-list li::before {
+      content: '→';
+      color: var(--accent);
+      flex-shrink: 0;
+      font-weight: 600;
+      margin-top: 1px;
+    }
+    .bullet-list li strong { color: var(--text-primary); }
+
+    /* ─── CONTENT BLOCKS (Theorie) ─── */
+    .theory-block {
+      margin-bottom: 2.5rem;
+    }
+    .theory-block p {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 0.8rem;
+    }
+    .theory-block p strong { color: var(--text-primary); }
+
+    .highlight-box {
+      background: var(--accent-soft);
+      border: 1px solid var(--border-strong);
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      margin: 1rem 0;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+    .highlight-box strong { color: var(--accent); }
+
+    /* ─── ACCORDION ─── */
+    .accordion { display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 1.5rem; }
+    .accordion-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .accordion-item:hover { border-color: var(--border-strong); }
+    .accordion-toggle {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.2rem;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      gap: 1rem;
+      font-family: inherit;
+    }
+    .accordion-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      border: 1px solid var(--border-strong);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      color: var(--accent);
+      flex-shrink: 0;
+      transition: transform 0.25s;
+    }
+    .accordion-toggle.open .accordion-icon { transform: rotate(45deg); }
+    .accordion-body {
+      display: none;
+      padding: 0 1.2rem 1.2rem;
+    }
+    .accordion-body.open { display: block; }
+    .accordion-body p, .accordion-body li {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+    .accordion-body ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+    .accordion-body li { display: flex; gap: 10px; }
+    .accordion-body li::before { content: '·'; color: var(--accent); font-size: 1.2rem; line-height: 1.4; flex-shrink: 0; }
+    .accordion-body li strong { color: var(--text-primary); }
+
+    /* ─── UMFRAGE BLOCK ─── */
+    .umfrage-card {
+      background: linear-gradient(135deg, #1a1e2a 0%, #1e2232 100%);
+      border: 1px solid rgba(90,159,212,0.3);
+      border-radius: 16px;
+      padding: 1.8rem;
+      text-align: center;
+      margin-bottom: 1.8rem;
+    }
+    .umfrage-card .icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
+    .umfrage-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .umfrage-card p { font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1.2rem; line-height: 1.6; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-warm));
+      color: #141210;
+    }
+    .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .btn-blue {
+      background: linear-gradient(135deg, #4a8fc0, #2d6da0);
+      color: #fff;
+    }
+    .btn-blue:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .btn-outline {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--border-strong);
+    }
+    .btn-outline:hover { background: var(--accent-soft); }
+
+    /* ─── SIDEBAR ─── */
+    .sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
+
+    .sidebar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.4rem;
+    }
+    .sidebar-card h3 {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sidebar-card h3 .icon { font-size: 1rem; }
+
+    /* Deadlines */
+    .deadline-list { display: flex; flex-direction: column; gap: 0.7rem; }
+    .deadline-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.7rem;
+      border-radius: 8px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+    }
+    .deadline-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-red    { background: var(--red); box-shadow: 0 0 8px var(--red); }
+    .dot-amber  { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+    .dot-green  { background: var(--green); box-shadow: 0 0 8px var(--green); }
+    .deadline-info .name { font-size: 0.82rem; font-weight: 600; }
+    .deadline-info .date { font-size: 0.72rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+
+    /* Preview */
+    .preview-item {
+      display: flex;
+      gap: 10px;
+      padding: 0.8rem;
+      border-radius: 10px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      margin-bottom: 0.7rem;
+      align-items: flex-start;
+    }
+    .preview-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--accent-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .preview-item .title { font-size: 0.85rem; font-weight: 600; }
+    .preview-item .desc  { font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; }
+
+    /* Progress */
+    .progress-wrap { margin-top: 0.5rem; }
+    .progress-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.6rem;
+    }
+    .progress-label { font-size: 0.8rem; color: var(--text-secondary); }
+    .progress-val   { font-size: 0.75rem; font-weight: 700; color: var(--accent); font-family: 'JetBrains Mono', monospace; }
+    .progress-bar {
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.06);
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-warm));
+      transition: width 1s ease;
+    }
+
+    /* Links Resource */
+    .resource-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.7rem 0.9rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-secondary);
+      text-decoration: none;
+      color: var(--text-primary);
+      font-size: 0.83rem;
+      font-weight: 500;
+      transition: all 0.2s;
+      margin-bottom: 0.6rem;
+      display: flex;
+    }
+    .resource-link:hover { border-color: var(--border-strong); background: var(--bg-card-alt); }
+    .resource-link .rl-icon { flex-shrink: 0; font-size: 1rem; }
+    .resource-link .rl-label { flex: 1; }
+    .resource-link .rl-arrow { color: var(--text-muted); font-size: 0.75rem; }
+
+    /* ─── AUSBLICK NÄCHSTE WOCHE ─── */
+    .next-week-card {
+      background: linear-gradient(135deg, #19201a 0%, #1e2820 100%);
+      border: 1px solid rgba(90,171,124,0.3);
+      border-radius: 16px;
+      padding: 1.8rem;
+      margin-bottom: 1.8rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .next-week-card::before {
+      content: '→';
+      position: absolute;
+      right: 1.5rem;
+      bottom: -0.5rem;
+      font-size: 6rem;
+      color: rgba(90,171,124,0.05);
+      font-weight: 900;
+    }
+    .next-week-card .nw-date {
+      font-size: 0.72rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--green);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+    .next-week-card h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+    }
+    .next-week-card p {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      line-height: 1.65;
+    }
+    .nw-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .chip {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .chip-green { background: var(--green-soft); color: var(--green); border: 1px solid rgba(90,171,124,0.25); }
+    .chip-amber { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--border-strong); }
+
+    /* ─── FOOTER ─── */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+    }
+    .site-footer p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+    .site-footer a { color: var(--accent); text-decoration: none; }
+    .site-footer a:hover { text-decoration: underline; }
+
+    /* ─── DIVIDER ─── */
+    .divider { height: 1px; background: var(--border); margin: 2rem 0; }
+
+    /* ─── RESPONSIVE ─── */
+    @media(max-width: 600px) {
+      .hero { padding: 2.5rem 1.5rem 2rem; }
+      .main { padding: 2rem 1.5rem 4rem; }
+      .cancelled-banner { padding: 0 1.5rem; }
+      .banner-box { flex-direction: column; gap: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     HEADER
+══════════════════════════════════════════════ -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="https://thi-kurs.vercel.app" class="header-logo">
+      <div class="logo-icon">📷</div>
+      <div>
+        <div class="logo-text">Mario Schubert</div>
+        <div class="logo-sub">THI · Digitalfotografie SS 2026</div>
+      </div>
+    </a>
+    <div class="header-badge">Session ausgefallen</div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <span class="tag tag-session">Session 05</span>
+      <span class="tag tag-cancelled">Entfällt heute</span>
+      <span class="tag tag-p3">P3 wird gestellt</span>
+    </div>
+    <h1>Urban Street<br /><span>&amp; Alltag</span></h1>
+    <p class="hero-sub">
+      Die heutige Präsenzveranstaltung findet nicht statt – du bekommst hier trotzdem alles, was du brauchst: die neue Pflichtaufgabe P3, Hintergrundwissen zur Streetfotografie und einen Ausblick auf nächste Woche.
+    </p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <div class="meta-dot"></div>
+        <span>27. April 2026</span>
+      </div>
+      <div class="hero-meta-item">
+        <div class="meta-dot"></div>
+        <span>P3 Abgabe: <strong>11.05.2026, 23:59 Uhr</strong></span>
+      </div>
+      <div class="hero-meta-item">
+        <div class="meta-dot"></div>
+        <span>Feedback P2: <strong>Nächste Woche</strong></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     ABGESAGT-BANNER
+══════════════════════════════════════════════ -->
+<div class="cancelled-banner">
+  <div style="margin-top: 2.5rem;"></div>
+  <div class="banner-box">
+    <div class="banner-icon">🚫</div>
+    <div>
+      <h2>Heutige Session (27.04.) fällt aus</h2>
+      <p>
+        Der heutige Termin kann leider nicht stattfinden. <strong>Das bedeutet nicht, dass nichts passiert:</strong> Du erhältst hier die neue Pflichtaufgabe P3, eine kurze Google-Umfrage zur geplanten Exkursion sowie einen Ausblick auf die kommende Woche. Nutze die Zeit, um schon mal draußen unterwegs zu sein – Street-Fotografie braucht keine Uni-Halle. Das <strong>Feedback zu P2</strong> findet nächste Woche statt.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     MAIN CONTENT + SIDEBAR
+══════════════════════════════════════════════ -->
+<main class="main">
+  <div class="content">
+
+    <!-- ── P3 AUFGABE ── -->
+    <div class="section-label">Pflichtaufgabe P3</div>
+    <div class="card card-accent">
+      <div class="p3-header">
+        <div>
+          <div class="p3-badge">P3</div>
+          <h2 class="block-title" style="margin-bottom:0.3rem;">Urban Street &amp; Alltag</h2>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <span class="tag tag-p3">Prüfungsrelevant</span>
+            <span class="tag tag-session">8–10 Fotos</span>
+          </div>
+        </div>
+        <div class="p3-deadline-pill">⏰ Deadline: 11.05.2026</div>
+      </div>
+
+      <p style="font-size:0.92rem; color:var(--text-secondary); margin-bottom:1.4rem; line-height:1.7;">
+        Streetfotografie bedeutet: das echte Leben abbilden – ungeplant, ehrlich, nah. Du gehst raus, schaust genau hin und drückst im richtigen Moment ab. Kein Studio, kein Stativ, kein Setup. Nur du, deine Kamera und das, was gerade passiert.
+      </p>
+
+      <div class="aufgabe-grid">
+        <div class="aufgabe-item">
+          <div class="label">Aufgabe</div>
+          <div class="value">P3 Urban Street &amp; Alltag</div>
+        </div>
+        <div class="aufgabe-item">
+          <div class="label">Deadline</div>
+          <div class="value red">11.05.2026, 23:59 Uhr</div>
+        </div>
+        <div class="aufgabe-item">
+          <div class="label">Anzahl Bilder</div>
+          <div class="value accent">8–10 bearbeitete JPGs</div>
+        </div>
+        <div class="aufgabe-item">
+          <div class="label">Abgabeformat</div>
+          <div class="value mono">ZIP + kurze Reflexion</div>
+        </div>
+        <div class="aufgabe-item">
+          <div class="label">Abgabeort</div>
+          <div class="value mono">Moodle · Kursordner P3</div>
+        </div>
+        <div class="aufgabe-item">
+          <div class="label">Prüfungsrelevant</div>
+          <div class="value accent">✓ Ja</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <h3 class="sub-title">Was sollt ihr abliefern?</h3>
+      <ul class="step-list" style="margin-bottom:1.4rem;">
+        <li>
+          <div class="step-num">1</div>
+          <p><strong>8–10 Street-Fotos</strong> aus dem echten Alltag: Menschen, Szenen, Stimmungen, Details – alles ist erlaubt, solange es echt wirkt.</p>
+        </li>
+        <li>
+          <div class="step-num">2</div>
+          <p><strong>Bearbeitung in Lightroom:</strong> Belichtung, Kontrast, Farbe oder Schwarzweiß – entwickle einen konsistenten Look für deine kleine Serie.</p>
+        </li>
+        <li>
+          <div class="step-num">3</div>
+          <p><strong>Kurze Reflexion</strong> (ca. 5–8 Sätze, TXT oder PDF): Was war dein Ansatz? Was war schwierig? Welches Bild ist dein Favorit – und warum?</p>
+        </li>
+        <li>
+          <div class="step-num">4</div>
+          <p><strong>Alles in einem ZIP</strong> verpacken, Dateinamen sauber halten (z.B. <span style="font-family:JetBrains Mono,monospace; font-size:0.82rem; color:var(--accent);">P3_Nachname_01.jpg</span>) und auf Moodle hochladen.</p>
+        </li>
+      </ul>
+
+      <div class="highlight-box">
+        💡 <strong>Tipp:</strong> Ihr müsst keine Gesichter fotografieren, wenn euch das unwohl ist. Rückenansichten, Hände, Schatten, Reflexionen, Schaufenster, Straßenschilder, wartende Menschen – das ist alles Street. Es geht ums Hinschauen, nicht ums Konfrontieren.
+      </div>
+    </div>
+
+    <!-- ── STREETFOTO THEORIE (Selbststudium) ── -->
+    <div class="section-label" style="margin-top:2.5rem;">Theorie zum Selbststudium</div>
+    <h2 class="block-title">Streetfotografie – Was steckt dahinter?</h2>
+
+    <div class="theory-block">
+      <p>
+        Streetfotografie ist eines der ältesten und direktesten Fotografie-Genres. Es geht darum, das Leben auf der Straße so zu zeigen, wie es ist: ungestellt, spontan, lebendig. Pioniere wie <strong>Henri Cartier-Bresson</strong> (der Begriff des „entscheidenden Moments") oder <strong>Vivian Maier</strong> (Chicago-Straßen der 50er) haben das Genre geprägt.
+      </p>
+      <p>
+        Was Streetfotografie von anderen Genres unterscheidet: Du kontrollierst nicht das Licht, nicht die Kulisse, nicht die Person. Du reagierst nur – schnell, ruhig, aufmerksam.
+      </p>
+    </div>
+
+    <div class="accordion">
+
+      <div class="accordion-item">
+        <button class="accordion-toggle" onclick="toggleAccordion(this)">
+          📐 Komposition im Chaos – wie strukturiere ich das Bild?
+          <span class="accordion-icon">+</span>
+        </button>
+        <div class="accordion-body">
+          <ul>
+            <li><strong>Drittelregel:</strong> Platziere dein Hauptmotiv nicht in der Mitte, sondern auf einem der vier Schnittpunkte des Drittels-Rasters.</li>
+            <li><strong>Führungslinien:</strong> Straßen, Gehsteigkanten, Zäune, Schatten – sie lenken den Blick direkt zum Motiv.</li>
+            <li><strong>Negativraum:</strong> Platz ums Motiv herum ist kein Fehler – er erzählt die Einsamkeit oder die Größe des Raums.</li>
+            <li><strong>Rahmen im Rahmen:</strong> Türen, Bögen, Fensterscheiben – nutze Strukturen als natürlichen Rahmen um dein Motiv.</li>
+            <li><strong>Vereinfachen:</strong> Weniger ist mehr. Frag dich immer: Was lenkt ab? Kann ich einen Schritt zur Seite gehen?</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-toggle" onclick="toggleAccordion(this)">
+          ⚙️ Kameraeinstellungen für Street – was ist sinnvoll?
+          <span class="accordion-icon">+</span>
+        </button>
+        <div class="accordion-body">
+          <ul>
+            <li><strong>Av- oder M-Modus:</strong> Av (Blendenpriorität) ist auf der Straße oft praktisch – du bestimmst die Schärfentiefe, die Kamera regelt die Zeit.</li>
+            <li><strong>Blende f/5.6–f/8:</strong> Gibt dir genug Schärfentiefe um spontane Momente sicher einzufangen, ohne ständig nachfokussieren zu müssen.</li>
+            <li><strong>Verschlusszeit ≥ 1/200s:</strong> Genug um Bewegungsunschärfe bei normaler Gehgeschwindigkeit zu verhindern.</li>
+            <li><strong>ISO auto (bis 3200):</strong> In der Stadt wechselt das Licht ständig – Auto-ISO spart dir den Kopf für das Motiv.</li>
+            <li><strong>Fokusmodus AF-S oder AF-C:</strong> AF-S für statische Momente, AF-C wenn sich das Motiv bewegt. Alternativ: Zone-AF auf einen mittleren Bereich setzen.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-toggle" onclick="toggleAccordion(this)">
+          ⚖️ Rechtslage in Deutschland – was darf ich?
+          <span class="accordion-icon">+</span>
+        </button>
+        <div class="accordion-body">
+          <p style="margin-bottom:0.8rem;">Das ist in DE ein häufig diskutiertes Thema. Hier die relevantesten Punkte für euren Alltag:</p>
+          <ul>
+            <li><strong>Öffentlicher Raum:</strong> Fotografieren in der Öffentlichkeit ist grundsätzlich erlaubt – das gilt für Straßen, Plätze, Parks.</li>
+            <li><strong>Persönlichkeitsrecht (§ 22 KUG):</strong> Wenn eine Person klar erkennbar und das Hauptmotiv ist, brauchst du im Prinzip ihre Einwilligung – außer sie ist „Teil der Zeitgeschichte" oder Teil einer Menschenmenge.</li>
+            <li><strong>In der Praxis:</strong> Rückenansichten, Silhouetten, Hände, Details – kein Problem. Klare Porträt-Aufnahmen ohne Einwilligung: für rein private, nicht-öffentliche Nutzung meist toleriert, aber nicht risikolos.</li>
+            <li><strong>Für diese Aufgabe:</strong> Ihr gebt die Bilder im Kurskontext ab. Haltet es clean: keine klar erkennbaren Personen ohne Einwilligung, wenn ihr unsicher seid.</li>
+            <li><strong>Empfehlung:</strong> Einfach fragen. Ein „Darf ich kurz ein Foto machen?" wirkt sympathisch, und die meisten Menschen sagen ja.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-toggle" onclick="toggleAccordion(this)">
+          🎨 Weißabgleich & Farbe als Gestaltungsmittel
+          <span class="accordion-icon">+</span>
+        </button>
+        <div class="accordion-body">
+          <p style="margin-bottom:0.8rem;">Für P3 und spätere Aufgaben ist Farbgestaltung ein starkes Werkzeug in Lightroom:</p>
+          <ul>
+            <li><strong>Weißabgleich (AWB vs. Manuell):</strong> AWB funktioniert gut – aber Kelvin manuell setzen gibt dir kontrollierten Warm- oder Kaltton. Für Street um die 5500–6500K probieren.</li>
+            <li><strong>Warm vs. kalt:</strong> Warme Töne (tiefer Kelvin-Wert, orangelicher Shift) wirken einladend, urban, nostalgisch. Kalte Töne (hoher Kelvin-Wert, bläulich) wirken distanziert, modern, hart.</li>
+            <li><strong>Schwarzweiß:</strong> Eine der stärksten Optionen für Street – lenkt den Fokus auf Form, Kontrast, Licht, weg von Farb-Ablenkung. In Lightroom: Entwickeln → SW-Mischung für Feintuning.</li>
+            <li><strong>Komplementärkontraste:</strong> Blau/Orange, Grün/Rot, Gelb/Lila – wenn sie im Bild zusammenkommen, zieht das Auge automatisch hin.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── GOOGLE UMFRAGE ── -->
+    <div class="section-label" style="margin-top:2.5rem;">Exkursion</div>
+    <div class="umfrage-card">
+      <div class="icon">🗺️</div>
+      <h3>Umfrage zur geplanten Exkursion</h3>
+      <p>
+        Wir planen eine Fotoexkursion als Teil des Kurses. Damit ich das Datum und den Rahmen gut abstimmen kann, brauche ich eure Verfügbarkeit. <strong>Bitte nehmt kurz an der Umfrage teil</strong> – sie dauert unter 2 Minuten.
+      </p>
+      <a href="https://forms.gle/wD3ZkxRnZmraaVtg9" target="_blank" class="btn btn-blue" style="margin: 0 auto;">
+        📋 Zur Umfrage (Google Forms)
+      </a>
+
+    </div>
+
+    <!-- ── PDF DOWNLOAD P3 ── -->
+    <div class="section-label" style="margin-top:2.5rem;">Aufgabenblatt P3</div>
+    <div class="card card-accent">
+      <div style="display:flex; align-items:flex-start; gap:1.4rem; flex-wrap:wrap;">
+        <div style="font-size:3rem; flex-shrink:0; line-height:1;">📄</div>
+        <div style="flex:1; min-width:220px;">
+          <h3 class="sub-title">Aufgabenblatt P3 als PDF</h3>
+
+          <div style="display:flex; flex-wrap:wrap; gap:0.8rem; align-items:center;">
+            <a href="https://drive.google.com/file/d/1lm8C62Vpjgxk5mIcVr-6r-kR8Q3i7Z8b/view?usp=drive_link" target="_blank" class="btn btn-primary">
+              ⬇️ PDF herunterladen
+            </a>
+          </div>
+
+        </div>
+        <div style="background:var(--bg-secondary); border:1px solid var(--border); border-radius:10px; padding:1rem 1.2rem; min-width:180px; flex-shrink:0;">
+          <div style="font-size:0.68rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); font-weight:600; margin-bottom:0.6rem;">Enthält im PDF</div>
+          <ul style="list-style:none; display:flex; flex-direction:column; gap:0.45rem;">
+            <li style="font-size:0.8rem; color:var(--text-secondary); display:flex; gap:8px;"><span style="color:var(--accent);">·</span>Aufgabenbeschreibung</li>
+            <li style="font-size:0.8rem; color:var(--text-secondary); display:flex; gap:8px;"><span style="color:var(--accent);">·</span>Bildmengen &amp; Format</li>
+            <li style="font-size:0.8rem; color:var(--text-secondary); display:flex; gap:8px;"><span style="color:var(--accent);">·</span>Bewertungskriterien</li>
+            <li style="font-size:0.8rem; color:var(--text-secondary); display:flex; gap:8px;"><span style="color:var(--accent);">·</span>Abgabehinweise</li>
+            <li style="font-size:0.8rem; color:var(--text-secondary); display:flex; gap:8px;"><span style="color:var(--accent);">·</span>Deadline &amp; Moodle-Pfad</li>
+            <li style="font-size:0.8rem; color:var(--text-secondary); display:flex; gap:8px;"><span style="color:var(--accent);">·</span>Street-Tipps kompakt</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── AUSBLICK NÄCHSTE WOCHE ── -->
+    <div class="section-label" style="margin-top:2.5rem;">Vorschau</div>
+    <div class="next-week-card">
+      <div class="nw-date">04. Mai 2026 · Session 06</div>
+      <h3>🐾 Nächste Woche: Tierfotografie + Feedback P2</h3>
+      <p>
+        Wir holen nächste Woche nach, was heute ausgefallen ist: Das <strong>Feedback zu P2 (Kreative Portraits)</strong> findet in Session 6 statt – bringt eure besten Bilder mit, wir besprechen sie gemeinsam. Außerdem steigen wir in die Welt der <strong>Tierfotografie</strong> ein und schaut euch eure P2-Portfolios nochmal an.
+      </p>
+      <div class="nw-chips">
+        <span class="chip chip-green">🐾 Tierfotografie</span>
+        <span class="chip chip-amber">📸 Feedback P2</span>
+        <span class="chip chip-green">🗂 Portfolio-Präsentation</span>
+        <span class="chip chip-amber">Präsenz · THI Ingolstadt</span>
+      </div>
+    </div>
+
+    <!-- ── TIERFOTOGRAFIE VORSCHAU ── -->
+    <div class="card">
+      <h3 class="sub-title" style="margin-bottom:1rem;">🐾 Kleiner Vorgeschmack: Tierfotografie</h3>
+      <div class="theory-block">
+        <p>
+          Tierfotografie ist technisch anspruchsvoll – aber der Einstieg ist mit eurer Kamera absolut möglich. Schon ein Zoo-Besuch oder Haustiere zuhause liefern genug Stoff zum Üben. Nächste Woche zeige ich euch live, worauf es ankommt.
+        </p>
+      </div>
+      <ul class="bullet-list">
+        <li><strong>Bewegung einfrieren:</strong> Schnelle Verschlusszeiten (ab 1/500s) sind Pflicht, wenn das Tier läuft oder springt.</li>
+        <li><strong>AF-C (kontinuierlicher Autofokus):</strong> Hält das Tier scharf, auch wenn es sich bewegt – euer wichtigstes Werkzeug.</li>
+        <li><strong>Augenfokus:</strong> Neuere Kameras haben AF auf Tieraugen – aktiviert das, wenn eure Kamera das kann.</li>
+        <li><strong>Augenhöhe mit dem Tier:</strong> Runterknien oder hinlegen – Perspektive auf Augenhöhe wirkt sofort natürlicher und stärker als von oben.</li>
+        <li><strong>Geduld + Antizipation:</strong> Tier beobachten, Verhalten vorhersagen, Kamera schon bereit halten. Den Moment findet man nur, wenn man ihn kommen sieht.</li>
+      </ul>
+
+      <div style="margin-top:1.8rem;">
+        <div class="section-label" style="font-size:0.68rem;">Wichtige Abgrenzung</div>
+        <h3 class="sub-title" style="margin-bottom:0.8rem;">🐾 vs. 🏛 Tierfotografie ≠ Architekturfotografie</h3>
+        <p style="font-size:0.88rem; color:var(--text-secondary); line-height:1.7; margin-bottom:1.2rem;">
+          Das klingt offensichtlich – ist aber ein häufiger Denkfehler beim Planen der eigenen Aufnahme. Beide Genres nutzen denselben Ort (z.B. Zoo, Stadtpark, Campus), haben aber grundlegend andere Anforderungen und Logiken.
+        </p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.2rem;">
+          <div style="background:rgba(90,171,124,0.07); border:1px solid rgba(90,171,124,0.25); border-radius:12px; padding:1.2rem;">
+            <div style="font-size:1.4rem; margin-bottom:0.5rem;">🐾</div>
+            <div style="font-size:0.8rem; font-weight:700; color:var(--green); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.7rem;">Tierfotografie</div>
+            <ul style="list-style:none; display:flex; flex-direction:column; gap:0.5rem;">
+              <li style="font-size:0.82rem; color:var(--text-secondary); display:flex; gap:8px;"><span style="color:var(--green);">✓</span> <span>Das Motiv <strong style="color:var(--text-primary);">bewegt sich</strong> – du reagierst</span></li>
+              <li style="font-size:0.82rem; color:var(--text-secondary); display:flex; gap:8px;"><span style="color:var(--green);">✓</span> <span><strong style="color:var(--text-primary);">Zeit ist alles</strong> – der Moment zählt</span></li>
+              <li style="font-size:0.82rem; color:var(--text-secondary); display:flex; gap:8px;"><span style="color:var(--green);">✓</span> <span>Perspektive: <strong style="color:var(--text-primary);">Augenhöhe des Tieres</strong></span></li>
+              <li style="font-size:0.82rem; color:var(--text-secondary); display:flex; gap:8px;"><span style="color:var(--green);">✓</span> <span><strong style="color:var(--text-primary);">AF-C, kurze Zeiten</strong>, hohe ISO</span></li>
+              <li style="font-size:0.82rem; color:var(--text-secondary); display:flex; gap:8px;"><span style="color:var(--green);">✓</span> <span>Schärfe liegt auf dem <strong style="color:var(--text-primary);">Auge des Tieres</strong></span></li>
+              <li style="font-size:0.82rem; color:var(--text-secondary); display:flex; gap:8px;"><span style="color:var(--green);">✓</span> <span>Hintergrund: <strong style="color:var(--text-primary);">gezielt unscharf</strong> (freigestellt)</span></li>
+            </ul>
+          </div>
+          <div style="background:rgba(90,159,212,0.07); border:1px solid rgba(90,159,212,0.25); border-radius:12px; padding:1.2rem;">
+            <div style="font-size:1.4rem; margin-bottom:0.5rem;">🏛</div>
+            <div style="font-size:0.8rem; font-weight:700; color:var(--blue); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.7rem;">Architekturfotografie</div>
+            <ul style="list-style:none; display:flex; flex-direction:column; gap:0.5rem;">
+              <li style="font-size:0.82rem; color:var(--text-secondary); display:flex; gap:8px;"><span style="color:var(--blue);">✓</span> <span>Das Motiv <strong style="color:var(--text-primary);">steht still</strong> – du planst</span></li>
+              <li style="font-size:0.82rem; color:var(--text-secondary); display:flex; gap:8px;"><span style="color:var(--blue);">✓</span> <span><strong style="color:var(--text-primary);">Licht & Tageszeit</strong> entscheiden alles</span></li>
+              <li style="font-size:0.82rem; color:var(--text-secondary); display:flex; gap:8px;"><span style="color:var(--blue);">✓</span> <span>Perspektive: <strong style="color:var(--text-primary);">Fluchtpunkte & Linien</strong></span></li>
+              <li style="font-size:0.82rem; color:var(--text-secondary); display:flex; gap:8px;"><span style="color:var(--blue);">✓</span> <span><strong style="color:var(--text-primary);">Stativ, lange Zeiten</strong>, niedrige ISO</span></li>
+              <li style="font-size:0.82rem; color:var(--text-secondary); display:flex; gap:8px;"><span style="color:var(--blue);">✓</span> <span>Schärfe: <strong style="color:var(--text-primary);">möglichst alles scharf</strong> (f/8–f/11)</span></li>
+              <li style="font-size:0.82rem; color:var(--text-secondary); display:flex; gap:8px;"><span style="color:var(--blue);">✓</span> <span>Hintergrund: <strong style="color:var(--text-primary);">Teil des Bildes</strong>, kein Störfaktor</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="highlight-box">
+          ⚡ <strong>Kurz gesagt:</strong> Bei Tieren <strong>reagierst du</strong> auf das Motiv – es bestimmt, wann du drückst. Bei Architektur <strong>planst du</strong> das Bild vorher – du bestimmst Licht, Winkel, Tageszeit. Beides braucht Aufmerksamkeit, aber in komplett unterschiedlichen Zeitdimensionen.
+        </div>
+      </div>
+    </div>
+
+  
+    <!-- ── YOUTUBE VERTIEFUNG ── -->
+    <div class="section-label" style="margin-top:2.5rem;">Für alle, die richtig tief einsteigen wollen</div>
+    <h2 class="block-title">🎬 8 Videos zum Vertiefen</h2>
+    <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:1.5rem;line-height:1.7;">
+      Diese Videos sind handverlesen und decken genau die Themen ab, die wir bisher im Kurs behandelt haben. Nicht als Pflichtprogramm, sondern als Angebot: Wer tiefer einsteigen will, findet hier Material, das unmittelbar nützt.
+    </p>
+    <style>
+      .yt-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; margin-bottom:2rem; }
+      @media(max-width:600px){ .yt-grid{grid-template-columns:1fr;} }
+      .yt-card { display:flex; flex-direction:column; background:var(--bg-card); border:1px solid var(--border); border-radius:12px; overflow:hidden; text-decoration:none; color:var(--text-primary); transition:border-color 0.2s, transform 0.2s; }
+      .yt-card:hover { border-color:var(--border-strong); transform:translateY(-2px); }
+      .yt-thumb-wrap { position:relative; width:100%; aspect-ratio:16/9; background:#1a1510; overflow:hidden; }
+      .yt-thumb { width:100%; height:100%; object-fit:cover; display:block; }
+      .yt-play { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:2rem; background:rgba(0,0,0,0.35); opacity:0; transition:opacity 0.2s; color:#fff; }
+      .yt-card:hover .yt-play { opacity:1; }
+      .yt-info { padding:0.9rem 1rem; display:flex; flex-direction:column; gap:0.3rem; flex:1; }
+      .yt-tag { font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); }
+      .yt-title { font-size:0.85rem; font-weight:700; line-height:1.35; }
+      .yt-channel { font-size:0.72rem; color:var(--text-muted); }
+      .yt-desc { font-size:0.78rem; color:var(--text-secondary); line-height:1.5; margin-top:0.2rem; }
+    </style>
+    <div class="yt-grid">
+
+        <a href="https://www.youtube.com/watch?v=uh1bENt71GA" target="_blank" class="yt-card">
+          <div class="yt-thumb-wrap">
+            <img src="https://img.youtube.com/vi/uh1bENt71GA/mqdefault.jpg" alt="12 Streetfotografie Tipps für Anfänger" class="yt-thumb" onerror="this.style.background='#2a2520'" />
+            <div class="yt-play">▶</div>
+          </div>
+          <div class="yt-info">
+            <span class="yt-tag">Street · Praxis</span>
+            <div class="yt-title">12 Streetfotografie Tipps für Anfänger</div>
+            <div class="yt-channel">Jochen Rolfes</div>
+            <div class="yt-desc">Direkte Tipps aus der Praxis – was wirklich hilft, wenn man anfängt.</div>
+          </div>
+        </a>
+        <a href="https://www.youtube.com/watch?v=uFSHZHpjxaQ" target="_blank" class="yt-card">
+          <div class="yt-thumb-wrap">
+            <img src="https://img.youtube.com/vi/uFSHZHpjxaQ/mqdefault.jpg" alt="Streetfotografie leicht gemacht – 5 Tipps" class="yt-thumb" onerror="this.style.background='#2a2520'" />
+            <div class="yt-play">▶</div>
+          </div>
+          <div class="yt-info">
+            <span class="yt-tag">Street · Einstieg</span>
+            <div class="yt-title">Streetfotografie leicht gemacht – 5 Tipps</div>
+            <div class="yt-channel">CHIP Foto-Video</div>
+            <div class="yt-desc">Beobachten, Blickwinkel, Spiegelungen und Rechtliches kompakt erklärt.</div>
+          </div>
+        </a>
+        <a href="https://www.youtube.com/watch?v=2ojvIHMBzog" target="_blank" class="yt-card">
+          <div class="yt-thumb-wrap">
+            <img src="https://img.youtube.com/vi/2ojvIHMBzog/mqdefault.jpg" alt="Brennweite verstehen – Bildwirkung & Perspektive" class="yt-thumb" onerror="this.style.background='#2a2520'" />
+            <div class="yt-play">▶</div>
+          </div>
+          <div class="yt-info">
+            <span class="yt-tag">Technik · Transfer</span>
+            <div class="yt-title">Brennweite verstehen – Bildwirkung & Perspektive</div>
+            <div class="yt-channel">Fotografie-Kanal</div>
+            <div class="yt-desc">Wie Brennweite Schärfentiefe, Perspektive und Bildwirkung beeinflusst.</div>
+          </div>
+        </a>
+        <a href="https://www.youtube.com/watch?v=bD4VFWrXxKc" target="_blank" class="yt-card">
+          <div class="yt-thumb-wrap">
+            <img src="https://img.youtube.com/vi/bD4VFWrXxKc/mqdefault.jpg" alt="Blende & Belichtungszeit – Grundlagen einfach erklärt" class="yt-thumb" onerror="this.style.background='#2a2520'" />
+            <div class="yt-play">▶</div>
+          </div>
+          <div class="yt-info">
+            <span class="yt-tag">Technik · Belichtung</span>
+            <div class="yt-title">Blende & Belichtungszeit – Grundlagen einfach erklärt</div>
+            <div class="yt-channel">Fotografie-Kanal</div>
+            <div class="yt-desc">Zusammenspiel von Blende, Zeit und Schärfentiefe mit Praxisbeispielen.</div>
+          </div>
+        </a>
+        <a href="https://www.youtube.com/watch?v=kc7F3oX1hos" target="_blank" class="yt-card">
+          <div class="yt-thumb-wrap">
+            <img src="https://img.youtube.com/vi/kc7F3oX1hos/mqdefault.jpg" alt="Die Drittelregel – damit kannst du JEDES Foto aufwerten" class="yt-thumb" onerror="this.style.background='#2a2520'" />
+            <div class="yt-play">▶</div>
+          </div>
+          <div class="yt-info">
+            <span class="yt-tag">Komposition</span>
+            <div class="yt-title">Die Drittelregel – damit kannst du JEDES Foto aufwerten</div>
+            <div class="yt-channel">Fotografie-Kanal</div>
+            <div class="yt-desc">Warum Motive am Rand wirken und wie du das sofort in der Praxis umsetzt.</div>
+          </div>
+        </a>
+        <a href="https://www.youtube.com/watch?v=mjLOitZooBw" target="_blank" class="yt-card">
+          <div class="yt-thumb-wrap">
+            <img src="https://img.youtube.com/vi/mjLOitZooBw/mqdefault.jpg" alt="ISO-Rauschen verstehen in der Fotografie" class="yt-thumb" onerror="this.style.background='#2a2520'" />
+            <div class="yt-play">▶</div>
+          </div>
+          <div class="yt-info">
+            <span class="yt-tag">Technik · ISO</span>
+            <div class="yt-title">ISO-Rauschen verstehen in der Fotografie</div>
+            <div class="yt-channel">Foto-Kanal DE</div>
+            <div class="yt-desc">Was ISO-Rauschen wirklich ist, warum es entsteht und wie du es reduzierst.</div>
+          </div>
+        </a>
+        <a href="https://www.youtube.com/watch?v=BFGZPiIl6sE" target="_blank" class="yt-card">
+          <div class="yt-thumb-wrap">
+            <img src="https://img.youtube.com/vi/BFGZPiIl6sE/mqdefault.jpg" alt="Den perfekten Weißabgleich finden – Lightroom" class="yt-thumb" onerror="this.style.background='#2a2520'" />
+            <div class="yt-play">▶</div>
+          </div>
+          <div class="yt-info">
+            <span class="yt-tag">Lightroom · Farbe</span>
+            <div class="yt-title">Den perfekten Weißabgleich finden – Lightroom</div>
+            <div class="yt-channel">1 Minute Lightroom</div>
+            <div class="yt-desc">Schnell und präzise den Weißabgleich in Lightroom setzen und finetunen.</div>
+          </div>
+        </a>
+        <a href="https://www.youtube.com/watch?v=zborYf5wrvs" target="_blank" class="yt-card">
+          <div class="yt-thumb-wrap">
+            <img src="https://img.youtube.com/vi/zborYf5wrvs/mqdefault.jpg" alt="Lightroom Tutorial 2024 – Einsteiger Neuauflage" class="yt-thumb" onerror="this.style.background='#2a2520'" />
+            <div class="yt-play">▶</div>
+          </div>
+          <div class="yt-info">
+            <span class="yt-tag">Lightroom · Workflow</span>
+            <div class="yt-title">Lightroom Tutorial 2024 – Einsteiger Neuauflage</div>
+            <div class="yt-channel">Fotologbuch.de</div>
+            <div class="yt-desc">Aktueller Einstieg in Lightroom Classic: Import, Grundlagen, erster Export.</div>
+          </div>
+        </a>
+    </div>
+
+    <!-- ── QUIZ ── -->
+    <div class="section-label" style="margin-top:2rem;">Selbsttest</div>
+    <h2 class="block-title">🎮 Quiz: Testet euer Wissen</h2>
+    <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:1.5rem;line-height:1.7;">
+      25 Fragen zu allem, was wir bisher gelernt haben. Kein Druck, keine Note, kein Limit. Aber seid ehrlich mit euch: Transferfragen zeigen, ob ihr das Wissen wirklich verstanden habt oder nur auswendig kennt.
+    </p>
+    <style>
+      .quiz-wrap { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:1.8rem; margin-bottom:2rem; }
+      .quiz-progress-bar { height:4px; border-radius:2px; background:rgba(255,255,255,0.06); margin-bottom:1.5rem; overflow:hidden; }
+      .quiz-progress-fill { height:100%; border-radius:2px; background:linear-gradient(90deg,var(--accent),var(--accent-warm)); transition:width 0.5s ease; }
+      .quiz-start { text-align:center; padding:2rem 0; }
+      .quiz-start h3 { font-size:1.3rem; font-weight:800; margin-bottom:0.7rem; }
+      .quiz-start p { font-size:0.88rem; color:var(--text-secondary); margin-bottom:1.4rem; line-height:1.6; }
+      .quiz-item { }
+      .quiz-num { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent); margin-bottom:0.6rem; }
+      .quiz-q { font-size:1rem; font-weight:600; line-height:1.55; margin-bottom:1.1rem; }
+      .quiz-opts { display:flex; flex-direction:column; gap:0.6rem; margin-bottom:1rem; }
+      .quiz-opt { background:var(--bg-secondary); border:1px solid var(--border); border-radius:9px; padding:0.75rem 1rem; text-align:left; color:var(--text-primary); font-size:0.88rem; cursor:pointer; transition:all 0.15s; font-family:inherit; }
+      .quiz-opt:hover:not(:disabled) { border-color:var(--border-strong); background:var(--bg-card-alt); }
+      .quiz-opt.correct { background:rgba(90,171,124,0.15); border-color:rgba(90,171,124,0.5); color:#5aab7c; font-weight:600; }
+      .quiz-opt.wrong { background:rgba(232,93,74,0.12); border-color:rgba(232,93,74,0.4); color:#e85d4a; }
+      .quiz-opt:disabled { cursor:default; }
+      .quiz-exp { background:var(--accent-soft); border:1px solid var(--border-strong); border-radius:9px; padding:0.9rem 1.1rem; font-size:0.84rem; color:var(--text-secondary); line-height:1.65; margin-bottom:1rem; }
+      .quiz-next { background:linear-gradient(135deg,var(--accent),var(--accent-warm)); color:#141210; border:none; border-radius:8px; padding:10px 22px; font-size:0.88rem; font-weight:700; cursor:pointer; font-family:inherit; transition:filter 0.2s; }
+      .quiz-next:hover { filter:brightness(1.1); }
+      .quiz-result { text-align:center; padding:1.5rem 0; }
+      .quiz-score-big { font-size:3.5rem; font-weight:900; color:var(--accent); letter-spacing:-0.03em; }
+      .quiz-score-label { font-size:0.9rem; color:var(--text-secondary); margin-bottom:1rem; }
+      .quiz-score-msg { font-size:1rem; font-weight:600; margin-bottom:1.5rem; }
+    </style>
+    <div class="quiz-wrap">
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quiz-prog" style="width:0%"></div></div>
+      <div class="quiz-start" id="quiz-start">
+        <h3>25 Fragen · Transferwissen</h3>
+        <p>Belichtungsdreieck, Komposition, Licht, Weißabgleich, Street-Recht, Lightroom und mehr.<br/>Kein Zeitlimit. Antwort auswählen, Erklärung lesen, weiter.</p>
+        <button class="quiz-next" onclick="startQuiz()">Quiz starten ▶</button>
+      </div>
+      
+      <div class="quiz-item" id="qi-0" style="display:none;">
+        <div class="quiz-num">Frage 1 / 25</div>
+        <div class="quiz-q">Du willst einen Vogel im Flug scharf einfrieren. Welche Verschlusszeit wählst du?</div>
+        <div class="quiz-opts"><button class="quiz-opt" onclick="checkAnswer(this,0,0)">1/30 s</button>
+<button class="quiz-opt" onclick="checkAnswer(this,0,1)">1/250 s</button>
+<button class="quiz-opt" onclick="checkAnswer(this,0,2)">1/1000 s</button>
+<button class="quiz-opt" onclick="checkAnswer(this,0,3)">2 s</button>
+</div>
+        <div class="quiz-exp" id="exp-0" style="display:none;">Kurze Verschlusszeiten ab 1/500 s oder kürzer frieren schnelle Bewegungen ein. 1/1000 s ist für Vogelflug ideal.</div>
+        <button class="quiz-next" id="next-0" style="display:none;" onclick="nextQuestion(0)">Nächste Frage →</button>
+      </div>
+      <div class="quiz-item" id="qi-1" style="display:none;">
+        <div class="quiz-num">Frage 2 / 25</div>
+        <div class="quiz-q">Du fotografierst mit f/1.8. Was passiert mit der Schärfentiefe im Vergleich zu f/11?</div>
+        <div class="quiz-opts"><button class="quiz-opt" onclick="checkAnswer(this,1,0)">Größere Schärfentiefe, mehr ist scharf</button>
+<button class="quiz-opt" onclick="checkAnswer(this,1,1)">Kleinere Schärfentiefe, der Hintergrund wird unschärfer</button>
+<button class="quiz-opt" onclick="checkAnswer(this,1,2)">Keine Auswirkung auf die Schärfe</button>
+<button class="quiz-opt" onclick="checkAnswer(this,1,3)">Die Verschlusszeit verlängert sich automatisch</button>
+</div>
+        <div class="quiz-exp" id="exp-1" style="display:none;">Je offener die Blende (kleiner Blendenwert), desto geringer die Schärfentiefe. f/1.8 ergibt eine sehr geringe Tiefenschärfe.</div>
+        <button class="quiz-next" id="next-1" style="display:none;" onclick="nextQuestion(1)">Nächste Frage →</button>
+      </div>
+      <div class="quiz-item" id="qi-2" style="display:none;">
+        <div class="quiz-num">Frage 3 / 25</div>
+        <div class="quiz-q">Du erhöhst die ISO von 200 auf 6400. Was ist die direkte Konsequenz?</div>
+        <div class="quiz-opts"><button class="quiz-opt" onclick="checkAnswer(this,2,0)">Das Bild wird kälter in der Farbstimmung</button>
+<button class="quiz-opt" onclick="checkAnswer(this,2,1)">Die Verschlusszeit wird kürzer, aber das Bild rauscht mehr</button>
+<button class="quiz-opt" onclick="checkAnswer(this,2,2)">Das Bild wird heller, aber das Bildrauschen nimmt zu</button>
+<button class="quiz-opt" onclick="checkAnswer(this,2,3)">Der Autofokus wird schneller</button>
+</div>
+        <div class="quiz-exp" id="exp-2" style="display:none;">Hohe ISO-Werte erhöhen die Lichtempfindlichkeit des Sensors, wodurch das Bild heller wird. Gleichzeitig verstärken sich auch Bildfehler (Rauschen).</div>
+        <button class="quiz-next" id="next-2" style="display:none;" onclick="nextQuestion(2)">Nächste Frage →</button>
+      </div>
+      <div class="quiz-item" id="qi-3" style="display:none;">
+        <div class="quiz-num">Frage 4 / 25</div>
+        <div class="quiz-q">Welche Brennweite erzeugt stärkere Hintergrundunschärfe bei gleichem Motiv und gleichem Abstand?</div>
+        <div class="quiz-opts"><button class="quiz-opt" onclick="checkAnswer(this,3,0)">24 mm</button>
+<button class="quiz-opt" onclick="checkAnswer(this,3,1)">50 mm</button>
+<button class="quiz-opt" onclick="checkAnswer(this,3,2)">85 mm</button>
+<button class="quiz-opt" onclick="checkAnswer(this,3,3)">Brennweite hat keinen Einfluss auf Unschärfe</button>
+</div>
+        <div class="quiz-exp" id="exp-3" style="display:none;">Längere Brennweiten komprimieren die Perspektive und verstärken die Hintergrundunschärfe (Bokeh) bei gleicher Blende und gleichem Abstand.</div>
+        <button class="quiz-next" id="next-3" style="display:none;" onclick="nextQuestion(3)">Nächste Frage →</button>
+      </div>
+      <div class="quiz-item" id="qi-4" style="display:none;">
+        <div class="quiz-num">Frage 5 / 25</div>
+        <div class="quiz-q">Du fotografierst bei Kunstlicht (Glühbirnen). Das Bild wirkt sehr orange. Was ist die Ursache?</div>
+        <div class="quiz-opts"><button class="quiz-opt" onclick="checkAnswer(this,4,0)">ISO ist zu hoch eingestellt</button>
+<button class="quiz-opt" onclick="checkAnswer(this,4,1)">Der Weißabgleich ist zu kalt eingestellt</button>
+<button class="quiz-opt" onclick="checkAnswer(this,4,2)">Die Belichtungszeit ist zu lang</button>
+<button class="quiz-opt" onclick="checkAnswer(this,4,3)">Die Blende ist zu weit geöffnet</button>
+</div>
+        <div class="quiz-exp" id="exp-4" style="display:none;">Künstliches Licht hat eine niedrige Farbtemperatur (~2700K). Ist der Weißabgleich auf Tageslicht (~5500K) gestellt, wirkt das Bild orange. Auto-WB oder 'Kunstlicht' löst das.</div>
+        <button class="quiz-next" id="next-4" style="display:none;" onclick="nextQuestion(4)">Nächste Frage →</button>
+      </div>
+      <div class="quiz-item" id="qi-5" style="display:none;">
+        <div class="quiz-num">Frage 6 / 25</div>
+        <div class="quiz-q">Was passiert, wenn du mit einer langen Brennweite (200 mm) sehr nah an dein Motiv herangehst?</div>
+        <div class="quiz-opts"><button class="quiz-opt" onclick="checkAnswer(this,5,0)">Der Hintergrund wirkt weiter entfernt und unschärfer</button>
+<button class="quiz-opt" onclick="checkAnswer(this,5,1)">Der Hintergrund rückt näher und wird schärfer</button>
+<button class="quiz-opt" onclick="checkAnswer(this,5,2)">Die Bildwirkung ist identisch mit einer kurzen Brennweite</button>
+<button class="quiz-opt" onclick="checkAnswer(this,5,3)">Das Motiv wird verzerrt dargestellt</button>
+</div>
+        <div class="quiz-exp" id="exp-5" style="display:none;">Lange Brennweiten komprimieren Vorder- und Hintergrund. Der Hintergrund wirkt 'herangeholt', gleichzeitig entsteht bei offener Blende stärkere Unschärfe.</div>
+        <button class="quiz-next" id="next-5" style="display:none;" onclick="nextQuestion(5)">Nächste Frage →</button>
+      </div>
+      <div class="quiz-item" id="qi-6" style="display:none;">
+        <div class="quiz-num">Frage 7 / 25</div>
+        <div class="quiz-q">Du fotografierst eine Straßenszene im manuellen Modus. Das Bild ist unterbelichtet. Was kannst du ändern?</div>
+        <div class="quiz-opts"><button class="quiz-opt" onclick="checkAnswer(this,6,0)">Blende weiter öffnen (kleinerer f-Wert)</button>
+<button class="quiz-opt" onclick="checkAnswer(this,6,1)">Verschlusszeit verlängern</button>
+<button class="quiz-opt" onclick="checkAnswer(this,6,2)">ISO erhöhen</button>
+<button class="quiz-opt" onclick="checkAnswer(this,6,3)">Alle drei Optionen erhöhen die Belichtung</button>
+</div>
+        <div class="quiz-exp" id="exp-6" style="display:none;">Alle drei Parameter des Belichtungsdreiecks können einzeln oder kombiniert genutzt werden, um mehr Licht auf den Sensor zu lassen bzw. die Empfindlichkeit zu erhöhen.</div>
+        <button class="quiz-next" id="next-6" style="display:none;" onclick="nextQuestion(6)">Nächste Frage →</button>
+      </div>
+      <div class="quiz-item" id="qi-7" style="display:none;">
+        <div class="quiz-num">Frage 8 / 25</div>
+        <div class="quiz-q">Welcher RAW-Vorteil macht bei Streetfotografie am meisten Sinn?</div>
+        <div class="quiz-opts"><button class="quiz-opt" onclick="checkAnswer(this,7,0)">RAW-Dateien sind kleiner als JPEGs</button>
+<button class="quiz-opt" onclick="checkAnswer(this,7,1)">Weißabgleich und Belichtung lassen sich nachträglich verlustfrei korrigieren</button>
+<button class="quiz-opt" onclick="checkAnswer(this,7,2)">RAW-Dateien sind direkter auf Social Media teilbar</button>
+<button class="quiz-opt" onclick="checkAnswer(this,7,3)">RAW ermöglicht schnellere Serienbildrate</button>
+</div>
+        <div class="quiz-exp" id="exp-7" style="display:none;">RAW speichert alle Rohdaten des Sensors. Weißabgleich, Belichtungsfehler oder Farbstimmung können in Lightroom flexibel korrigiert werden – JPEG hat diese Daten bereits unwiderruflich verworfen.</div>
+        <button class="quiz-next" id="next-7" style="display:none;" onclick="nextQuestion(7)">Nächste Frage →</button>
+      </div>
+      <div class="quiz-item" id="qi-8" style="display:none;">
+        <div class="quiz-num">Frage 9 / 25</div>
+        <div class="quiz-q">Du fotografierst ein Portrait mit 85 mm bei f/1.4. Dein Fokuspunkt liegt auf dem linken Auge. Was passiert mit dem rechten Auge?</div>
+        <div class="quiz-opts"><button class="quiz-opt" onclick="checkAnswer(this,8,0)">Es ist genauso scharf</button>
+<button class="quiz-opt" onclick="checkAnswer(this,8,1)">Es ist leicht unscharf, weil es weiter weg ist</button>
+<button class="quiz-opt" onclick="checkAnswer(this,8,2)">Es wird durch den Kamerasensor automatisch scharf gestellt</button>
+<button class="quiz-opt" onclick="checkAnswer(this,8,3)">Es spielt keine Rolle bei Portraits</button>
+</div>
+        <div class="quiz-exp" id="exp-8" style="display:none;">Bei f/1.4 und 85 mm ist die Schärfentiefe extrem gering. Selbst wenige Zentimeter Abstand reichen, damit das hintere Auge außerhalb der Schärfeebene liegt.</div>
+        <button class="quiz-next" id="next-8" style="display:none;" onclick="nextQuestion(8)">Nächste Frage →</button>
+      </div>
+      <div class="quiz-item" id="qi-9" style="display:none;">
+        <div class="quiz-num">Frage 10 / 25</div>
+        <div class="quiz-q">Was beschreibt der Begriff 'Golde Stunde' in der Fotografie?</div>
+        <div class="quiz-opts"><button class="quiz-opt" onclick="checkAnswer(this,9,0)">Die Zeit, in der Kameras laut Hersteller die besten Ergebnisse liefern</button>
+<button class="quiz-opt" onclick="checkAnswer(this,9,1)">Die Zeitspanne kurz nach Sonnenaufgang oder vor Sonnenuntergang mit warmem, weichem Licht</button>
+<button class="quiz-opt" onclick="checkAnswer(this,9,2)">Die optimale Belichtungszeit für Langzeitbelichtungen</button>
+<button class="quiz-opt" onclick="checkAnswer(this,9,3)">Der Zeitraum, in dem Straßenbeleuchtung und Tageslicht sich ausgleichen</button>
+</div>
+        <div class="quiz-exp" id="exp-9" style="display:none;">Die Goldene Stunde bezeichnet das warme, weiche Licht kurz nach Sonnenaufgang und kurz vor Sonnenuntergang. Der tiefe Sonnenstand erzeugt lange Schatten und eine warme Farbstimmung.</div>
+        <button class="quiz-next" id="next-9" style="display:none;" onclick="nextQuestion(9)">Nächste Frage →</button>
+      </div>
+      <div class="quiz-item" id="qi-10" style="display:none;">
+        <div class="quiz-num">Frage 11 / 25</div>
+        <div class="quiz-q">Welcher Fokusmodus ist am besten geeignet, wenn du ein laufendes Kind fotografierst?</div>
+        <div class="quiz-opts"><button class="quiz-opt" onclick="checkAnswer(this,10,0)">MF (manueller Fokus)</button>
+<button class="quiz-opt" onclick="checkAnswer(this,10,1)">AF-S (Einzel-AF)</button>
+<button class="quiz-opt" onclick="checkAnswer(this,10,2)">AF-C (kontinuierlicher AF)</button>
+<button class="quiz-opt" onclick="checkAnswer(this,10,3)">Spot-Fokus auf die Mitte gesperrt</button>
+</div>
+        <div class="quiz-exp" id="exp-10" style="display:none;">AF-C (Continuous AF) verfolgt das Motiv kontinuierlich und passt den Fokus an, solange du den Auslöser halb gedrückt hältst. Ideal für bewegliche Motive.</div>
+        <button class="quiz-next" id="next-10" style="display:none;" onclick="nextQuestion(10)">Nächste Frage →</button>
+      </div>
+      <div class="quiz-item" id="qi-11" style="display:none;">
+        <div class="quiz-num">Frage 12 / 25</div>
+        <div class="quiz-q">Du hast ein Bild mit hohem ISO-Rauschen. Welche Lightroom-Funktion hilft am direktesten?</div>
+        <div class="quiz-opts"><button class="quiz-opt" onclick="checkAnswer(this,11,0)">Farbkorrektur mit dem Pinsel</button>
+<button class="quiz-opt" onclick="checkAnswer(this,11,1)">KI-Rauschreduzierung (Denoise)</button>
+<button class="quiz-opt" onclick="checkAnswer(this,11,2)">Vignettierung hinzufügen</button>
+<button class="quiz-opt" onclick="checkAnswer(this,11,3)">Den Kontrast erhöhen</button>
+</div>
+        <div class="quiz-exp" id="exp-11" style="display:none;">Lightroom bietet seit 2023 KI-gestützte Rauschreduzierung (Denoise), die deutlich effektiver ist als klassische Rauschreduktion und feine Details besser erhält.</div>
+        <button class="quiz-next" id="next-11" style="display:none;" onclick="nextQuestion(11)">Nächste Frage →</button>
+      </div>
+      <div class="quiz-item" id="qi-12" style="display:none;">
+        <div class="quiz-num">Frage 13 / 25</div>
+        <div class="quiz-q">Welche Kompositionstechnik nutzt du, wenn du eine Person im Türrahmen fotografierst?</div>
+        <div class="quiz-opts"><button class="quiz-opt" onclick="checkAnswer(this,12,0)">Drittelregel</button>
+<button class="quiz-opt" onclick="checkAnswer(this,12,1)">Rahmen im Rahmen (Frame within a Frame)</button>
+<button class="quiz-opt" onclick="checkAnswer(this,12,2)">Führungslinien</button>
+<button class="quiz-opt" onclick="checkAnswer(this,12,3)">Negativraum</button>
+</div>
+        <div class="quiz-exp" id="exp-12" style="display:none;">Der Türrahmen bildet einen natürlichen Rahmen um das Motiv. Diese Technik lenkt den Blick ins Bild und gibt dem Motiv zusätzlichen Kontext.</div>
+        <button class="quiz-next" id="next-12" style="display:none;" onclick="nextQuestion(12)">Nächste Frage →</button>
+      </div>
+      <div class="quiz-item" id="qi-13" style="display:none;">
+        <div class="quiz-num">Frage 14 / 25</div>
+        <div class="quiz-q">Was ist der Hauptunterschied zwischen hartem und weichem Licht?</div>
+        <div class="quiz-opts"><button class="quiz-opt" onclick="checkAnswer(this,13,0)">Hartes Licht hat eine höhere ISO, weiches eine niedrigere</button>
+<button class="quiz-opt" onclick="checkAnswer(this,13,1)">Hartes Licht erzeugt scharfe Schatten, weiches Licht diffuse, weiche Übergänge</button>
+<button class="quiz-opt" onclick="checkAnswer(this,13,2)">Hartes Licht kommt immer von vorne, weiches von der Seite</button>
+<button class="quiz-opt" onclick="checkAnswer(this,13,3)">Hartes Licht ist kalt, weiches ist warm in der Farbtemperatur</button>
+</div>
+        <div class="quiz-exp" id="exp-13" style="display:none;">Hartes Licht (direktes Sonnenlicht, kleiner Strahler) erzeugt scharfkantige Schatten. Weiches Licht (bewölkter Himmel, große Softbox) streut das Licht und erzeugt sanfte Schatten.</div>
+        <button class="quiz-next" id="next-13" style="display:none;" onclick="nextQuestion(13)">Nächste Frage →</button>
+      </div>
+      <div class="quiz-item" id="qi-14" style="display:none;">
+        <div class="quiz-num">Frage 15 / 25</div>
+        <div class="quiz-q">Welche Einstellung hilft, wenn du in dunklen Innenräumen fotografierst und keine Verwacklung willst?</div>
+        <div class="quiz-opts"><button class="quiz-opt" onclick="checkAnswer(this,14,0)">Blende schließen (f/16), ISO niedrig</button>
+<button class="quiz-opt" onclick="checkAnswer(this,14,1)">ISO erhöhen, Blende öffnen, evt. Verschlusszeit verlängern</button>
+<button class="quiz-opt" onclick="checkAnswer(this,14,2)">Verschlusszeit verlängern auf 1 Sekunde, ohne Stativ</button>
+<button class="quiz-opt" onclick="checkAnswer(this,14,3)">Weißabgleich auf Tageslicht setzen</button>
+</div>
+        <div class="quiz-exp" id="exp-14" style="display:none;">In dunklen Umgebungen braucht der Sensor mehr Licht. ISO erhöhen und Blende öffnen erlaubt kürzere Verschlusszeiten, was Verwacklung verhindert – der klassische Kompromiss.</div>
+        <button class="quiz-next" id="next-14" style="display:none;" onclick="nextQuestion(14)">Nächste Frage →</button>
+      </div>
+      <div class="quiz-item" id="qi-15" style="display:none;">
+        <div class="quiz-num">Frage 16 / 25</div>
+        <div class="quiz-q">Was versteht man unter 'Panning' in der Fotografie?</div>
+        <div class="quiz-opts"><button class="quiz-opt" onclick="checkAnswer(this,15,0)">Das Schwenken der Kamera mit einem sich bewegenden Motiv, um es scharf darzustellen, während der Hintergrund unscharf wird</button>
+<button class="quiz-opt" onclick="checkAnswer(this,15,1)">Das Fotografieren aus einer Panorama-Perspektive</button>
+<button class="quiz-opt" onclick="checkAnswer(this,15,2)">Das Stitching mehrerer Bilder zu einem Panorama in Lightroom</button>
+<button class="quiz-opt" onclick="checkAnswer(this,15,3)">Das Einfrieren von Bewegungen durch extrem kurze Verschlusszeiten</button>
+</div>
+        <div class="quiz-exp" id="exp-15" style="display:none;">Beim Panning schwenkst du die Kamera synchron zur Bewegung des Motivs (ca. 1/30–1/60 s). Das Motiv bleibt relativ scharf, der Hintergrund verwischt zu Bewegungsstreifen.</div>
+        <button class="quiz-next" id="next-15" style="display:none;" onclick="nextQuestion(15)">Nächste Frage →</button>
+      </div>
+      <div class="quiz-item" id="qi-16" style="display:none;">
+        <div class="quiz-num">Frage 17 / 25</div>
+        <div class="quiz-q">Welcher Weißabgleich-Wert (Kelvin) erzeugt ein kühles, bläuliches Bild?</div>
+        <div class="quiz-opts"><button class="quiz-opt" onclick="checkAnswer(this,16,0)">7500 K – Bewölkt</button>
+<button class="quiz-opt" onclick="checkAnswer(this,16,1)">5500 K – Tageslicht</button>
+<button class="quiz-opt" onclick="checkAnswer(this,16,2)">2700 K – Kunstlicht</button>
+<button class="quiz-opt" onclick="checkAnswer(this,16,3)">Unter 4000 K</button>
+</div>
+        <div class="quiz-exp" id="exp-16" style="display:none;">Niedrige Kelvin-Werte (unter 4000K) ergeben ein kühleres, bläulicheres Bild. Hohe Werte (über 6000K) ergeben wärmere, orange-gelbliche Töne.</div>
+        <button class="quiz-next" id="next-16" style="display:none;" onclick="nextQuestion(16)">Nächste Frage →</button>
+      </div>
+      <div class="quiz-item" id="qi-17" style="display:none;">
+        <div class="quiz-num">Frage 18 / 25</div>
+        <div class="quiz-q">Du fotografierst in der Straße und willst Schärfe von 1 m bis Unendlich. Welche Blende wählst du?</div>
+        <div class="quiz-opts"><button class="quiz-opt" onclick="checkAnswer(this,17,0)">f/1.4</button>
+<button class="quiz-opt" onclick="checkAnswer(this,17,1)">f/2.8</button>
+<button class="quiz-opt" onclick="checkAnswer(this,17,2)">f/8</button>
+<button class="quiz-opt" onclick="checkAnswer(this,17,3)">f/16 oder kleiner</button>
+</div>
+        <div class="quiz-exp" id="exp-17" style="display:none;">Kleine Blenden (große f-Werte) erzeugen maximale Schärfentiefe. f/16 oder f/22 können in Verbindung mit der hyperfokalen Distanz die Schärfe von nah bis unendlich ausdehnen.</div>
+        <button class="quiz-next" id="next-17" style="display:none;" onclick="nextQuestion(17)">Nächste Frage →</button>
+      </div>
+      <div class="quiz-item" id="qi-18" style="display:none;">
+        <div class="quiz-num">Frage 19 / 25</div>
+        <div class="quiz-q">Was bedeutet es, wenn ein Bild 'überbelichtet' ist?</div>
+        <div class="quiz-opts"><button class="quiz-opt" onclick="checkAnswer(this,18,0)">Das Bild wurde zu lange gespeichert und ist verblasst</button>
+<button class="quiz-opt" onclick="checkAnswer(this,18,1)">Zu viel Licht hat den Sensor erreicht – helle Bereiche sind ausgebrannt und detaillos weiß</button>
+<button class="quiz-opt" onclick="checkAnswer(this,18,2)">Der ISO-Wert war zu niedrig eingestellt</button>
+<button class="quiz-opt" onclick="checkAnswer(this,18,3)">Die Kamera hat den Fokus verloren</button>
+</div>
+        <div class="quiz-exp" id="exp-18" style="display:none;">Überbelichtung bedeutet zu viel Licht auf dem Sensor. Helle Tonwerte clippen ins Weiß und verlieren alle Details. Im Histogramm siehst du eine starke Häufung rechts am Rand.</div>
+        <button class="quiz-next" id="next-18" style="display:none;" onclick="nextQuestion(18)">Nächste Frage →</button>
+      </div>
+      <div class="quiz-item" id="qi-19" style="display:none;">
+        <div class="quiz-num">Frage 20 / 25</div>
+        <div class="quiz-q">Welche Kompositionsregel empfiehlt, Motive auf imaginären Kreuzpunkten eines 3x3-Rasters zu platzieren?</div>
+        <div class="quiz-opts"><button class="quiz-opt" onclick="checkAnswer(this,19,0)">Goldener Schnitt</button>
+<button class="quiz-opt" onclick="checkAnswer(this,19,1)">Drittelregel</button>
+<button class="quiz-opt" onclick="checkAnswer(this,19,2)">Symmetrieachse</button>
+<button class="quiz-opt" onclick="checkAnswer(this,19,3)">Fibonacci-Spirale</button>
+</div>
+        <div class="quiz-exp" id="exp-19" style="display:none;">Die Drittelregel teilt das Bild mit zwei horizontalen und zwei vertikalen Linien. Die vier Schnittpunkte dieser Linien gelten als natürliche 'Andockpunkte' für das Hauptmotiv.</div>
+        <button class="quiz-next" id="next-19" style="display:none;" onclick="nextQuestion(19)">Nächste Frage →</button>
+      </div>
+      <div class="quiz-item" id="qi-20" style="display:none;">
+        <div class="quiz-num">Frage 21 / 25</div>
+        <div class="quiz-q">Du siehst im Sucher ein flackerndes Belichtungswarnsignal. Was bedeutet das?</div>
+        <div class="quiz-opts"><button class="quiz-opt" onclick="checkAnswer(this,20,0)">Der Akku ist schwach</button>
+<button class="quiz-opt" onclick="checkAnswer(this,20,1)">Das Bild ist unterbelichtet oder überbelichtet und die Kamera warnt dich</button>
+<button class="quiz-opt" onclick="checkAnswer(this,20,2)">Der Autofokus kann kein Motiv finden</button>
+<button class="quiz-opt" onclick="checkAnswer(this,20,3)">Die Speicherkarte ist fast voll</button>
+</div>
+        <div class="quiz-exp" id="exp-20" style="display:none;">Ein Belichtungswarnsignal (Blinkton oder blinkendes Symbol im Sucher) zeigt an, dass die aktuelle Belichtung außerhalb des messbaren oder empfohlenen Bereichs liegt.</div>
+        <button class="quiz-next" id="next-20" style="display:none;" onclick="nextQuestion(20)">Nächste Frage →</button>
+      </div>
+      <div class="quiz-item" id="qi-21" style="display:none;">
+        <div class="quiz-num">Frage 22 / 25</div>
+        <div class="quiz-q">Was ist der wichtigste Unterschied zwischen Straßenfotografie und Architekturfotografie?</div>
+        <div class="quiz-opts"><button class="quiz-opt" onclick="checkAnswer(this,21,0)">Straßenfotografie erfordert teureres Equipment</button>
+<button class="quiz-opt" onclick="checkAnswer(this,21,1)">Bei Street reagierst du auf das Motiv, bei Architektur planst du das Bild vorher</button>
+<button class="quiz-opt" onclick="checkAnswer(this,21,2)">Architekturfotografie ist rechtlich nicht erlaubt in Deutschland</button>
+<button class="quiz-opt" onclick="checkAnswer(this,21,3)">Street nutzt immer Schwarzweiß, Architektur immer Farbe</button>
+</div>
+        <div class="quiz-exp" id="exp-21" style="display:none;">Street lebt vom spontanen Reagieren auf bewegliche, unkontrollierbare Momente. Architekturfotografie erlaubt Planung: Licht, Tageszeit, Winkel und Stativ können vorbereitet werden.</div>
+        <button class="quiz-next" id="next-21" style="display:none;" onclick="nextQuestion(21)">Nächste Frage →</button>
+      </div>
+      <div class="quiz-item" id="qi-22" style="display:none;">
+        <div class="quiz-num">Frage 23 / 25</div>
+        <div class="quiz-q">Du machst ein Street-Foto einer Person von hinten, ohne sie zu fragen. Ist das in Deutschland rechtlich problematisch?</div>
+        <div class="quiz-opts"><button class="quiz-opt" onclick="checkAnswer(this,22,0)">Ja, jede Aufnahme einer Person ist verboten</button>
+<button class="quiz-opt" onclick="checkAnswer(this,22,1)">Nein, Rückenansichten gelten in der Regel nicht als erkennbare Person im Sinne des KUG</button>
+<button class="quiz-opt" onclick="checkAnswer(this,22,2)">Nur wenn das Foto veröffentlicht wird, braucht man eine Genehmigung</button>
+<button class="quiz-opt" onclick="checkAnswer(this,22,3)">Ja, aber nur bei Minderjährigen</button>
+</div>
+        <div class="quiz-exp" id="exp-22" style="display:none;">Das Kunsturhebergesetz (KUG §22) schützt erkennbare Personen. Eine nicht erkennbare Rückenansicht fällt in der Regel nicht darunter. Bei Veröffentlichung gilt jedoch immer erhöhte Sorgfaltspflicht.</div>
+        <button class="quiz-next" id="next-22" style="display:none;" onclick="nextQuestion(22)">Nächste Frage →</button>
+      </div>
+      <div class="quiz-item" id="qi-23" style="display:none;">
+        <div class="quiz-num">Frage 24 / 25</div>
+        <div class="quiz-q">Du willst in Lightroom alle Bilder einer Serie auf den gleichen Look bringen. Welche Funktion ist dafür am effizientesten?</div>
+        <div class="quiz-opts"><button class="quiz-opt" onclick="checkAnswer(this,23,0)">Jedes Bild einzeln neu bearbeiten</button>
+<button class="quiz-opt" onclick="checkAnswer(this,23,1)">Einstellungen eines Bildes kopieren und auf alle anderen einfügen</button>
+<button class="quiz-opt" onclick="checkAnswer(this,23,2)">Einen neuen Katalog erstellen</button>
+<button class="quiz-opt" onclick="checkAnswer(this,23,3)">Die Belichtung im Datei-Explorer anpassen</button>
+</div>
+        <div class="quiz-exp" id="exp-23" style="display:none;">In Lightroom kannst du Bearbeitungseinstellungen eines Bildes kopieren (Strg+C) und auf mehrere Bilder gleichzeitig einfügen (Strg+V auf Auswahl). So entsteht schnell ein konsistenter Serienlook.</div>
+        <button class="quiz-next" id="next-23" style="display:none;" onclick="nextQuestion(23)">Nächste Frage →</button>
+      </div>
+      <div class="quiz-item" id="qi-24" style="display:none;">
+        <div class="quiz-num">Frage 25 / 25</div>
+        <div class="quiz-q">Welcher Parameter des Belichtungsdreiecks hat KEINEN direkten Einfluss auf die Bildschärfe oder Tiefenschärfe?</div>
+        <div class="quiz-opts"><button class="quiz-opt" onclick="checkAnswer(this,24,0)">Blende</button>
+<button class="quiz-opt" onclick="checkAnswer(this,24,1)">Verschlusszeit (bei statischem Motiv, Stativ)</button>
+<button class="quiz-opt" onclick="checkAnswer(this,24,2)">ISO</button>
+<button class="quiz-opt" onclick="checkAnswer(this,24,3)">Brennweite</button>
+</div>
+        <div class="quiz-exp" id="exp-24" style="display:none;">ISO beeinflusst die Lichtempfindlichkeit und das Bildrauschen, hat aber keinen direkten Einfluss auf Schärfentiefe oder Bewegungsunschärfe. Diese werden durch Blende und Verschlusszeit bestimmt.</div>
+        <button class="quiz-next" id="next-24" style="display:none;" onclick="nextQuestion(24)">Ergebnis anzeigen 🎉</button>
+      </div>
+      <div class="quiz-result" id="quiz-result" style="display:none;">
+        <div class="quiz-score-big" id="score-num">–</div>
+        <div class="quiz-score-label">von 25 Fragen richtig</div>
+        <div class="quiz-score-msg" id="score-msg"></div>
+        <button class="quiz-next" onclick="restartQuiz()">Nochmal versuchen 🔄</button>
+      </div>
+    </div>
+    <script>
+      var quizData = [{"a": 2}, {"a": 1}, {"a": 2}, {"a": 2}, {"a": 1}, {"a": 0}, {"a": 3}, {"a": 1}, {"a": 1}, {"a": 1}, {"a": 2}, {"a": 1}, {"a": 1}, {"a": 1}, {"a": 1}, {"a": 0}, {"a": 3}, {"a": 3}, {"a": 1}, {"a": 1}, {"a": 1}, {"a": 1}, {"a": 1}, {"a": 1}, {"a": 2}];
+      var currentQ = 0, score = 0, answered = false;
+      function startQuiz(){
+        document.getElementById('quiz-start').style.display='none';
+        currentQ=0; score=0;
+        showQuestion(0);
+      }
+      function showQuestion(i){
+        document.querySelectorAll('.quiz-item').forEach(function(el){el.style.display='none';});
+        var el = document.getElementById('qi-'+i);
+        if(el){ el.style.display='block'; answered=false; }
+        updateProgress(i);
+      }
+      function updateProgress(i){
+        var pct = Math.round((i/25)*100);
+        document.getElementById('quiz-prog').style.width = pct+'%';
+      }
+      function checkAnswer(btn, qi, chosen){
+        if(answered) return;
+        answered = true;
+        var correct = quizData[qi].a;
+        var opts = document.querySelectorAll('#qi-'+qi+' .quiz-opt');
+        opts.forEach(function(o){ o.disabled=true; });
+        opts[correct].classList.add('correct');
+        if(chosen !== correct){ btn.classList.add('wrong'); } else { score++; }
+        document.getElementById('exp-'+qi).style.display='block';
+        document.getElementById('next-'+qi).style.display='inline-flex';
+      }
+      function nextQuestion(current){
+        var next = current + 1;
+        if(next < 25){ showQuestion(next); }
+        else{
+          document.querySelectorAll('.quiz-item').forEach(function(el){el.style.display='none';});
+          document.getElementById('quiz-result').style.display='block';
+          document.getElementById('score-num').textContent = score;
+          document.getElementById('quiz-prog').style.width='100%';
+          var msg = '';
+          if(score>=23) msg='Exzellent! Ihr habt den Stoff wirklich verstanden. 🏆';
+          else if(score>=18) msg='Stark! Ein paar Lücken, aber das Fundament sitzt. 👍';
+          else if(score>=12) msg='Solide Basis, aber schau dir die Erklärungen nochmal an. 📚';
+          else msg='Nochmal von vorne – das ist kein Problem, dafür ist das Quiz da. 💪';
+          document.getElementById('score-msg').textContent = msg;
+        }
+      }
+      function restartQuiz(){
+        document.getElementById('quiz-result').style.display='none';
+        document.getElementById('quiz-start').style.display='block';
+        document.getElementById('quiz-prog').style.width='0%';
+      }
+    </script>
+
+  </div><!-- /content -->
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar">
+
+    <!-- Deadlines -->
+    <div class="sidebar-card">
+      <h3><span class="icon">⏰</span> Aktuelle Deadlines</h3>
+      <div class="deadline-list">
+        <div class="deadline-item">
+          <div class="deadline-dot dot-red"></div>
+          <div class="deadline-info">
+            <div class="name">P3 Urban Street & Alltag</div>
+            <div class="date">11.05.2026 · 23:59</div>
+          </div>
+        </div>
+        <div class="deadline-item">
+          <div class="deadline-dot dot-amber"></div>
+          <div class="deadline-info">
+            <div class="name">Umfrage Exkursion</div>
+            <div class="date">So bald wie möglich</div>
+          </div>
+        </div>
+        <div class="deadline-item">
+          <div class="deadline-dot dot-green"></div>
+          <div class="deadline-info">
+            <div class="name">Feedback P2</div>
+            <div class="date">04.05.2026 · in Session 6</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kursfortschritt -->
+    <div class="sidebar-card">
+      <h3><span class="icon">📊</span> Kursfortschritt</h3>
+      <div class="progress-wrap">
+        <div class="progress-row"><span class="progress-label">Sessions</span><span class="progress-val">5 / 13</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:38%"></div></div>
+        <div class="progress-row"><span class="progress-label">Prüfungsaufgaben</span><span class="progress-val">P3 läuft</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:30%"></div></div>
+        <div class="progress-row"><span class="progress-label">Semester</span><span class="progress-val">SS 2026</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div>
+      </div>
+    </div>
+
+    <!-- Nächste Woche -->
+    <div class="sidebar-card">
+      <h3><span class="icon">📅</span> Session 06 – 04.05.</h3>
+      <div class="preview-item">
+        <div class="preview-icon">🐾</div>
+        <div>
+          <div class="title">Tierfotografie</div>
+          <div class="desc">Bewegung, AF-C, Perspektive auf Augenhöhe</div>
+        </div>
+      </div>
+      <div class="preview-item">
+        <div class="preview-icon">📸</div>
+        <div>
+          <div class="title">Feedback P2</div>
+          <div class="desc">Portraits gemeinsam besprechen – bringt eure Bilder</div>
+        </div>
+      </div>
+      <div class="preview-item">
+        <div class="preview-icon">🗂</div>
+        <div>
+          <div class="title">Portfolio-Präsentation</div>
+          <div class="desc">Kurze Vorstellung eurer P2-Serie im Plenum</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Links -->
+    <div class="sidebar-card">
+      <h3><span class="icon">📚</span> Bisher im Kurs gelernt</h3>
+      <div style="display:flex;flex-direction:column;gap:0.5rem;">
+        <div style="display:flex;gap:8px;align-items:center;padding:0.55rem 0.7rem;background:var(--bg-secondary);border:1px solid var(--border);border-radius:7px;">
+          <span style="font-size:0.85rem;">📷</span>
+          <span style="font-size:0.78rem;color:var(--text-secondary);"><strong style="color:var(--text-primary);">S1</strong> Kameragrundlagen &amp; Sehen</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;padding:0.55rem 0.7rem;background:var(--bg-secondary);border:1px solid var(--border);border-radius:7px;">
+          <span style="font-size:0.85rem;">⚙️</span>
+          <span style="font-size:0.78rem;color:var(--text-secondary);"><strong style="color:var(--text-primary);">S2</strong> Belichtungsdreieck &amp; RAW</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;padding:0.55rem 0.7rem;background:var(--bg-secondary);border:1px solid var(--border);border-radius:7px;">
+          <span style="font-size:0.85rem;">📐</span>
+          <span style="font-size:0.78rem;color:var(--text-secondary);"><strong style="color:var(--text-primary);">S3</strong> Komposition &amp; Lichtgrundlagen</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;padding:0.55rem 0.7rem;background:var(--bg-secondary);border:1px solid var(--border);border-radius:7px;">
+          <span style="font-size:0.85rem;">🌅</span>
+          <span style="font-size:0.78rem;color:var(--text-secondary);"><strong style="color:var(--text-primary);">S4</strong> Available-Light-Portraits</span>
+        </div>
+        <a href="https://thi-kurs.vercel.app" target="_blank" style="display:flex;align-items:center;gap:8px;padding:0.55rem 0.7rem;background:var(--accent-soft);border:1px solid var(--border-strong);border-radius:7px;text-decoration:none;margin-top:0.3rem;">
+          <span style="font-size:0.85rem;">🏠</span>
+          <span style="font-size:0.78rem;font-weight:600;color:var(--accent);">Alle Kursmaterialien</span>
+          <span style="margin-left:auto;font-size:0.7rem;color:var(--text-muted);">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Mario Brand -->
+    <div class="sidebar-card" style="background: linear-gradient(135deg, var(--bg-card), rgba(232,160,48,0.06)); border-color: var(--border-strong);">
+      <h3><span class="icon">👤</span> Dein Dozent</h3>
+
+      <a href="https://www.linkedin.com/in/marioschub/" target="_blank" class="resource-link">
+        <span class="rl-icon">💼</span>
+        <span class="rl-label">LinkedIn</span>
+        <span class="rl-arrow">↗</span>
+      </a>
+      <a href="https://www.instagram.com/marioschub/" target="_blank" class="resource-link">
+        <span class="rl-icon">📷</span>
+        <span class="rl-label">Instagram</span>
+        <span class="rl-arrow">↗</span>
+      </a>
+    </div>
+
+  </aside>
+</main>
+
+<!-- ══════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <p>THI Ingolstadt · Digitalfotografie und digitale Bildbearbeitung · SS 2026</p>
+  <p>Dozent: <a href="https://thi-kurs.vercel.app">Mario Schubert</a> · Session 05 · 27. April 2026</p>
+</footer>
+
+<!-- ══════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════ -->
+<script>
+  function toggleAccordion(btn) {
+    const body = btn.nextElementSibling;
+    const isOpen = btn.classList.contains('open');
+    // close all
+    document.querySelectorAll('.accordion-toggle').forEach(b => {
+      b.classList.remove('open');
+      b.nextElementSibling.classList.remove('open');
+    });
+    // open clicked if it wasn't open
+    if (!isOpen) {
+      btn.classList.add('open');
+      body.classList.add('open');
+    }
+  }
+
+  // Animate progress bars on load
+  window.addEventListener('load', () => {
+    document.querySelectorAll('.progress-fill').forEach(bar => {
+      const w = bar.style.width;
+      bar.style.width = '0';
+      setTimeout(() => { bar.style.width = w; }, 300);
+    });
+  });
+</script>
+
+</body>
+</html>
